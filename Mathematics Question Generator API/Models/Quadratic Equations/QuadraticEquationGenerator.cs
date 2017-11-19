@@ -1,0 +1,226 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Mathematics_Questions_Generator.Model
+{
+    class QuadraticEquationGenerator : IQuestionGenerator<QuadraticEquation>
+    {
+        private const int MAX_NUMBER_OF_TRIES = 10000;
+
+        private QuadraticEquationGeneratorParameters parameters;
+
+        public QuadraticEquationGenerator()
+        {
+            var defaultParameters = new QuadraticEquationGeneratorParameters();
+            parameters = defaultParameters;
+        }
+
+        public QuadraticEquationGenerator(QuadraticEquationGeneratorParameters parameters)
+        {
+            this.parameters = parameters;
+        }
+
+        public QuadraticEquation GenerateQuestionAndAnswer()
+        {
+            CheckValidParameters();
+            var coefficients = GenerateValidcoefficients();
+            List<double> roots = CalculateRoots(coefficients);
+            QuadraticEquation quadraticEquation = new QuadraticEquation(coefficients, roots);
+            return quadraticEquation;
+        }
+
+        public string GenerateQuestionAndAnswerAsString()
+        {
+            QuadraticEquation quadraticEquation = (QuadraticEquation) GenerateQuestionAndAnswer();
+            return Parser(quadraticEquation.Coefficients, quadraticEquation.Roots);
+        }
+
+        private List<double> CalculateRoots(Dictionary<string, int> coefficients)
+        {
+            int a = coefficients["a"];
+            int b = coefficients["b"];
+            int c = coefficients["c"];
+
+            var roots = new List<double>() { (-b + Math.Sqrt(b * b - 4 * a * c)) / (2 * a), (-b - Math.Sqrt(b * b - 4 * a * c)) / (2 * a) };
+
+            var roundedRoots = roots.Select(root => Math.Round(root, parameters.DecimalPlaces)).ToList();
+
+            return roundedRoots;
+        }
+
+        private Dictionary<string, int> GenerateValidcoefficients()
+        {
+            Dictionary<string, int> coefficients;
+
+            // for performance reasons generate double root equations separately
+            if (parameters.RequireDoubleRoot)
+            {
+                return GenerateDoubleRootcoefficients();
+            }
+
+            var numberOfTries = 0;
+
+            do
+            {
+                if (numberOfTries > MAX_NUMBER_OF_TRIES)
+                {
+                    throw new Exception("Could not generate polynomial satisfying conditions.");
+                }
+                coefficients = GenerateRandomcoefficients();
+                numberOfTries++;
+            } while (!CheckValidcoefficients(coefficients));
+
+            return coefficients;
+        }
+
+        /* *
+         * Instead of generating the coefficients and checking for a double root, we generate terms u and v
+         * and use these to generate the quadratic (ux+v)^2, which always has a double root. We have the
+         * restriction that u^2 <= aUpper and v^2 <= cUpper which helps narrow down the possible valid values.
+         * This also means we only need to check for b being in range.
+         * */
+        private Dictionary<string, int> GenerateDoubleRootcoefficients()
+        {
+            Random randomNumberGenerator = new Random();
+            var coefficients = new Dictionary<string, int>();
+
+            do
+            {
+                int uUpperBound = (int)Math.Round(Math.Sqrt(parameters.AUpperBound));
+                int vUpperBound = (int)Math.Round(Math.Sqrt(parameters.CUpperBound));
+                int u = randomNumberGenerator.Next(uUpperBound);
+                int v = randomNumberGenerator.Next(vUpperBound);
+                coefficients["a"] = u * u;
+                coefficients["b"] = 2 * u * v;
+                coefficients["c"] = v * v;
+            } while (!CheckValidcoefficients(coefficients) || (coefficients["b"] > parameters.BUpperBound) || (coefficients["b"] < parameters.BLowerBound));
+
+            return coefficients;
+        }
+
+        private bool CheckValidcoefficients(Dictionary<string, int> coefficients)
+        {
+            var a = coefficients["a"];
+            var b = coefficients["b"];
+            var c = coefficients["c"];
+
+            var discriminant = b * b - 4 * a * c;
+
+            if ((a == 0) || ((b == 0) && (c == 0)))
+            {
+                return false;
+            }
+            else if (parameters.RequireRealRoot && (discriminant < 0))
+            {
+                return false;
+            }
+            else if (parameters.RequireComplexRoot && (discriminant >= 0))
+            {
+                return false;
+            }
+            else if (parameters.RequireDoubleRoot && (discriminant != 0))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        private Dictionary<string, int> GenerateRandomcoefficients()
+        {
+            Random randomNumberGenerator = new Random();
+            var coefficients = new Dictionary<string, int>
+            {
+                { "a", randomNumberGenerator.Next(parameters.ALowerBound, parameters.AUpperBound) },
+                { "b", randomNumberGenerator.Next(parameters.BLowerBound, parameters.BUpperBound) },
+                { "c", randomNumberGenerator.Next(parameters.CLowerBound, parameters.CUpperBound) }
+            };
+
+            return coefficients;
+        }
+
+        private void CheckValidParameters()
+        {
+            if ((parameters.ALowerBound > parameters.AUpperBound) || (parameters.BLowerBound > parameters.BUpperBound) || (parameters.CLowerBound > parameters.CUpperBound))
+            {
+                throw new Exception("Invalid bounds");
+            }
+            else if (parameters.DecimalPlaces < 0)
+            {
+                throw new Exception("Cannot have less than 0 decimal places.");
+            }
+            else if ((parameters.RequireIntegerRoot || parameters.RequireRealRoot) && parameters.RequireComplexRoot)
+            {
+                throw new Exception("Cannot have Complex root paired with eral or integer root.");
+            }
+            else if (parameters.RequireDoubleRoot && parameters.RequireComplexRoot)
+            {
+                throw new Exception("Cannot have double complex root with real coefficients.");
+            }
+        }
+
+        // returns a string of the equation and root in a nice format
+        private static string Parser(Dictionary<string, int> coefficients, List<double> roots)
+        {
+            string aTerm = (coefficients["a"] == 1) ? "" : $"{coefficients["a"]}";
+            string bTerm = (coefficients["b"] < 0) ? $"{coefficients["b"]}" : $"+{coefficients["b"]}";
+            string cTerm = (coefficients["c"] < 0) ? $"{coefficients["c"]}" : $"+{coefficients["c"]}";
+
+            return $"Question: {aTerm}x^2{bTerm}x{cTerm}=0\nRoots: {roots[0].ToString()}, {roots[1].ToString()}";
+        }
+    }
+
+    public class QuadraticEquationGeneratorParameters
+    {
+        public int ALowerBound;
+        public int BLowerBound;
+        public int CLowerBound;
+
+        public int AUpperBound;
+        public int BUpperBound;
+        public int CUpperBound;
+
+        public int DecimalPlaces;
+
+        public bool RequireIntegerRoot;
+        public bool RequireRealRoot;
+        public bool RequireComplexRoot;
+        public bool RequireDoubleRoot;
+
+        public QuadraticEquationGeneratorParameters(int aLowerBound = -100, int bLowerBound = -100, int cLowerBound = -100, int aUpperBound = 100,
+            int bUpperBound = 100, int cUpperBound = 100, int decimalPlaces = 2, bool requireIntegerRoot = false,
+            bool requireRealRoot = false, bool requireComplexRoot = false, bool requireDoubleRoot = false)
+        {
+            this.ALowerBound = aLowerBound;
+            this.BLowerBound = bLowerBound;
+            this.CLowerBound = cLowerBound;
+            this.AUpperBound = aUpperBound;
+            this.BUpperBound = bUpperBound;
+            this.CUpperBound = cUpperBound;
+            this.DecimalPlaces = decimalPlaces;
+            this.RequireIntegerRoot = requireIntegerRoot;
+            this.RequireRealRoot = requireRealRoot;
+            this.RequireComplexRoot = requireComplexRoot;
+            this.RequireDoubleRoot = requireDoubleRoot;
+        }
+    }
+
+    //TODO: Why does this need to be declared public manually?
+    public class QuadraticEquation
+    {
+        public Dictionary<string, int> Coefficients;
+
+        public List<double> Roots;
+
+        public QuadraticEquation(Dictionary<string, int> coefficients, List<double> roots)
+        {
+            Coefficients = coefficients;
+            Roots = roots;
+        }
+    }
+}
