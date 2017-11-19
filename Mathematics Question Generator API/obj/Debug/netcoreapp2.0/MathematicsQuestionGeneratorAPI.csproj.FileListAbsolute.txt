@@ -1,0 +1,4 @@
+C:\Users\Jamie\Desktop\Mathematics-Question-Generator-API\Mathematics Question Generator API\obj\Debug\netcoreapp2.0\MathematicsQuestionGeneratorAPI.csprojResolveAssemblyReference.cache
+C:\Users\Jamie\Desktop\Mathematics-Question-Generator-API\Mathematics Question Generator API\obj\Debug\netcoreapp2.0\MathematicsQuestionGeneratorAPI.csproj.CoreCompileInputs.cache
+C:\Users\Jamie\Desktop\Mathematics-Question-Generator-API\Mathematics Question Generator API\obj\Debug\netcoreapp2.0\MathematicsQuestionGeneratorAPI.AssemblyInfoInputs.cache
+C:\Users\Jamie\Desktop\Mathematics-Question-Generator-API\Mathematics Question Generator API\obj\Debug\netcoreapp2.0\MathematicsQuestionGeneratorAPI.AssemblyInfo.cs

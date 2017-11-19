@@ -1,11 +1,9 @@
-﻿using Mathematics_Questions_Generator.Model.Polynomial_Equations;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
-namespace Mathematics_Questions_Generator.Model
+namespace MathematicsQuestionGeneratorAPI.Models.PolynomialEquations
 {
-    class PolynomialEquationGenerator : IQuestionGenerator<PolynomialEquationData>
+    public class PolynomialEquationGenerator : IQuestionGenerator<PolynomialEquationData>
     {
         private PolynomialEquationGeneratorParameters parameters;
 

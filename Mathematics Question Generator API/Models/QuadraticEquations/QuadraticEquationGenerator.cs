@@ -1,12 +1,12 @@
-﻿using System;
+﻿using MathematicsQuestionGeneratorAPI.Models.QuadraticEquations;
+using MathematicsQuestionGeneratorAPI.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Mathematics_Questions_Generator.Model
+namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
 {
-    class QuadraticEquationGenerator : IQuestionGenerator<QuadraticEquation>
+    public class QuadraticEquationGenerator : IQuestionGenerator<QuadraticEquation>
     {
         private const int MAX_NUMBER_OF_TRIES = 10000;
 
@@ -34,7 +34,7 @@ namespace Mathematics_Questions_Generator.Model
 
         public string GenerateQuestionAndAnswerAsString()
         {
-            QuadraticEquation quadraticEquation = (QuadraticEquation) GenerateQuestionAndAnswer();
+            QuadraticEquation quadraticEquation = GenerateQuestionAndAnswer();
             return Parser(quadraticEquation.Coefficients, quadraticEquation.Roots);
         }
 
@@ -172,55 +172,6 @@ namespace Mathematics_Questions_Generator.Model
             string cTerm = (coefficients["c"] < 0) ? $"{coefficients["c"]}" : $"+{coefficients["c"]}";
 
             return $"Question: {aTerm}x^2{bTerm}x{cTerm}=0\nRoots: {roots[0].ToString()}, {roots[1].ToString()}";
-        }
-    }
-
-    public class QuadraticEquationGeneratorParameters
-    {
-        public int ALowerBound;
-        public int BLowerBound;
-        public int CLowerBound;
-
-        public int AUpperBound;
-        public int BUpperBound;
-        public int CUpperBound;
-
-        public int DecimalPlaces;
-
-        public bool RequireIntegerRoot;
-        public bool RequireRealRoot;
-        public bool RequireComplexRoot;
-        public bool RequireDoubleRoot;
-
-        public QuadraticEquationGeneratorParameters(int aLowerBound = -100, int bLowerBound = -100, int cLowerBound = -100, int aUpperBound = 100,
-            int bUpperBound = 100, int cUpperBound = 100, int decimalPlaces = 2, bool requireIntegerRoot = false,
-            bool requireRealRoot = false, bool requireComplexRoot = false, bool requireDoubleRoot = false)
-        {
-            this.ALowerBound = aLowerBound;
-            this.BLowerBound = bLowerBound;
-            this.CLowerBound = cLowerBound;
-            this.AUpperBound = aUpperBound;
-            this.BUpperBound = bUpperBound;
-            this.CUpperBound = cUpperBound;
-            this.DecimalPlaces = decimalPlaces;
-            this.RequireIntegerRoot = requireIntegerRoot;
-            this.RequireRealRoot = requireRealRoot;
-            this.RequireComplexRoot = requireComplexRoot;
-            this.RequireDoubleRoot = requireDoubleRoot;
-        }
-    }
-
-    //TODO: Why does this need to be declared public manually?
-    public class QuadraticEquation
-    {
-        public Dictionary<string, int> Coefficients;
-
-        public List<double> Roots;
-
-        public QuadraticEquation(Dictionary<string, int> coefficients, List<double> roots)
-        {
-            Coefficients = coefficients;
-            Roots = roots;
         }
     }
 }

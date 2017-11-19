@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Mathematics_Question_Generator_API
+namespace MathematicsQuestionGeneratorAPI
 {
     public class Startup
     {

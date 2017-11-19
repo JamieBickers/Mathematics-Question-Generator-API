@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mathematics_Questions_Generator.Model
+namespace MathematicsQuestionGeneratorAPI.Models
 {
-    interface IQuestionGenerator<QuestionType>
+    public interface IQuestionGenerator<QuestionType>
     {
         QuestionType GenerateQuestionAndAnswer();
     }

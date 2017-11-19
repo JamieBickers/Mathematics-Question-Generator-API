@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Mathematics_Questions_Generator.Model
+namespace MathematicsQuestionGeneratorAPI.Models.PolynomialEquations
 {
-    class PolynomialEquationParser
+    public class PolynomialEquationParser
     {
         List<int> Coefficients;
         List<double> Roots;

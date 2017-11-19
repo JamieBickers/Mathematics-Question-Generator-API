@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Mathematics_Questions_Generator.Model.Polynomial_Equations
+namespace MathematicsQuestionGeneratorAPI.Models.PolynomialEquations
 {
-    class PolynomialEquationData
+    public class PolynomialEquationData
     {
         public List<int> Coefficients;
         public List<RealRoot> RealRoots;

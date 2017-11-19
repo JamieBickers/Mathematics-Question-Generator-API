@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mathematics_Questions_Generator.Model.Polynomial_Equations
+namespace MathematicsQuestionGeneratorAPI.Models.PolynomialEquations
 {
-    class RealRoot
+    public class RealRoot
     {
         public double Value;
         public double Degree;

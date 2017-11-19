@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace Mathematics_Question_Generator_API
+namespace MathematicsQuestionGeneratorAPI
 {
     public class Program
     {

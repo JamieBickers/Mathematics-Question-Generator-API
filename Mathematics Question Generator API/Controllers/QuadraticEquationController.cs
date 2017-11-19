@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Mathematics_Questions_Generator.Model;
+using MathematicsQuestionGeneratorAPI.Models.QuadraticEquations;
 
-namespace Mathematics_Question_Generator_API.Controllers
+namespace MathematicsQuestionGeneratorAPI.Controllers
 {
     [Route("api/QuadraticEquation")]
     public class QuadraticEquationController : Controller

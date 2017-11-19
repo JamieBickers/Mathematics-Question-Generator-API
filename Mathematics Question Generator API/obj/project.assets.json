@@ -12543,11 +12543,11 @@
       "hideWarningsAndErrors": true
     },
     "restore": {
-      "projectUniqueName": "C:\\Users\\Jamie\\Desktop\\Computer Science Courses\\Mathematics Question Generator API\\Mathematics Question Generator API\\Mathematics Question Generator API.csproj",
-      "projectName": "Mathematics Question Generator API",
-      "projectPath": "C:\\Users\\Jamie\\Desktop\\Computer Science Courses\\Mathematics Question Generator API\\Mathematics Question Generator API\\Mathematics Question Generator API.csproj",
+      "projectUniqueName": "C:\\Users\\Jamie\\Desktop\\Mathematics-Question-Generator-API\\Mathematics Question Generator API\\MathematicsQuestionGeneratorAPI.csproj",
+      "projectName": "MathematicsQuestionGeneratorAPI",
+      "projectPath": "C:\\Users\\Jamie\\Desktop\\Mathematics-Question-Generator-API\\Mathematics Question Generator API\\MathematicsQuestionGeneratorAPI.csproj",
       "packagesPath": "C:\\Users\\Jamie\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Jamie\\Desktop\\Computer Science Courses\\Mathematics Question Generator API\\Mathematics Question Generator API\\obj\\",
+      "outputPath": "C:\\Users\\Jamie\\Desktop\\Mathematics-Question-Generator-API\\Mathematics Question Generator API\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

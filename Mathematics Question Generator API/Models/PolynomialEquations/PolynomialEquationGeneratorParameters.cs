@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Mathematics_Questions_Generator.Model.Polynomial_Equations
+namespace MathematicsQuestionGeneratorAPI.Models.PolynomialEquations
 {
-    class PolynomialEquationGeneratorParameters
+    public class PolynomialEquationGeneratorParameters
     {
         public int Degree;
         public int MinimumNumberOfTerms;
