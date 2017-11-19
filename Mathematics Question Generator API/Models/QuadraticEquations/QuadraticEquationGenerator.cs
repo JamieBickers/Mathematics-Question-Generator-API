@@ -25,7 +25,10 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
 
         public QuadraticEquation GenerateQuestionAndAnswer()
         {
-            CheckValidParameters();
+            if (!parameters.CheckValidParameters())
+            {
+                throw new Exception("Invalid parameters.");
+            }
             var coefficients = GenerateValidcoefficients();
             List<double> roots = CalculateRoots(coefficients);
             QuadraticEquation quadraticEquation = new QuadraticEquation(coefficients, roots);
@@ -144,27 +147,6 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
             return coefficients;
         }
 
-        private void CheckValidParameters()
-        {
-            if ((parameters.ALowerBound > parameters.AUpperBound) || (parameters.BLowerBound > parameters.BUpperBound) || (parameters.CLowerBound > parameters.CUpperBound))
-            {
-                throw new Exception("Invalid bounds");
-            }
-            else if (parameters.DecimalPlaces < 0)
-            {
-                throw new Exception("Cannot have less than 0 decimal places.");
-            }
-            else if ((parameters.RequireIntegerRoot || parameters.RequireRealRoot) && parameters.RequireComplexRoot)
-            {
-                throw new Exception("Cannot have Complex root paired with eral or integer root.");
-            }
-            else if (parameters.RequireDoubleRoot && parameters.RequireComplexRoot)
-            {
-                throw new Exception("Cannot have double complex root with real coefficients.");
-            }
-        }
-
-        // returns a string of the equation and root in a nice format
         private static string Parser(Dictionary<string, int> coefficients, List<double> roots)
         {
             string aTerm = (coefficients["a"] == 1) ? "" : $"{coefficients["a"]}";
