@@ -13,11 +13,31 @@ namespace MathematicsQuestionGeneratorTests.Models.QuadraticEquations
         public void CheckRealRootsAreCalculatedCorrectly()
         {
             int a = 958, b = -324, c = -902;
-            var exceptedSolutions = new List<double>() { -0.816, 1.154 };
+            var exceptedRoots = new List<double>() { -0.816, 1.154 };
 
-            var solutions = QuadraticEquationAnalysisFunctions.ComputeRoots(a, b, c).Select(root => Math.Round(root, 3)).ToList();
+            var roots = QuadraticEquationAnalysisFunctions.ComputeRoots(a, b, c).Select(root => Math.Round(root, 3)).ToList();
 
-            CollectionAssert.AreEquivalent(exceptedSolutions, solutions);
+            CollectionAssert.AreEquivalent(exceptedRoots, roots);
+        }
+
+        [TestMethod]
+        public void CheckImaginaryRootsReturnNaN()
+        {
+            int a = 342563, b = -834, c = 22034;
+
+            var roots = QuadraticEquationAnalysisFunctions.ComputeRoots(a, b, c);
+
+            Assert.AreEqual(roots.Count(root => Double.IsNaN(root)), 2);
+        }
+
+        [TestMethod]
+        public void CheckDiscriminantIsCorrect()
+        {
+            int a = 92347, b = -3252, c = 1432;
+
+            var discriminant = QuadraticEquationAnalysisFunctions.ComputeDiscriminant(a, b, c);
+
+            Assert.AreEqual(-518388112, discriminant);
         }
     }
 }
