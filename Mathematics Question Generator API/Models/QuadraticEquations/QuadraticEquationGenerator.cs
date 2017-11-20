@@ -49,7 +49,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
             int b = coefficients["b"];
             int c = coefficients["c"];
 
-            var roots = new List<double>() { (-b + Math.Sqrt(b * b - 4 * a * c)) / (2 * a), (-b - Math.Sqrt(b * b - 4 * a * c)) / (2 * a) };
+            var roots = QuadraticEquationAnalysisFunctions.ComputeRoots(a, b, c);
 
             var roundedRoots = roots.Select(root => Math.Round(root, parameters.DecimalPlaces)).ToList();
 
@@ -63,7 +63,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
             // for performance reasons generate double root equations separately
             if (parameters.RequireDoubleRoot)
             {
-                return GenerateDoubleRootcoefficients();
+                return GenerateDoubleRootCoefficients();
             }
 
             var numberOfTries = 0;
@@ -87,7 +87,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
          * restriction that u^2 <= aUpper and v^2 <= cUpper which helps narrow down the possible valid values.
          * This also means we only need to check for b being in range.
          * */
-        private Dictionary<string, int> GenerateDoubleRootcoefficients()
+        private Dictionary<string, int> GenerateDoubleRootCoefficients()
         {
             var coefficients = new Dictionary<string, int>();
 
@@ -111,7 +111,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
             var b = coefficients["b"];
             var c = coefficients["c"];
 
-            var discriminant = b * b - 4 * a * c;
+            var discriminant = QuadraticEquationAnalysisFunctions.ComputeDiscriminant(a, b, c);
 
             if ((a == 0) || ((b == 0) && (c == 0)))
             {

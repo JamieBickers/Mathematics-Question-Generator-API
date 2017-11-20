@@ -19,7 +19,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
         public bool RequireComplexRoot { get; set; } = false;
         public bool RequireDoubleRoot { get; set; } = false;
 
-        public QuadraticEquationGeneratorParameters(int aLowerBound = -100, int bLowerBound = -100, int cLowerBound = -100, int aUpperBound = 100,
+        public QuadraticEquationGeneratorParameters(int aLowerBound = -10, int bLowerBound = -100, int cLowerBound = -100, int aUpperBound = 10,
             int bUpperBound = 100, int cUpperBound = 100, int decimalPlaces = 2, bool requireIntegerRoot = false,
             bool requireRealRoot = false, bool requireComplexRoot = false, bool requireDoubleRoot = false)
         {

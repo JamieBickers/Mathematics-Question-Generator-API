@@ -7,11 +7,12 @@ namespace MathematicsQuestionGeneratorAPI.Models.RandomNumberGenerators
 {
     public class FixedRandomIntegerGenerator : IRandomIntegerGenerator
     {
-        private const int seed = 1000;
+        private readonly int seed;
         private Random builtInRandom;
 
-        public FixedRandomIntegerGenerator()
+        public FixedRandomIntegerGenerator(int seed)
         {
+            this.seed = seed;
             builtInRandom = new Random(seed);
         }
         public int GenerateRandomInteger(int lowerBound, int upperBound)
