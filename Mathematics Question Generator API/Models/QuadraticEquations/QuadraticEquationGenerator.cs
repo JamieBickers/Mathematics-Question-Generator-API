@@ -1,26 +1,28 @@
-﻿using MathematicsQuestionGeneratorAPI.Models.QuadraticEquations;
-using MathematicsQuestionGeneratorAPI.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MathematicsQuestionGeneratorAPI.Models.RandomNumberGenerators;
 
 namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
 {
     public class QuadraticEquationGenerator : IQuestionGenerator<QuadraticEquation>
     {
-        private const int MAX_NUMBER_OF_TRIES = 10000;
+        private const int MAX_NUMBER_OF_TRIES = 1000000;
 
         private QuadraticEquationGeneratorParameters parameters;
+        private IRandomIntegerGenerator randomNumberGenerator;
 
-        public QuadraticEquationGenerator()
+        public QuadraticEquationGenerator(IRandomIntegerGenerator randomNumberGenerator)
         {
             var defaultParameters = new QuadraticEquationGeneratorParameters();
             parameters = defaultParameters;
+            this.randomNumberGenerator = randomNumberGenerator;
         }
 
-        public QuadraticEquationGenerator(QuadraticEquationGeneratorParameters parameters)
+        public QuadraticEquationGenerator(QuadraticEquationGeneratorParameters parameters, IRandomIntegerGenerator randomNumberGenerator)
         {
             this.parameters = parameters;
+            this.randomNumberGenerator = randomNumberGenerator;
         }
 
         public QuadraticEquation GenerateQuestionAndAnswer()
@@ -87,15 +89,14 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
          * */
         private Dictionary<string, int> GenerateDoubleRootcoefficients()
         {
-            Random randomNumberGenerator = new Random();
             var coefficients = new Dictionary<string, int>();
 
             do
             {
                 int uUpperBound = (int)Math.Round(Math.Sqrt(parameters.AUpperBound));
                 int vUpperBound = (int)Math.Round(Math.Sqrt(parameters.CUpperBound));
-                int u = randomNumberGenerator.Next(uUpperBound);
-                int v = randomNumberGenerator.Next(vUpperBound);
+                int u = randomNumberGenerator.GenerateRandomInteger(uUpperBound);
+                int v = randomNumberGenerator.GenerateRandomInteger(vUpperBound);
                 coefficients["a"] = u * u;
                 coefficients["b"] = 2 * u * v;
                 coefficients["c"] = v * v;
@@ -136,12 +137,11 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
 
         private Dictionary<string, int> GenerateRandomcoefficients()
         {
-            Random randomNumberGenerator = new Random();
             var coefficients = new Dictionary<string, int>
             {
-                { "a", randomNumberGenerator.Next(parameters.ALowerBound, parameters.AUpperBound) },
-                { "b", randomNumberGenerator.Next(parameters.BLowerBound, parameters.BUpperBound) },
-                { "c", randomNumberGenerator.Next(parameters.CLowerBound, parameters.CUpperBound) }
+                { "a", randomNumberGenerator.GenerateRandomInteger(parameters.ALowerBound, parameters.AUpperBound) },
+                { "b", randomNumberGenerator.GenerateRandomInteger(parameters.BLowerBound, parameters.BUpperBound) },
+                { "c", randomNumberGenerator.GenerateRandomInteger(parameters.CLowerBound, parameters.CUpperBound) }
             };
 
             return coefficients;
