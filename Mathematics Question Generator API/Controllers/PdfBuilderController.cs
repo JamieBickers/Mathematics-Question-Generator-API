@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using MathematicsQuestionGeneratorAPI.Models.PdfBuilders;
+using MathematicsQuestionGeneratorAPI.Models.QuadraticEquations;
 
 namespace MathematicsQuestionGeneratorAPI.Controllers
 {
@@ -12,7 +13,7 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
         [HttpGet]
         public void Post()
         {
-            var pdfBuilder = new BasicPdfBuilder(new List<string>());
+            var pdfBuilder = new BasicPdfBuilder(new List<QuadraticEquation>());
             pdfBuilder.BuildPdf(@"C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\testFile.pdf", "testFile.txt");
         }
     }

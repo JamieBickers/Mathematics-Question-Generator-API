@@ -40,7 +40,8 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
         public string GenerateQuestionAndAnswerAsString()
         {
             QuadraticEquation quadraticEquation = GenerateQuestionAndAnswer();
-            return Parser(quadraticEquation.Coefficients, quadraticEquation.Roots);
+            return QuadraticEquationParser.ParseToString(quadraticEquation.Coefficients["a"], quadraticEquation.Coefficients["b"],
+                quadraticEquation.Coefficients["c"], quadraticEquation.Roots[0], quadraticEquation.Roots[1]);
         }
 
         private List<double> CalculateRoots(Dictionary<string, int> coefficients)
@@ -145,15 +146,6 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
             };
 
             return coefficients;
-        }
-
-        private static string Parser(Dictionary<string, int> coefficients, List<double> roots)
-        {
-            string aTerm = (coefficients["a"] == 1) ? "" : $"{coefficients["a"]}";
-            string bTerm = (coefficients["b"] < 0) ? $"{coefficients["b"]}" : $"+{coefficients["b"]}";
-            string cTerm = (coefficients["c"] < 0) ? $"{coefficients["c"]}" : $"+{coefficients["c"]}";
-
-            return $"Question: {aTerm}x^2{bTerm}x{cTerm}=0\nRoots: {roots[0].ToString()}, {roots[1].ToString()}";
         }
     }
 }
