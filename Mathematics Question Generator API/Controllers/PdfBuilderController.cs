@@ -2,6 +2,7 @@
 using MathematicsQuestionGeneratorAPI.Models.PdfBuilders;
 using MathematicsQuestionGeneratorAPI.Models.Wrappers;
 using System.Linq;
+using MathematicsQuestionGeneratorAPI.Models.MailSenders;
 
 namespace MathematicsQuestionGeneratorAPI.Controllers
 {
@@ -26,6 +27,15 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
             }
             var pdfBuilder = new BasicPdfBuilder(parameters);
             pdfBuilder.BuildPdf(@"C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\Worksheets\");
+        }
+
+        [HttpGet]
+        [Route("email")]
+        public string SendEmailTester()
+        {
+            var mailSender = new SmtpMailSender();
+            mailSender.SendEmail();
+            return "success";
         }
     }
 }
