@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using iTextSharp.text;
 using System.IO;
 using iTextSharp.text.pdf;
@@ -14,17 +12,18 @@ namespace MathematicsQuestionGeneratorAPI.Models.PdfBuilders
     {
         private static float MARGIN = 72f;
         private static BaseColor FONT_COLOR = BaseColor.Black;
-        private static float FONT_SIZE = 12f;
-        private static Font FONT = FontFactory.GetFont(FontFactory.HELVETICA, FONT_SIZE, FONT_COLOR);
-        private static int ANSWER_SPACE = 40;
+        private static float FONT_SIZE_BODY = 12f;
+        private static float FONT_SIZE_TITLE = 20f;
+        private static Font FONT_BODY = FontFactory.GetFont(FontFactory.HELVETICA, FONT_SIZE_BODY, FONT_COLOR);
+        private static Font FONT_TITLE = FontFactory.GetFont(FontFactory.HELVETICA, FONT_SIZE_TITLE, FONT_COLOR);
+        private static int ANSWER_SPACE = 34;
         private static int SPACE_BETWEEN_QUESTIONS = 5;
+        private static int SPACE_AFTER_TITLE = 18;
 
         public List<QuadraticEquation> Questions { get; set; }
 
-        public BasicPdfBuilder(List<QuadraticEquation> questions)
+        public BasicPdfBuilder()
         {
-            //Questions = questions;
-
             var integerGenerator = new RandomIntegerGenerator();
             var equationGenerator = new QuadraticEquationGenerator(integerGenerator);
             Questions = new List<QuadraticEquation>();
@@ -35,7 +34,12 @@ namespace MathematicsQuestionGeneratorAPI.Models.PdfBuilders
             }
         }
 
-        public void BuildPdf(string saveLocation, string documentName)
+        public BasicPdfBuilder(List<QuadraticEquationGeneratorParameters> parameters)
+        {
+            Questions = parameters.Select(parameter => (new QuadraticEquationGenerator(parameter, new RandomIntegerGenerator())).GenerateQuestionAndAnswer()).ToList();
+        }
+
+        public void BuildPdf(string saveLocation)
         {
             using (var file = File.Create(saveLocation))
             {
@@ -44,11 +48,22 @@ namespace MathematicsQuestionGeneratorAPI.Models.PdfBuilders
                 var writer = PdfWriter.GetInstance(document, file);
                 document.Open();
 
+                var titleWords = "Quadratic Equations";
+
+                var title = new Paragraph(titleWords);
+                title.Alignment = Element.ALIGN_RIGHT;
+                title.Font = FONT_TITLE;
+                document.Add(title);
+
+                Paragraph line = new Paragraph(new Chunk(new iTextSharp.text.pdf.draw.LineSeparator(0.0F, 100.0F, BaseColor.Black, Element.ALIGN_LEFT, 1)));
+                document.Add(line);
+
                 var openingWords = $"Solve the {Questions.Count} quadratic equations below, giving your answers to 2 decimal places." +
                     $"If they are unsolveable, write \"no solution\".";
 
                 var introductoryParagraph = new Paragraph();
                 introductoryParagraph.Add(openingWords);
+                introductoryParagraph.SpacingBefore = SPACE_AFTER_TITLE;
                 introductoryParagraph.SpacingAfter = 10;
 
                 document.Add(introductoryParagraph);
@@ -73,7 +88,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.PdfBuilders
             question.SpacingBefore = SPACE_BETWEEN_QUESTIONS;
             question.SpacingAfter = ANSWER_SPACE;
             question.Alignment = Element.ALIGN_LEFT;
-            question.Font = FONT;
+            question.Font = FONT_BODY;
             question.Add($"\t\t\t{questionNumber + 1}. ");
             question.Add(QuadraticEquationParser.ParseToPdfParagraph(a, b, c));
             document.Add(question);
@@ -83,7 +98,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.PdfBuilders
             answerArea.SpacingBefore = ANSWER_SPACE;
             answerArea.SpacingAfter = SPACE_BETWEEN_QUESTIONS;
             answerArea.Alignment = Element.ALIGN_RIGHT;
-            answerArea.Font = FONT;
+            answerArea.Font = FONT_BODY;
             answerArea.Add("Answer....................");
             document.Add(answerArea);
         }

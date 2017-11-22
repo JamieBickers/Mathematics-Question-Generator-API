@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MathematicsQuestionGeneratorAPI.Models.PdfBuilders;
-using MathematicsQuestionGeneratorAPI.Models.QuadraticEquations;
+using MathematicsQuestionGeneratorAPI.Models.Wrappers;
+using System.Linq;
 
 namespace MathematicsQuestionGeneratorAPI.Controllers
 {
@@ -9,12 +9,23 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
     [Route("api/PdfBuilder")]
     public class PdfBuilderController : Controller
     {     
-        // POST: api/PdfBuilder
         [HttpGet]
-        public void Post()
+        public void GenerateDefaultQuadraticEquationWorksheet()
         {
-            var pdfBuilder = new BasicPdfBuilder(new List<QuadraticEquation>());
-            pdfBuilder.BuildPdf(@"C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\testFile.pdf", "testFile.txt");
+            var pdfBuilder = new BasicPdfBuilder();
+            pdfBuilder.BuildPdf(@"C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\testFile.pdf");
+        }
+
+        [HttpPost]
+        public void GenerateUserSpecifiedQuadraticEquationWorksheet([FromBody] QuadraticEquationGeneratorParamaterListWrapper parametersWrapper)
+        {
+            var parameters = parametersWrapper.parameters;
+            foreach (var parameter in parameters)
+            {
+                parameter.Fill();
+            }
+            var pdfBuilder = new BasicPdfBuilder(parameters);
+            pdfBuilder.BuildPdf(@"C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\testFile.pdf");
         }
     }
 }
