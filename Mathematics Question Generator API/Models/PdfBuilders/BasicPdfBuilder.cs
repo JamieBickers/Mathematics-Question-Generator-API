@@ -5,6 +5,7 @@ using System.IO;
 using iTextSharp.text.pdf;
 using MathematicsQuestionGeneratorAPI.Models.QuadraticEquations;
 using MathematicsQuestionGeneratorAPI.Models.RandomNumberGenerators;
+using System;
 
 namespace MathematicsQuestionGeneratorAPI.Models.PdfBuilders
 {
@@ -41,66 +42,92 @@ namespace MathematicsQuestionGeneratorAPI.Models.PdfBuilders
 
         public void BuildPdf(string saveLocation)
         {
-            using (var file = File.Create(saveLocation))
+            using (var questionSheet = File.Create(saveLocation + "Question Sheet.pdf"))
+            using (var answerSheet = File.Create(saveLocation + "Answer Sheet.pdf"))
             {
-                var document = new Document(PageSize.A4, MARGIN, MARGIN, MARGIN, MARGIN);
-
-                var writer = PdfWriter.GetInstance(document, file);
-                document.Open();
-
-                var titleWords = "Quadratic Equations";
-
-                var title = new Paragraph(titleWords);
-                title.Alignment = Element.ALIGN_RIGHT;
-                title.Font = FONT_TITLE;
-                document.Add(title);
-
-                Paragraph line = new Paragraph(new Chunk(new iTextSharp.text.pdf.draw.LineSeparator(0.0F, 100.0F, BaseColor.Black, Element.ALIGN_LEFT, 1)));
-                document.Add(line);
-
-                var openingWords = $"Solve the {Questions.Count} quadratic equations below, giving your answers to 2 decimal places." +
-                    $"If they are unsolveable, write \"no solution\".";
-
-                var introductoryParagraph = new Paragraph();
-                introductoryParagraph.Add(openingWords);
-                introductoryParagraph.SpacingBefore = SPACE_AFTER_TITLE;
-                introductoryParagraph.SpacingAfter = 10;
-
-                document.Add(introductoryParagraph);
-
-                for (var i = 0; i < Questions.Count; i++)
-                {
-                    WriteSingleQuestionAndAnswerToDocument(document, Questions[i], i, false);
-                }
-
-                document.Close();
+                WriteDocumentToGivenFile(questionSheet, false);
+                WriteDocumentToGivenFile(answerSheet, true);
             }
         }
 
-        private void WriteSingleQuestionAndAnswerToDocument(Document document, QuadraticEquation equation, int questionNumber, bool ShowAnswer)
+        private void WriteDocumentToGivenFile(FileStream file, bool displayAnswers)
+        {
+            var document = new Document(PageSize.A4, MARGIN, MARGIN, MARGIN, MARGIN);
+
+            var writer = PdfWriter.GetInstance(document, file);
+            document.Open();
+
+            var titleWords = "Quadratic Equations";
+
+            var title = new Paragraph(titleWords);
+            title.Alignment = Element.ALIGN_RIGHT;
+            title.Font = FONT_TITLE;
+            document.Add(title);
+
+            Paragraph line = new Paragraph(new Chunk(new iTextSharp.text.pdf.draw.LineSeparator(0.0F, 100.0F, BaseColor.Black, Element.ALIGN_LEFT, 1)));
+            document.Add(line);
+
+            var openingWords = $"Solve the {Questions.Count} quadratic equations below, giving your answers to 2 decimal places." +
+                $"If they are unsolveable, write \"no solution\".";
+
+            var introductoryParagraph = new Paragraph();
+            introductoryParagraph.Add(openingWords);
+            introductoryParagraph.SpacingBefore = SPACE_AFTER_TITLE;
+            introductoryParagraph.SpacingAfter = 10;
+
+            document.Add(introductoryParagraph);
+
+            for (var i = 0; i < Questions.Count; i++)
+            {
+                WriteSingleQuestionAndAnswerToDocument(document, Questions[i], i, displayAnswers);
+            }
+
+            document.Close();
+        }
+
+        private void WriteSingleQuestionAndAnswerToDocument(Document document, QuadraticEquation equation, int questionNumber, bool showAnswer)
         {
             var a = Questions[questionNumber].Coefficients["a"];
             var b = Questions[questionNumber].Coefficients["b"];
             var c = Questions[questionNumber].Coefficients["c"];
 
             // write question
-            var question = new Paragraph();
-            question.SpacingBefore = SPACE_BETWEEN_QUESTIONS;
-            question.SpacingAfter = ANSWER_SPACE;
-            question.Alignment = Element.ALIGN_LEFT;
-            question.Font = FONT_BODY;
+            var question = new Paragraph
+            {
+                SpacingBefore = SPACE_BETWEEN_QUESTIONS,
+                SpacingAfter = ANSWER_SPACE,
+                Alignment = Element.ALIGN_LEFT,
+                Font = FONT_BODY
+            };
             question.Add($"\t\t\t{questionNumber + 1}. ");
             question.Add(QuadraticEquationParser.ParseToPdfParagraph(a, b, c));
             document.Add(question);
 
             // write answer area
-            var answerArea = new Paragraph();
-            answerArea.SpacingBefore = ANSWER_SPACE;
-            answerArea.SpacingAfter = SPACE_BETWEEN_QUESTIONS;
-            answerArea.Alignment = Element.ALIGN_RIGHT;
-            answerArea.Font = FONT_BODY;
-            answerArea.Add("Answer....................");
+            var answerArea = new Paragraph
+            {
+                SpacingBefore = ANSWER_SPACE,
+                SpacingAfter = SPACE_BETWEEN_QUESTIONS,
+                Alignment = Element.ALIGN_RIGHT,
+                Font = FONT_BODY
+            };
+            answerArea.Add(WriteAnswerSection(equation, showAnswer));
             document.Add(answerArea);
+        }
+
+        private string WriteAnswerSection(QuadraticEquation equation, bool showAnswer)
+        {
+            var formattedRoot1 = (Double.IsNaN(equation.Roots[0]) ? "no solution" : Math.Round(equation.Roots[0], 2).ToString());
+            var formattedRoot2 = (Double.IsNaN(equation.Roots[1]) ? "" : Math.Round(equation.Roots[1], 2).ToString());
+
+            if (showAnswer)
+            {
+                return $"Answer: {formattedRoot1}, {formattedRoot2}";
+            }
+            else
+            {
+                return "Answer....................";
+            }
         }
     }
 }

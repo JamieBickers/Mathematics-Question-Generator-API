@@ -13,7 +13,7 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
         public void GenerateDefaultQuadraticEquationWorksheet()
         {
             var pdfBuilder = new BasicPdfBuilder();
-            pdfBuilder.BuildPdf(@"C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\testFile.pdf");
+            pdfBuilder.BuildPdf(@"C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\Worksheets\");
         }
 
         [HttpPost]
@@ -25,7 +25,7 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
                 parameter.Fill();
             }
             var pdfBuilder = new BasicPdfBuilder(parameters);
-            pdfBuilder.BuildPdf(@"C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\testFile.pdf");
+            pdfBuilder.BuildPdf(@"C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\Worksheets\");
         }
     }
 }
