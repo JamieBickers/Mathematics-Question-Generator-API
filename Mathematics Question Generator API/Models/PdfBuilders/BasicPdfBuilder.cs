@@ -40,21 +40,31 @@ namespace MathematicsQuestionGeneratorAPI.Models.PdfBuilders
             Questions = parameters.Select(parameter => (new QuadraticEquationGenerator(parameter, new RandomIntegerGenerator())).GenerateQuestionAndAnswer()).ToList();
         }
 
-        public void BuildPdf(string saveLocation)
+        public void CreatePdfsAndSaveLocallyAsFiles(string saveLocation)
         {
             using (var questionSheet = File.Create(saveLocation + "Question Sheet.pdf"))
             using (var answerSheet = File.Create(saveLocation + "Answer Sheet.pdf"))
             {
-                WriteDocumentToGivenFile(questionSheet, false);
-                WriteDocumentToGivenFile(answerSheet, true);
+                WriteDocumentToGivenStream(questionSheet, false);
+                WriteDocumentToGivenStream(answerSheet, true);
             }
         }
 
-        private void WriteDocumentToGivenFile(FileStream file, bool displayAnswers)
+        public List<MemoryStream> CreatePdfsAsMemoryStreams()
+        {
+            var questionSheet = new MemoryStream();
+            var answerSheet = new MemoryStream();
+            WriteDocumentToGivenStream(questionSheet, false);
+            WriteDocumentToGivenStream(answerSheet, true);
+
+            return new List<MemoryStream>() { questionSheet, answerSheet };
+        }
+
+        private void WriteDocumentToGivenStream(Stream stream, bool displayAnswers)
         {
             var document = new Document(PageSize.A4, MARGIN, MARGIN, MARGIN, MARGIN);
 
-            var writer = PdfWriter.GetInstance(document, file);
+            var writer = PdfWriter.GetInstance(document, stream);
             document.Open();
 
             var titleWords = "Quadratic Equations";
