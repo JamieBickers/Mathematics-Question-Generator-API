@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MathematicsQuestionGeneratorAPI.Models.PdfBuilders;
-using System.Linq;
 using MathematicsQuestionGeneratorAPI.Models.MailSenders;
 using MathematicsQuestionGeneratorAPI.Models;
 
