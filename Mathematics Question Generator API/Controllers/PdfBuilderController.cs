@@ -19,6 +19,11 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
 
             var mailSender = new SmtpMailSender();
             mailSender.SendEmail(emailAddress, streams);
+
+            foreach (var stream in streams)
+            {
+                stream.Dispose();
+            }
         }
 
         [Route("specified")]
@@ -32,10 +37,16 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
             }
 
             var pdfBuilder = new BasicPdfBuilder(equationParameters);
+
             var streams = pdfBuilder.CreatePdfsAsMemoryStreams();
 
             var mailSender = new SmtpMailSender();
             mailSender.SendEmail(worksheetParameters.EmailAddress, streams);
+
+            foreach (var stream in streams)
+            {
+                stream.Dispose();
+            }
         }
     }
 }
