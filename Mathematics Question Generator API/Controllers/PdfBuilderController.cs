@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace MathematicsQuestionGeneratorAPI.Controllers
 {
-    [Produces("application/json")] //TODO: What does this do?
+    [Produces("application/json")]
     [Route("api/PdfBuilder")]
     public class PdfBuilderController : Controller
     {     

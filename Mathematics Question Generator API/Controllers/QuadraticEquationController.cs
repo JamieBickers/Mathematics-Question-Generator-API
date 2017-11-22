@@ -6,6 +6,7 @@ using System.Reflection;
 
 namespace MathematicsQuestionGeneratorAPI.Controllers
 {
+    [Produces("application/json")]
     [Route("api/QuadraticEquation")]
     public class QuadraticEquationController : Controller
     {
