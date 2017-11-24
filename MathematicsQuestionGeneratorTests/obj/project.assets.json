@@ -14,7 +14,7 @@
           "lib/netstandard2.0/CoreCompat.System.Drawing.dll": {}
         }
       },
-      "iTextSharp.LGPLv2.Core/1.3.2": {
+      "iTextSharp.LGPLv2.Core/1.3.3": {
         "type": "package",
         "dependencies": {
           "CoreCompat.System.Drawing.v2": "5.2.0-preview1-r131",
@@ -3195,19 +3195,6 @@
           "lib/netstandard1.3/Newtonsoft.Json.Bson.dll": {}
         }
       },
-      "Ninject/3.3.4": {
-        "type": "package",
-        "dependencies": {
-          "System.Reflection.Emit.ILGeneration": "4.3.0",
-          "System.Reflection.Emit.Lightweight": "4.3.0"
-        },
-        "compile": {
-          "lib/netstandard2.0/Ninject.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.0/Ninject.dll": {}
-        }
-      },
       "NuGet.Frameworks/4.0.0": {
         "type": "package",
         "dependencies": {
@@ -5570,80 +5557,6 @@
           "lib/netstandard1.3/Microsoft.WindowsAzure.Storage.dll": {}
         }
       },
-      "xunit/2.3.1": {
-        "type": "package",
-        "dependencies": {
-          "xunit.analyzers": "0.7.0",
-          "xunit.assert": "[2.3.1]",
-          "xunit.core": "[2.3.1]"
-        }
-      },
-      "xunit.abstractions/2.0.1": {
-        "type": "package",
-        "dependencies": {
-          "NETStandard.Library": "1.6.0"
-        },
-        "compile": {
-          "lib/netstandard1.0/xunit.abstractions.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard1.0/xunit.abstractions.dll": {}
-        }
-      },
-      "xunit.analyzers/0.7.0": {
-        "type": "package"
-      },
-      "xunit.assert/2.3.1": {
-        "type": "package",
-        "dependencies": {
-          "NETStandard.Library": "1.6.1"
-        },
-        "compile": {
-          "lib/netstandard1.1/xunit.assert.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard1.1/xunit.assert.dll": {}
-        }
-      },
-      "xunit.core/2.3.1": {
-        "type": "package",
-        "dependencies": {
-          "xunit.extensibility.core": "[2.3.1]",
-          "xunit.extensibility.execution": "[2.3.1]"
-        },
-        "build": {
-          "build/_._": {}
-        },
-        "buildMultiTargeting": {
-          "buildMultiTargeting/_._": {}
-        }
-      },
-      "xunit.extensibility.core/2.3.1": {
-        "type": "package",
-        "dependencies": {
-          "NETStandard.Library": "1.6.1",
-          "xunit.abstractions": "2.0.1"
-        },
-        "compile": {
-          "lib/netstandard1.1/xunit.core.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard1.1/xunit.core.dll": {}
-        }
-      },
-      "xunit.extensibility.execution/2.3.1": {
-        "type": "package",
-        "dependencies": {
-          "NETStandard.Library": "1.6.1",
-          "xunit.extensibility.core": "[2.3.1]"
-        },
-        "compile": {
-          "lib/netstandard1.1/xunit.execution.dotnet.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard1.1/xunit.execution.dotnet.dll": {}
-        }
-      },
       "MathematicsQuestionGeneratorAPI/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v2.0",
@@ -5651,9 +5564,7 @@
           "Microsoft.AspNetCore.All": "2.0.3",
           "Microsoft.NETCore.App": "2.0.0",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "2.0.1",
-          "Ninject": "3.3.4",
-          "iTextSharp.LGPLv2.Core": "1.3.2",
-          "xunit": "2.3.1"
+          "iTextSharp.LGPLv2.Core": "1.3.3"
         },
         "compile": {
           "bin/placeholder/MathematicsQuestionGeneratorAPI.dll": {}
@@ -5675,12 +5586,12 @@
         "lib/netstandard2.0/CoreCompat.System.Drawing.dll"
       ]
     },
-    "iTextSharp.LGPLv2.Core/1.3.2": {
-      "sha512": "6WiziO8DQUfKwoh235gngxTkTPik6lollx6oBhxjQCqb0EhFvzQ5VU/SZGzdKcYp8roQJ0OFa0k/k4S7OYn2WQ==",
+    "iTextSharp.LGPLv2.Core/1.3.3": {
+      "sha512": "+JtKEQnWXp9Vmw3xLOyTM/HwTk2DoginCecxGR57nb/C7EtOIYt05KNl4EFjRU/p37WD7e5NDig8XcOdT9YgTQ==",
       "type": "package",
-      "path": "itextsharp.lgplv2.core/1.3.2",
+      "path": "itextsharp.lgplv2.core/1.3.3",
       "files": [
-        "itextsharp.lgplv2.core.1.3.2.nupkg.sha512",
+        "itextsharp.lgplv2.core.1.3.3.nupkg.sha512",
         "itextsharp.lgplv2.core.nuspec",
         "lib/netstandard1.3/iTextSharp.LGPLv2.Core.dll",
         "lib/netstandard1.3/iTextSharp.LGPLv2.Core.xml",
@@ -9050,19 +8961,6 @@
         "lib/netstandard1.3/Newtonsoft.Json.Bson.xml",
         "newtonsoft.json.bson.1.0.1.nupkg.sha512",
         "newtonsoft.json.bson.nuspec"
-      ]
-    },
-    "Ninject/3.3.4": {
-      "sha512": "CmbWW97FfJuh4LEOVZM/spqXl4KAulRUjqeMwRd5J9rDMQArmIYaDMU3pyzXXHT062tbF0OPIMwI7tSOtprPfg==",
-      "type": "package",
-      "path": "ninject/3.3.4",
-      "files": [
-        "lib/net45/Ninject.dll",
-        "lib/net45/Ninject.xml",
-        "lib/netstandard2.0/Ninject.dll",
-        "lib/netstandard2.0/Ninject.xml",
-        "ninject.3.3.4.nupkg.sha512",
-        "ninject.nuspec"
       ]
     },
     "NuGet.Frameworks/4.0.0": {
@@ -14612,92 +14510,6 @@
         "lib/wpa/Microsoft.WindowsAzure.Storage.pdb",
         "windowsazure.storage.8.1.4.nupkg.sha512",
         "windowsazure.storage.nuspec"
-      ]
-    },
-    "xunit/2.3.1": {
-      "sha512": "IWux0xXfZ/bC7SgooK5rmW5KwCwFg9GFslmPxA7+pJsT+2SRyhOfOgNUXDd7B09UN4f6kogRT2TqNi6gbWEspA==",
-      "type": "package",
-      "path": "xunit/2.3.1",
-      "files": [
-        "xunit.2.3.1.nupkg.sha512",
-        "xunit.nuspec"
-      ]
-    },
-    "xunit.abstractions/2.0.1": {
-      "sha512": "bDm/zdG5rnRDsobKuKwrvL4HccBdC0uvT12be6fG12P3d1U7u9Wkvfoq/PM2GeyIeb0Dtcmm/7k2oaawiqQ2Dg==",
-      "type": "package",
-      "path": "xunit.abstractions/2.0.1",
-      "files": [
-        "lib/net35/xunit.abstractions.dll",
-        "lib/net35/xunit.abstractions.xml",
-        "lib/netstandard1.0/xunit.abstractions.dll",
-        "lib/netstandard1.0/xunit.abstractions.xml",
-        "xunit.abstractions.2.0.1.nupkg.sha512",
-        "xunit.abstractions.nuspec"
-      ]
-    },
-    "xunit.analyzers/0.7.0": {
-      "sha512": "pEjPJ/pd+r9blGBJ9bXg961phkAiCl4k2DwxwWGEZyYC/7Tb1xJ1az0H18uGANX7zFIkvE5ZO1eZZ4vU7gny7w==",
-      "type": "package",
-      "path": "xunit.analyzers/0.7.0",
-      "files": [
-        "analyzers/dotnet/cs/xunit.analyzers.dll",
-        "tools/install.ps1",
-        "tools/uninstall.ps1",
-        "xunit.analyzers.0.7.0.nupkg.sha512",
-        "xunit.analyzers.nuspec"
-      ]
-    },
-    "xunit.assert/2.3.1": {
-      "sha512": "+mUMp3aJOS0ag3qJ2tUhVa930KhwjyypxXT4Ab8lQozEQN8/xgkblQnYs0woIWpr2NbzEOxsZojytl9NBVRKxg==",
-      "type": "package",
-      "path": "xunit.assert/2.3.1",
-      "files": [
-        "lib/netstandard1.1/xunit.assert.dll",
-        "lib/netstandard1.1/xunit.assert.xml",
-        "xunit.assert.2.3.1.nupkg.sha512",
-        "xunit.assert.nuspec"
-      ]
-    },
-    "xunit.core/2.3.1": {
-      "sha512": "LOG4qOFuVQcjYcIuZbKeo03Uvng3lSb2gZJU9ANljwCf+PTd//iAMZS5qcJQZrjhndc4aOUlJGQy5wa0+/iZ6w==",
-      "type": "package",
-      "path": "xunit.core/2.3.1",
-      "files": [
-        "build/xunit.core.props",
-        "build/xunit.core.targets",
-        "build/xunit.execution.desktop.dll",
-        "buildMultiTargeting/xunit.core.props",
-        "buildMultiTargeting/xunit.core.targets",
-        "xunit.core.2.3.1.nupkg.sha512",
-        "xunit.core.nuspec"
-      ]
-    },
-    "xunit.extensibility.core/2.3.1": {
-      "sha512": "1mgYqXeQfU+7zcSRW8/5Uf1jVZ5+5WELmi+BuRTh0xu/x0Q0gK0SuR3FLUF4BSd8sfZzvrRUrhWj3ltpyFxhrg==",
-      "type": "package",
-      "path": "xunit.extensibility.core/2.3.1",
-      "files": [
-        "lib/netstandard1.1/xunit.core.dll",
-        "lib/netstandard1.1/xunit.core.dll.tdnet",
-        "lib/netstandard1.1/xunit.core.xml",
-        "lib/netstandard1.1/xunit.runner.tdnet.dll",
-        "lib/netstandard1.1/xunit.runner.utility.net452.dll",
-        "xunit.extensibility.core.2.3.1.nupkg.sha512",
-        "xunit.extensibility.core.nuspec"
-      ]
-    },
-    "xunit.extensibility.execution/2.3.1": {
-      "sha512": "i8xrHfKC5dyBWQ7I15FePzm0m8KNToBsTleCCQbOQuXRPZIvupd4nnfaCPeJuKHHe7yJ8JGtWxjIgw0ow/cMhg==",
-      "type": "package",
-      "path": "xunit.extensibility.execution/2.3.1",
-      "files": [
-        "lib/net452/xunit.execution.desktop.dll",
-        "lib/net452/xunit.execution.desktop.xml",
-        "lib/netstandard1.1/xunit.execution.dotnet.dll",
-        "lib/netstandard1.1/xunit.execution.dotnet.xml",
-        "xunit.extensibility.execution.2.3.1.nupkg.sha512",
-        "xunit.extensibility.execution.nuspec"
       ]
     },
     "MathematicsQuestionGeneratorAPI/1.0.0": {

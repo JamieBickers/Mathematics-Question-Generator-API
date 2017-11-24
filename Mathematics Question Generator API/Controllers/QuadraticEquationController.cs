@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MathematicsQuestionGeneratorAPI.Models.QuadraticEquations;
 using MathematicsQuestionGeneratorAPI.Models.RandomNumberGenerators;
-using Ninject;
 using System.Reflection;
 
 namespace MathematicsQuestionGeneratorAPI.Controllers
@@ -12,11 +11,9 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
     {
         private readonly IRandomIntegerGenerator randomIntegerGenerator;
 
-        public QuadraticEquationController()
+        public QuadraticEquationController(IRandomIntegerGenerator randomIntegerGenerator)
         {
-            var kernel = new StandardKernel();
-            kernel.Load(Assembly.GetExecutingAssembly());
-            randomIntegerGenerator = kernel.Get<IRandomIntegerGenerator>();
+            this.randomIntegerGenerator = randomIntegerGenerator;
         }
 
         // returns a random quadratic equation and its roots

@@ -6,22 +6,25 @@ using System.Threading.Tasks;
 
 namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.SimultaneousEquations
 {
-    public class LinearSimultaneousEquationsGenerator : QuestionGenerator<LinearSimultaneousEquations>
+    public class LinearSimultaneousEquationsGenerator : IQuestionGenerator<LinearSimultaneousEquations>
     {
         private LinearSimultaneousEquationsGeneratorParameters parameters;
+        private readonly IRandomIntegerGenerator randomIntegerGenerator;
+        private const int MaxNumberOfTries = 1000000;
 
-        public LinearSimultaneousEquationsGenerator(IRandomIntegerGenerator randomIntegerGenerator) : base(randomIntegerGenerator)
+        public LinearSimultaneousEquationsGenerator(IRandomIntegerGenerator randomIntegerGenerator)
         {
+            this.randomIntegerGenerator = randomIntegerGenerator;
             parameters = new LinearSimultaneousEquationsGeneratorParameters();
         }
 
         public LinearSimultaneousEquationsGenerator(IRandomIntegerGenerator randomIntegerGenerator, LinearSimultaneousEquationsGeneratorParameters parameters)
-            : base(randomIntegerGenerator)
         {
+            this.randomIntegerGenerator = randomIntegerGenerator;
             this.parameters = parameters;
         }
 
-        public override LinearSimultaneousEquations GenerateQuestionAndAnswer()
+        public LinearSimultaneousEquations GenerateQuestionAndAnswer()
         {
             var equations = GenerateValidEquations();
             var solver = new LinearSimultaneousEquationsAnalysisFunctions();

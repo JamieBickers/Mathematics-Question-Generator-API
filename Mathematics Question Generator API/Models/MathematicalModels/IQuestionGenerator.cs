@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MathematicsQuestionGeneratorAPI.Models
 {
-    public interface IQuestionGenerator<QuestionType>
+    public interface IQuestionGenerator<out QuestionType>
     {
         QuestionType GenerateQuestionAndAnswer();
     }

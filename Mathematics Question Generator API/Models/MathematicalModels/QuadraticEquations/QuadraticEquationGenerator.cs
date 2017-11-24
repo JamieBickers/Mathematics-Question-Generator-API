@@ -6,22 +6,26 @@ using MathematicsQuestionGeneratorAPI.Models.MathematicalModels;
 
 namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
 {
-    public class QuadraticEquationGenerator : QuestionGenerator<QuadraticEquation>
+    public class QuadraticEquationGenerator : IQuestionGenerator<QuadraticEquation>
     {
         private QuadraticEquationGeneratorParameters parameters;
+        private readonly IRandomIntegerGenerator randomIntegerGenerator;
+        private const int MaxNumberOfTries = 1000000;
 
-        public QuadraticEquationGenerator(IRandomIntegerGenerator randomNumberGenerator) : base(randomNumberGenerator)
+        public QuadraticEquationGenerator(IRandomIntegerGenerator randomIntegerGenerator)
         {
             var defaultParameters = new QuadraticEquationGeneratorParameters();
             parameters = defaultParameters;
+            this.randomIntegerGenerator = randomIntegerGenerator;
         }
 
-        public QuadraticEquationGenerator(QuadraticEquationGeneratorParameters parameters, IRandomIntegerGenerator randomIntegerGenerator) : base(randomIntegerGenerator)
+        public QuadraticEquationGenerator(QuadraticEquationGeneratorParameters parameters, IRandomIntegerGenerator randomIntegerGenerator)
         {
+            this.randomIntegerGenerator = randomIntegerGenerator;
             this.parameters = parameters;
         }
 
-        public override QuadraticEquation GenerateQuestionAndAnswer()
+        public QuadraticEquation GenerateQuestionAndAnswer()
         {
             if (!parameters.CheckValidParameters())
             {

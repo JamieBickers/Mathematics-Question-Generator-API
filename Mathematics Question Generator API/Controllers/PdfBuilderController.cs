@@ -6,57 +6,37 @@ using MathematicsQuestionGeneratorAPI.Models.RandomNumberGenerators;
 using MathematicsQuestionGeneratorAPI.Models.QuadraticEquations;
 using System.Collections.Generic;
 using MathematicsQuestionGeneratorAPI.Models.MathematicalModels.SimultaneousEquations;
+using MathematicsQuestionGeneratorAPI.Models.MathematicalModels;
+using System;
+using System.Reflection;
 
 namespace MathematicsQuestionGeneratorAPI.Controllers
 {
     [Produces("application/json")]
     [Route("api/worksheet")]
     public class PdfBuilderController : Controller
-    {     
+    {
+        private readonly IRandomIntegerGenerator randomIntegerGenerator;
+
+        public PdfBuilderController(IRandomIntegerGenerator randomIntegerGenerator)
+        {
+            this.randomIntegerGenerator = randomIntegerGenerator;
+        }
+
         [Route("defaultQuadraticEquations")]
         [HttpPost]
         public void GenerateDefaultQuadraticEquationsWorksheet([FromBody] string emailAddress)
         {
-            var integerGenerator = new RandomIntegerGenerator();
-            var equationGenerator = new QuadraticEquationGenerator(integerGenerator);
-            var questions = new List<IQuestion>();
-            for (int i = 0; i < 10; i++)
-            {
-                questions.Add(equationGenerator.GenerateQuestionAndAnswer());
-            }
-            var pdfBuilder = new BasicPdfBuilder(questions, "title", "instructions");
-            var streams = pdfBuilder.CreatePdfsAsMemoryStreams();
-
-            var mailSender = new SmtpMailSender();
-            mailSender.SendEmail(emailAddress, streams);
-
-            foreach (var stream in streams)
-            {
-                stream.Dispose();
-            }
+            IQuestionGenerator<QuadraticEquation> equationGenerator = new QuadraticEquationGenerator(randomIntegerGenerator);
+            BuildAndSendPdf(equationGenerator, emailAddress);
         }
 
         [Route("defaultSimultaneousEquations")]
         [HttpPost]
         public void GenerateDefaultSimultaneousEquationsWorksheet([FromBody] string emailAddress)
         {
-            var integerGenerator = new RandomIntegerGenerator();
-            var equationGenerator = new LinearSimultaneousEquationsGenerator(integerGenerator);
-            var questions = new List<IQuestion>();
-            for (int i = 0; i < 10; i++)
-            {
-                questions.Add(equationGenerator.GenerateQuestionAndAnswer());
-            }
-            var pdfBuilder = new BasicPdfBuilder(questions, "title", "instructions");
-            var streams = pdfBuilder.CreatePdfsAsMemoryStreams();
-
-            var mailSender = new SmtpMailSender();
-            mailSender.SendEmail(emailAddress, streams);
-
-            foreach (var stream in streams)
-            {
-                stream.Dispose();
-            }
+            IQuestionGenerator<LinearSimultaneousEquations> equationGenerator = new LinearSimultaneousEquationsGenerator(randomIntegerGenerator);
+            BuildAndSendPdf(equationGenerator, emailAddress);
         }
 
         [Route("specified")]
@@ -80,6 +60,25 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
             //{
                 //stream.Dispose();
             //}
+        }
+
+        private void BuildAndSendPdf(IQuestionGenerator<IQuestion> questionGenerator, string emailAddress)
+        {
+            var questions = new List<IQuestion>();
+            for (int i = 0; i < 10; i++)
+            {
+                questions.Add(questionGenerator.GenerateQuestionAndAnswer());
+            }
+            var pdfBuilder = new BasicPdfBuilder(questions, "title", "instructions");
+            var streams = pdfBuilder.CreatePdfsAsMemoryStreams();
+
+            var mailSender = new SmtpMailSender();
+            mailSender.SendEmail(emailAddress, streams);
+
+            foreach (var stream in streams)
+            {
+                stream.Dispose();
+            }
         }
     }
 }
