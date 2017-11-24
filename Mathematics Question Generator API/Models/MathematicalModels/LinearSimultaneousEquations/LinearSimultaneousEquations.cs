@@ -1,5 +1,6 @@
 ﻿using iTextSharp.text;
 using iTextSharp.text.pdf;
+using MathematicsQuestionGeneratorAPI.Models.PdfBuilders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +35,10 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
             var secondParsed = ParseLinearEquationToString(SecondEquation);
 
             var firstEquation = new Paragraph($"      {firstParsed}"); // 6 spaces
+            firstEquation.Font = PdfStylings.FONT_BODY;
+
             var secondEquation = new Paragraph($"           {secondParsed}"); // 10 spaces
+            firstEquation.Font = PdfStylings.FONT_BODY;
 
             var question = new Paragraph
             {
@@ -42,7 +46,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
                 firstEquation,
                 secondEquation
             };
-
+            question.Font = PdfStylings.FONT_BODY;
             question.SpacingAfter = 100;
 
             var answerArea = CreateAnswerArea(showAnswers);
@@ -65,6 +69,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
                 Alignment = Element.ALIGN_RIGHT
             };
 
+            answerArea.Font = PdfStylings.FONT_BODY;
             return answerArea;
         }
 

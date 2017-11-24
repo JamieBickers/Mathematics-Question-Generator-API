@@ -15,7 +15,7 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
     {     
         [Route("default")]
         [HttpPost]
-        public void GenerateDefaultQuadraticEquationWorksheet([FromBody] string emailAddress)
+        public void GenerateDefaultWorksheet([FromBody] string emailAddress)
         {
             var integerGenerator = new RandomIntegerGenerator();
             var equationGenerator = new QuadraticEquationGenerator(new QuadraticEquationGeneratorParameters(requireDoubleRoot: true), integerGenerator);

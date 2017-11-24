@@ -3,21 +3,12 @@ using System.Collections.Generic;
 using iTextSharp.text.pdf;
 using System;
 using System.Linq;
+using MathematicsQuestionGeneratorAPI.Models.PdfBuilders;
 
 namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
 {
     public class QuadraticEquation : IQuestion
     {
-        private static float MARGIN = 72f;
-        private static BaseColor FONT_COLOR = BaseColor.Black;
-        private static float FONT_SIZE_BODY = 12f;
-        private static float FONT_SIZE_TITLE = 20f;
-        private static Font FONT_BODY = FontFactory.GetFont(FontFactory.HELVETICA, FONT_SIZE_BODY, FONT_COLOR);
-        private static Font FONT_TITLE = FontFactory.GetFont(FontFactory.HELVETICA, FONT_SIZE_TITLE, FONT_COLOR);
-        private static int ANSWER_SPACE = 34;
-        private static int SPACE_BETWEEN_QUESTIONS = 5;
-        private static int SPACE_AFTER_TITLE = 18;
-
         public Dictionary<string, int> Coefficients;
         public List<double> Roots;
 
@@ -66,6 +57,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
             {
                 Alignment = Element.ALIGN_RIGHT
             };
+            answerArea.Font = PdfStylings.FONT_BODY;
 
             return answerArea;
         }
@@ -102,6 +94,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
             equation.Add(ConvertCTermToString());
             equation.Add("=0");
 
+            equation.Font = PdfStylings.FONT_BODY;
             return equation;
         }
 

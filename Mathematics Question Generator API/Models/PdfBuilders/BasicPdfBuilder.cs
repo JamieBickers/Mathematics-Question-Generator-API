@@ -1,26 +1,12 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using iTextSharp.text;
 using System.IO;
 using iTextSharp.text.pdf;
-using MathematicsQuestionGeneratorAPI.Models.QuadraticEquations;
-using MathematicsQuestionGeneratorAPI.Models.RandomNumberGenerators;
-using System;
 
 namespace MathematicsQuestionGeneratorAPI.Models.PdfBuilders
 {
     public class BasicPdfBuilder
     {
-        private static float MARGIN = 72f;
-        private static BaseColor FONT_COLOR = BaseColor.Black;
-        private static float FONT_SIZE_BODY = 12f;
-        private static float FONT_SIZE_TITLE = 20f;
-        private static Font FONT_BODY = FontFactory.GetFont(FontFactory.HELVETICA, FONT_SIZE_BODY, FONT_COLOR);
-        private static Font FONT_TITLE = FontFactory.GetFont(FontFactory.HELVETICA, FONT_SIZE_TITLE, FONT_COLOR);
-        private static int ANSWER_SPACE = 34;
-        private static int SPACE_BETWEEN_QUESTIONS = 5;
-        private static int SPACE_AFTER_TITLE = 18;
-
         private List<IQuestion> questions;
         private string title;
         private string instrutions;
@@ -54,7 +40,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.PdfBuilders
 
         private void WriteDocumentToGivenStream(Stream stream, bool displayAnswers)
         {
-            Document document = new Document(PageSize.A4, MARGIN, MARGIN, MARGIN, MARGIN);
+            Document document = new Document(PageSize.A4, PdfStylings.MARGIN, PdfStylings.MARGIN, PdfStylings.MARGIN, PdfStylings.MARGIN);
             WriteTitleAndInstructions(stream, document);
 
             var table = new PdfPTable(1);
@@ -77,16 +63,18 @@ namespace MathematicsQuestionGeneratorAPI.Models.PdfBuilders
             Paragraph introductoryParagraph;
             var titleParagraph = new Paragraph(title);
             titleParagraph.Alignment = Element.ALIGN_RIGHT;
-            titleParagraph.Font = FONT_TITLE;
+            titleParagraph.Font = PdfStylings.FONT_TITLE;
             document.Add(titleParagraph);
 
             Paragraph line = new Paragraph(new Chunk(new iTextSharp.text.pdf.draw.LineSeparator(0.0F, 100.0F, BaseColor.Black, Element.ALIGN_LEFT, 1)));
             document.Add(line);
 
-            introductoryParagraph = new Paragraph();
-            introductoryParagraph.Add(instrutions);
-            introductoryParagraph.SpacingBefore = SPACE_AFTER_TITLE;
-            introductoryParagraph.SpacingAfter = 10;
+            introductoryParagraph = new Paragraph
+            {
+                instrutions
+            };
+            introductoryParagraph.SpacingBefore = PdfStylings.SPACE_AFTER_TITLE;
+            introductoryParagraph.SpacingAfter = PdfStylings.SPACE_AFTER_INSTRUCTIONS; ;
 
             document.Add(introductoryParagraph);
         }
