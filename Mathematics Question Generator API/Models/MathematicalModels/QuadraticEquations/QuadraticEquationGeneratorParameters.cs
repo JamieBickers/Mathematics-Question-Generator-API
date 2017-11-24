@@ -7,31 +7,48 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
 {
     public class QuadraticEquationGeneratorParameters : QuestionParameters
     {
+        [DefaultValue(-10)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public int ALowerBound { get; set; }
+
+        [DefaultValue(-100)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public int BLowerBound { get; set; }
+
+        [DefaultValue(-100)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public int CLowerBound { get; set; }
 
-        [DefaultValue(5)]
+        [DefaultValue(10)]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public int AUpperBound { get; set; }
 
-        [DefaultValue(5)]
+        [DefaultValue(100)]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public int BUpperBound { get; set; }
 
-        [DefaultValue(5)]
+        [DefaultValue(100)]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public int CUpperBound { get; set; }
 
-        public int DecimalPlaces { get; set; }
-
+        [DefaultValue(false)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public bool RequireIntegerRoot { get; set; }
+
+        [DefaultValue(false)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public bool RequireRealRoot { get; set; }
+
+        [DefaultValue(false)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public bool RequireComplexRoot { get; set; }
+
+        [DefaultValue(false)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public bool RequireDoubleRoot { get; set; }
 
         public QuadraticEquationGeneratorParameters(int aLowerBound = -10, int bLowerBound = -100, int cLowerBound = -100, int aUpperBound = 10,
-            int bUpperBound = 100, int cUpperBound = 100, int decimalPlaces = 2, bool requireIntegerRoot = false,
+            int bUpperBound = 100, int cUpperBound = 100, bool requireIntegerRoot = false,
             bool requireRealRoot = false, bool requireComplexRoot = false, bool requireDoubleRoot = false)
         {
             ALowerBound = aLowerBound;
@@ -40,7 +57,6 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
             AUpperBound = aUpperBound;
             BUpperBound = bUpperBound;
             CUpperBound = cUpperBound;
-            DecimalPlaces = decimalPlaces;
             RequireIntegerRoot = requireIntegerRoot;
             RequireRealRoot = requireRealRoot;
             RequireComplexRoot = requireComplexRoot;
@@ -58,10 +74,6 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
             {
                 return false;
             }
-            else if (DecimalPlaces < 0)
-            {
-                return false;
-            }
             else if ((RequireIntegerRoot || RequireRealRoot) && RequireComplexRoot)
             {
                 return false;
@@ -73,28 +85,6 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
             else
             {
                 return true;
-            }
-        }
-
-        //TODO: Replace this with something less ugly.
-        public void Fill()
-        {
-            var defaultParameters = new QuadraticEquationGeneratorParameters();
-            Type type = typeof(QuadraticEquationGeneratorParameters);
-            var properties = type.GetProperties();
-
-            foreach (var property in properties)
-            {
-                var value = property.GetValue(this);
-                var defaultValue = property.GetValue(defaultParameters);
-                if (value.GetType() == typeof(int) && (int) value == 0)
-                {
-                    property.SetValue(this, defaultValue);
-                }
-                else if (value.GetType() == typeof(bool) && (bool)value == false)
-                {
-                    property.SetValue(this, defaultValue);
-                }
             }
         }
     }

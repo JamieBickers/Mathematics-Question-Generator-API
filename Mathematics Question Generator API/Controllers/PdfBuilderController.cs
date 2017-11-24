@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using MathematicsQuestionGeneratorAPI.Models.MathematicalModels.SimultaneousEquations;
 using MathematicsQuestionGeneratorAPI.Models.MathematicalModels;
 using System;
-using System.Reflection;
 
 namespace MathematicsQuestionGeneratorAPI.Controllers
 {
@@ -50,6 +49,17 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
                 quadraticEquationGeneratorConstructor, worksheetParameters.QuestionGeneratorParameters, worksheetParameters.EmailAddress);
         }
 
+        [Route("specifiedSimultaneousEquations")]
+        [HttpPost]
+        public void GenerateUserSpecifiedSimultaneousEquationsWorksheet(
+            [FromBody] WorksheetGeneratorParameters<LinearSimultaneousEquations, LinearSimultaneousEquationsGeneratorParameters> worksheetParameters)
+        {
+            Func<LinearSimultaneousEquationsGeneratorParameters, LinearSimultaneousEquationsGenerator> quadraticEquationGeneratorConstructor
+                = parameter => new LinearSimultaneousEquationsGenerator(randomIntegerGenerator, parameter);
+            BuildAndSendPdf<LinearSimultaneousEquationsGenerator, LinearSimultaneousEquationsGeneratorParameters, LinearSimultaneousEquations>(
+                quadraticEquationGeneratorConstructor, worksheetParameters.QuestionGeneratorParameters, worksheetParameters.EmailAddress);
+        }
+
         private void BuildAndSendPdf(IQuestionGenerator<IQuestion> questionGenerator, string emailAddress)
         {
             var questions = new List<IQuestion>();
@@ -57,16 +67,7 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
             {
                 questions.Add(questionGenerator.GenerateQuestionAndAnswer());
             }
-            var pdfBuilder = new BasicPdfBuilder(questions, "title", "instructions");
-            var streams = pdfBuilder.CreatePdfsAsMemoryStreams();
-
-            var mailSender = new SmtpMailSender();
-            mailSender.SendEmail(emailAddress, streams);
-
-            foreach (var stream in streams)
-            {
-                stream.Dispose();
-            }
+            EmailWorksheetWithGivenQuestions(emailAddress, questions);
         }
 
         private void BuildAndSendPdf<GeneratorType, ParameterType, QuestionType>(
@@ -81,6 +82,11 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
                 var generator = generatorConstructor(parameters[i]);
                 questions.Add(generator.GenerateQuestionAndAnswer());
             }
+            EmailWorksheetWithGivenQuestions(emailAddress, questions);
+        }
+
+        private static void EmailWorksheetWithGivenQuestions(string emailAddress, List<IQuestion> questions)
+        {
             var pdfBuilder = new BasicPdfBuilder(questions, "title", "instructions");
             var streams = pdfBuilder.CreatePdfsAsMemoryStreams();
 

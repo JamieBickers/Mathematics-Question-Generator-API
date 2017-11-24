@@ -61,11 +61,11 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
             var solver = new LinearSimultaneousEquationsAnalysisFunctions();
             var solution = solver.CalculateSolution(first, second);
 
-            if (!solution.InfiniteSolutions && parameters.InfiniteSolutions)
+            if (!solution.InfiniteSolutions && parameters.RequireInfiniteSolutions)
             {
                 return false;
             }
-            else if (!solution.NoSolution && parameters.NoSolutions)
+            else if (!solution.NoSolution && parameters.RequireNoSolutions)
             {
                 return false;
             }

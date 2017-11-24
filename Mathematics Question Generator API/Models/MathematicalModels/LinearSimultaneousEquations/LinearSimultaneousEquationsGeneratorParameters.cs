@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,18 +9,32 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
 {
     public class LinearSimultaneousEquationsGeneratorParameters : QuestionParameters
     {
-        public bool UniqueSolution;
-        public bool NoSolutions;
-        public bool InfiniteSolutions;
-        public int CoefficientLowerBound;
-        public int CoefficientUpperBound;
+        [DefaultValue(false)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+        public bool RequireUniqueSolution { get; set; }
 
-        public LinearSimultaneousEquationsGeneratorParameters(bool uniqueSolution = false, bool noSolutions = false,
-            bool infiniteSolutions = false, int coefficientLowerBound = -100, int coefficientUpperBound = 100)
+        [DefaultValue(false)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+        public bool RequireNoSolutions { get; set; }
+
+        [DefaultValue(false)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+        public bool RequireInfiniteSolutions { get; set; }
+
+        [DefaultValue(-100)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+        public int CoefficientLowerBound { get; set; }
+
+        [DefaultValue(100)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+        public int CoefficientUpperBound { get; set; }
+
+        public LinearSimultaneousEquationsGeneratorParameters(bool requireUniqueSolution = false, bool requireNoSolutions = false,
+            bool requireInfiniteSolutions = false, int coefficientLowerBound = -100, int coefficientUpperBound = 100)
         {
-            UniqueSolution = uniqueSolution;
-            NoSolutions = noSolutions;
-            InfiniteSolutions = infiniteSolutions;
+            RequireUniqueSolution = requireUniqueSolution;
+            RequireNoSolutions = requireNoSolutions;
+            RequireInfiniteSolutions = requireInfiniteSolutions;
             CoefficientLowerBound = coefficientLowerBound;
             CoefficientUpperBound = coefficientUpperBound;
             if (!CheckValidParameters())
@@ -29,11 +45,11 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
 
         protected override bool CheckValidParameters()
         {
-            if (UniqueSolution && (NoSolutions || InfiniteSolutions))
+            if (RequireUniqueSolution && (RequireNoSolutions || RequireInfiniteSolutions))
             {
                 return false;
             }
-            else if (NoSolutions && InfiniteSolutions)
+            else if (RequireNoSolutions && RequireInfiniteSolutions)
             {
                 return false;
             }

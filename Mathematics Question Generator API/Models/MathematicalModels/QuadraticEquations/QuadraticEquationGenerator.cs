@@ -47,9 +47,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
 
             var roots = QuadraticEquationAnalysisFunctions.ComputeRoots(a, b, c);
 
-            var roundedRoots = roots.Select(root => Math.Round(root, parameters.DecimalPlaces)).ToList();
-
-            return roundedRoots;
+            return roots;
         }
 
         private Dictionary<string, int> GenerateValidcoefficients()
