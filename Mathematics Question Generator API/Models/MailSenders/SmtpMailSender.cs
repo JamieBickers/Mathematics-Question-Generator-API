@@ -11,7 +11,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.MailSenders
 
     public class SmtpMailSender
     {
-        private static string password = "ENTER_PASSWORD_HERE";
+        private static string password = "Ga173VC0GW9z";
 
         public void SendEmail(string reciever, List<MemoryStream> streams = null)
         {

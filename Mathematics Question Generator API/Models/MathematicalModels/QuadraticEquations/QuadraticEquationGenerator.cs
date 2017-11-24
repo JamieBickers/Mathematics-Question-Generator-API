@@ -40,8 +40,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
         public string GenerateQuestionAndAnswerAsString()
         {
             QuadraticEquation quadraticEquation = GenerateQuestionAndAnswer();
-            return QuadraticEquationParser.ParseToString(quadraticEquation.Coefficients["a"], quadraticEquation.Coefficients["b"],
-                quadraticEquation.Coefficients["c"], quadraticEquation.Roots[0], quadraticEquation.Roots[1]);
+            return quadraticEquation.ParseToString();
         }
 
         private List<double> CalculateRoots(Dictionary<string, int> coefficients)

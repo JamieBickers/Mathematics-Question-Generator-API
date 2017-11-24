@@ -1,11 +1,11 @@
-﻿using MathematicsQuestionGeneratorAPI.Models.MathematicalModels.LinearSimultaneousEquations;
+﻿using MathematicsQuestionGeneratorAPI.Models.MathematicalModels.SimultaneousEquations;
 using MathematicsQuestionGeneratorAPI.Models.RandomNumberGenerators;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MathematicsQuestionGeneratorTests.Models.LinearSimultaneousEquations
+namespace MathematicsQuestionGeneratorTests.Models.SimultaneousEquations
 {
     [TestClass]
     public class LinearSimultaneousEquationsAnalysisFunctionsTests

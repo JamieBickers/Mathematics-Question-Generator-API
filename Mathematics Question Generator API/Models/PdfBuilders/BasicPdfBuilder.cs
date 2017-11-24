@@ -21,23 +21,15 @@ namespace MathematicsQuestionGeneratorAPI.Models.PdfBuilders
         private static int SPACE_BETWEEN_QUESTIONS = 5;
         private static int SPACE_AFTER_TITLE = 18;
 
-        public List<QuadraticEquation> Questions { get; set; }
+        private List<IQuestion> questions;
+        private string title;
+        private string instrutions;
 
-        public BasicPdfBuilder()
+        public BasicPdfBuilder(List<IQuestion> questions, string title, string instrutions)
         {
-            var integerGenerator = new RandomIntegerGenerator();
-            var equationGenerator = new QuadraticEquationGenerator(integerGenerator);
-            Questions = new List<QuadraticEquation>();
-
-            for (int i = 0; i < 5; i++)
-            {
-                Questions.Add(equationGenerator.GenerateQuestionAndAnswer());
-            }
-        }
-
-        public BasicPdfBuilder(List<QuadraticEquationGeneratorParameters> parameters)
-        {
-            Questions = parameters.Select(parameter => (new QuadraticEquationGenerator(parameter, new RandomIntegerGenerator())).GenerateQuestionAndAnswer()).ToList();
+            this.questions = questions;
+            this.title = title;
+            this.instrutions = instrutions;
         }
 
         public void CreatePdfsAndSaveLocallyAsFiles(string saveLocation)
@@ -62,82 +54,41 @@ namespace MathematicsQuestionGeneratorAPI.Models.PdfBuilders
 
         private void WriteDocumentToGivenStream(Stream stream, bool displayAnswers)
         {
-            var document = new Document(PageSize.A4, MARGIN, MARGIN, MARGIN, MARGIN);
+            Document document = new Document(PageSize.A4, MARGIN, MARGIN, MARGIN, MARGIN);
+            WriteTitleAndInstructions(stream, document);
 
+            var table = new PdfPTable(1);
+
+            for (var i = 0; i < questions.Count; i++)
+            {
+                table.AddCell(questions[i].ParseToPdfPCell(i + 1, displayAnswers));
+            }
+
+            table.WidthPercentage = 100;
+            document.Add(table);
+            document.Close();
+        }
+
+        private void WriteTitleAndInstructions(Stream stream, Document document)
+        {
             var writer = PdfWriter.GetInstance(document, stream);
             document.Open();
 
-            var titleWords = "Quadratic Equations";
-
-            var title = new Paragraph(titleWords);
-            title.Alignment = Element.ALIGN_RIGHT;
-            title.Font = FONT_TITLE;
-            document.Add(title);
+            Paragraph introductoryParagraph;
+            var titleParagraph = new Paragraph(title);
+            titleParagraph.Alignment = Element.ALIGN_RIGHT;
+            titleParagraph.Font = FONT_TITLE;
+            document.Add(titleParagraph);
 
             Paragraph line = new Paragraph(new Chunk(new iTextSharp.text.pdf.draw.LineSeparator(0.0F, 100.0F, BaseColor.Black, Element.ALIGN_LEFT, 1)));
             document.Add(line);
 
-            var openingWords = $"Solve the {Questions.Count} quadratic equations below, giving your answers to 2 decimal places." +
-                $"If they are unsolveable, write \"no solution\".";
-
-            var introductoryParagraph = new Paragraph();
-            introductoryParagraph.Add(openingWords);
+            introductoryParagraph = new Paragraph();
+            introductoryParagraph.Add(instrutions);
             introductoryParagraph.SpacingBefore = SPACE_AFTER_TITLE;
             introductoryParagraph.SpacingAfter = 10;
 
             document.Add(introductoryParagraph);
-
-            for (var i = 0; i < Questions.Count; i++)
-            {
-                WriteSingleQuestionAndAnswerToDocument(document, Questions[i], i, displayAnswers);
-            }
-
-            document.Close();
-        }
-
-        private void WriteSingleQuestionAndAnswerToDocument(Document document, QuadraticEquation equation, int questionNumber, bool showAnswer)
-        {
-            var a = Questions[questionNumber].Coefficients["a"];
-            var b = Questions[questionNumber].Coefficients["b"];
-            var c = Questions[questionNumber].Coefficients["c"];
-
-            // write question
-            var question = new Paragraph
-            {
-                SpacingBefore = SPACE_BETWEEN_QUESTIONS,
-                SpacingAfter = ANSWER_SPACE,
-                Alignment = Element.ALIGN_LEFT,
-                Font = FONT_BODY
-            };
-            question.Add($"\t\t\t{questionNumber + 1}. ");
-            question.Add(QuadraticEquationParser.ParseToPdfParagraph(a, b, c));
-            document.Add(question);
-
-            // write answer area
-            var answerArea = new Paragraph
-            {
-                SpacingBefore = ANSWER_SPACE,
-                SpacingAfter = SPACE_BETWEEN_QUESTIONS,
-                Alignment = Element.ALIGN_RIGHT,
-                Font = FONT_BODY
-            };
-            answerArea.Add(WriteAnswerSection(equation, showAnswer));
-            document.Add(answerArea);
-        }
-
-        private string WriteAnswerSection(QuadraticEquation equation, bool showAnswer)
-        {
-            var formattedRoot1 = (Double.IsNaN(equation.Roots[0]) ? "no solution" : Math.Round(equation.Roots[0], 2).ToString());
-            var formattedRoot2 = (Double.IsNaN(equation.Roots[1]) ? "" : Math.Round(equation.Roots[1], 2).ToString());
-
-            if (showAnswer)
-            {
-                return $"Answer: {formattedRoot1}, {formattedRoot2}";
-            }
-            else
-            {
-                return "Answer....................";
-            }
         }
     }
 }

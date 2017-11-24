@@ -2,6 +2,10 @@
 using MathematicsQuestionGeneratorAPI.Models.PdfBuilders;
 using MathematicsQuestionGeneratorAPI.Models.MailSenders;
 using MathematicsQuestionGeneratorAPI.Models;
+using MathematicsQuestionGeneratorAPI.Models.RandomNumberGenerators;
+using MathematicsQuestionGeneratorAPI.Models.QuadraticEquations;
+using System.Collections.Generic;
+using MathematicsQuestionGeneratorAPI.Models.MathematicalModels.SimultaneousEquations;
 
 namespace MathematicsQuestionGeneratorAPI.Controllers
 {
@@ -13,7 +17,14 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
         [HttpPost]
         public void GenerateDefaultQuadraticEquationWorksheet([FromBody] string emailAddress)
         {
-            var pdfBuilder = new BasicPdfBuilder();
+            var integerGenerator = new RandomIntegerGenerator();
+            var equationGenerator = new QuadraticEquationGenerator(new QuadraticEquationGeneratorParameters(requireDoubleRoot: true), integerGenerator);
+            var questions = new List<IQuestion>();
+            for (int i = 0; i < 10; i++)
+            {
+                questions.Add(equationGenerator.GenerateQuestionAndAnswer());
+            }
+            var pdfBuilder = new BasicPdfBuilder(questions, "title", "instructions");
             var streams = pdfBuilder.CreatePdfsAsMemoryStreams();
 
             var mailSender = new SmtpMailSender();
@@ -35,17 +46,17 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
                 parameter.Fill();
             }
 
-            var pdfBuilder = new BasicPdfBuilder(equationParameters);
+            //var pdfBuilder = new BasicPdfBuilder(equationParameters);
 
-            var streams = pdfBuilder.CreatePdfsAsMemoryStreams();
+            //var streams = pdfBuilder.CreatePdfsAsMemoryStreams();
 
             var mailSender = new SmtpMailSender();
-            mailSender.SendEmail(worksheetParameters.EmailAddress, streams);
+            //mailSender.SendEmail(worksheetParameters.EmailAddress, streams);
 
-            foreach (var stream in streams)
-            {
-                stream.Dispose();
-            }
+            //foreach (var stream in streams)
+            //{
+                //stream.Dispose();
+            //}
         }
     }
 }
