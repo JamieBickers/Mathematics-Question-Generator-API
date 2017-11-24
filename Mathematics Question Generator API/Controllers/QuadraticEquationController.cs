@@ -28,7 +28,6 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
         [HttpPost]
         public QuadraticEquation GetQuadraticEquation([FromBody] QuadraticEquationGeneratorParameters parameters)
         {
-            parameters.Fill();
             var equationGenerator = new QuadraticEquationGenerator(parameters, randomIntegerGenerator);
             return equationGenerator.GenerateQuestionAndAnswer();
         }

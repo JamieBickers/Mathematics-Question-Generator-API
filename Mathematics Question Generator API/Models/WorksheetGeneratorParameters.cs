@@ -1,4 +1,5 @@
-﻿using MathematicsQuestionGeneratorAPI.Models.QuadraticEquations;
+﻿using MathematicsQuestionGeneratorAPI.Models.MathematicalModels;
+using MathematicsQuestionGeneratorAPI.Models.QuadraticEquations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,15 +7,17 @@ using System.Threading.Tasks;
 
 namespace MathematicsQuestionGeneratorAPI.Models
 {
-    public class WorksheetGeneratorParameters
+    public class WorksheetGeneratorParameters<QuestionType, QuestionGeneratorParameterType>
+        where QuestionType : IQuestion
+        where QuestionGeneratorParameterType : QuestionParameters
     {
         public string EmailAddress;
-        public List<QuadraticEquationGeneratorParameters> QuadraticEquationParameters;
+        public List<QuestionGeneratorParameterType> QuestionGeneratorParameters;
 
-        public WorksheetGeneratorParameters(string emailAddress, List<QuadraticEquationGeneratorParameters> quadraticEquationParameters)
+        public WorksheetGeneratorParameters(string emailAddress, List<QuestionGeneratorParameterType> questionGeneratorParameters)
         {
             EmailAddress = emailAddress;
-            QuadraticEquationParameters = quadraticEquationParameters;
+            QuestionGeneratorParameters = questionGeneratorParameters;
         }
     }
 }

@@ -1,23 +1,34 @@
-﻿using System;
+﻿using MathematicsQuestionGeneratorAPI.Models.MathematicalModels;
+using Newtonsoft.Json;
+using System;
+using System.ComponentModel;
 
 namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
 {
-    public class QuadraticEquationGeneratorParameters
+    public class QuadraticEquationGeneratorParameters : QuestionParameters
     {
-        public int ALowerBound { get; set; } = -10;
-        public int BLowerBound { get; set; } = -100;
-        public int CLowerBound { get; set; } = -100;
+        public int ALowerBound { get; set; }
+        public int BLowerBound { get; set; }
+        public int CLowerBound { get; set; }
 
-        public int AUpperBound { get; set; } = 10;
-        public int BUpperBound { get; set; } = 100;
-        public int CUpperBound { get; set; } = 100;
+        [DefaultValue(5)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+        public int AUpperBound { get; set; }
 
-        public int DecimalPlaces { get; set; } = 2;
+        [DefaultValue(5)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+        public int BUpperBound { get; set; }
 
-        public bool RequireIntegerRoot { get; set; } = false;
-        public bool RequireRealRoot { get; set; } = false;
-        public bool RequireComplexRoot { get; set; } = false;
-        public bool RequireDoubleRoot { get; set; } = false;
+        [DefaultValue(5)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+        public int CUpperBound { get; set; }
+
+        public int DecimalPlaces { get; set; }
+
+        public bool RequireIntegerRoot { get; set; }
+        public bool RequireRealRoot { get; set; }
+        public bool RequireComplexRoot { get; set; }
+        public bool RequireDoubleRoot { get; set; }
 
         public QuadraticEquationGeneratorParameters(int aLowerBound = -10, int bLowerBound = -100, int cLowerBound = -100, int aUpperBound = 10,
             int bUpperBound = 100, int cUpperBound = 100, int decimalPlaces = 2, bool requireIntegerRoot = false,
@@ -34,9 +45,14 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
             RequireRealRoot = requireRealRoot;
             RequireComplexRoot = requireComplexRoot;
             RequireDoubleRoot = requireDoubleRoot;
+
+            if (!CheckValidParameters())
+            {
+                throw new Exception("Invalid quadratic parameters.");
+            }
         }
 
-        public bool CheckValidParameters()
+        protected override bool CheckValidParameters()
         {
             if ((ALowerBound > AUpperBound) || (BLowerBound > BUpperBound) || (CLowerBound > CUpperBound))
             {

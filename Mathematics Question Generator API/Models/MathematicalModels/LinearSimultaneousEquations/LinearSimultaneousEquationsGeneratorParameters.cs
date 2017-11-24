@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.SimultaneousEquations
 {
-    public class LinearSimultaneousEquationsGeneratorParameters
+    public class LinearSimultaneousEquationsGeneratorParameters : QuestionParameters
     {
         public bool UniqueSolution;
         public bool NoSolutions;
@@ -21,23 +21,27 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
             InfiniteSolutions = infiniteSolutions;
             CoefficientLowerBound = coefficientLowerBound;
             CoefficientUpperBound = coefficientUpperBound;
-            CheckValidParamaters();
+            if (!CheckValidParameters())
+            {
+                throw new Exception("Invalid parameters.");
+            }
         }
 
-        private void CheckValidParamaters()
+        protected override bool CheckValidParameters()
         {
             if (UniqueSolution && (NoSolutions || InfiniteSolutions))
             {
-                throw new Exception("Cannot have unique solutions together with either no or infinite solutions.");
+                return false;
             }
             else if (NoSolutions && InfiniteSolutions)
             {
-                throw new Exception("Cannot have no and infinite solutions.");
+                return false;
             }
             else if (CoefficientLowerBound > CoefficientUpperBound)
             {
-                throw new Exception("Lower bound must be less than upper bound.");
+                return false;
             }
+            return true;
         }
     }
 }

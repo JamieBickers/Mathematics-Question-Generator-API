@@ -39,27 +39,15 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
             BuildAndSendPdf(equationGenerator, emailAddress);
         }
 
-        [Route("specified")]
+        [Route("specifiedQuadraticEquations")]
         [HttpPost]
-        public void GenerateUserSpecifiedQuadraticEquationWorksheet([FromBody] WorksheetGeneratorParameters worksheetParameters)
+        public void GenerateUserSpecifiedQuadraticEquationWorksheet(
+            [FromBody] WorksheetGeneratorParameters<QuadraticEquation, QuadraticEquationGeneratorParameters> worksheetParameters)
         {
-            var equationParameters = worksheetParameters.QuadraticEquationParameters;
-            foreach (var parameter in equationParameters)
-            {
-                parameter.Fill();
-            }
-
-            //var pdfBuilder = new BasicPdfBuilder(equationParameters);
-
-            //var streams = pdfBuilder.CreatePdfsAsMemoryStreams();
-
-            var mailSender = new SmtpMailSender();
-            //mailSender.SendEmail(worksheetParameters.EmailAddress, streams);
-
-            //foreach (var stream in streams)
-            //{
-                //stream.Dispose();
-            //}
+            Func<QuadraticEquationGeneratorParameters, QuadraticEquationGenerator> quadraticEquationGeneratorConstructor
+                = parameter => new QuadraticEquationGenerator(parameter, randomIntegerGenerator);
+            BuildAndSendPdf<QuadraticEquationGenerator, QuadraticEquationGeneratorParameters, QuadraticEquation>(
+                quadraticEquationGeneratorConstructor, worksheetParameters.QuestionGeneratorParameters, worksheetParameters.EmailAddress);
         }
 
         private void BuildAndSendPdf(IQuestionGenerator<IQuestion> questionGenerator, string emailAddress)
@@ -68,6 +56,30 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
             for (int i = 0; i < 10; i++)
             {
                 questions.Add(questionGenerator.GenerateQuestionAndAnswer());
+            }
+            var pdfBuilder = new BasicPdfBuilder(questions, "title", "instructions");
+            var streams = pdfBuilder.CreatePdfsAsMemoryStreams();
+
+            var mailSender = new SmtpMailSender();
+            mailSender.SendEmail(emailAddress, streams);
+
+            foreach (var stream in streams)
+            {
+                stream.Dispose();
+            }
+        }
+
+        private void BuildAndSendPdf<GeneratorType, ParameterType, QuestionType>(
+            Func<ParameterType, GeneratorType> generatorConstructor, List<ParameterType> parameters, string emailAddress)
+            where GeneratorType : IQuestionGenerator<QuestionType>
+            where ParameterType : QuestionParameters
+            where QuestionType : IQuestion
+        {
+            var questions = new List<IQuestion>();
+            for (int i = 0; i < parameters.Count; i++)
+            {
+                var generator = generatorConstructor(parameters[i]);
+                questions.Add(generator.GenerateQuestionAndAnswer());
             }
             var pdfBuilder = new BasicPdfBuilder(questions, "title", "instructions");
             var streams = pdfBuilder.CreatePdfsAsMemoryStreams();

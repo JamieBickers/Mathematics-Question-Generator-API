@@ -27,10 +27,6 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
 
         public QuadraticEquation GenerateQuestionAndAnswer()
         {
-            if (!parameters.CheckValidParameters())
-            {
-                throw new Exception("Invalid parameters.");
-            }
             var coefficients = GenerateValidcoefficients();
             List<double> roots = CalculateRoots(coefficients);
             QuadraticEquation quadraticEquation = new QuadraticEquation(coefficients, roots);
