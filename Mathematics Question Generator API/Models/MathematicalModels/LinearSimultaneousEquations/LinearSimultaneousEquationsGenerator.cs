@@ -6,24 +6,22 @@ using System.Threading.Tasks;
 
 namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.SimultaneousEquations
 {
-    public class LinearSimultaneousEquationsGenerator : IQuestionGenerator<LinearSimultaneousEquations>
+    public class LinearSimultaneousEquationsGenerator : QuestionGenerator<LinearSimultaneousEquations>
     {
-        private IRandomIntegerGenerator randomIntegerGenerator;
         private LinearSimultaneousEquationsGeneratorParameters parameters;
 
-        public LinearSimultaneousEquationsGenerator(IRandomIntegerGenerator randomIntegerGenerator)
+        public LinearSimultaneousEquationsGenerator(IRandomIntegerGenerator randomIntegerGenerator) : base(randomIntegerGenerator)
         {
-            this.randomIntegerGenerator = randomIntegerGenerator;
             parameters = new LinearSimultaneousEquationsGeneratorParameters();
         }
 
         public LinearSimultaneousEquationsGenerator(IRandomIntegerGenerator randomIntegerGenerator, LinearSimultaneousEquationsGeneratorParameters parameters)
+            : base(randomIntegerGenerator)
         {
-            this.randomIntegerGenerator = randomIntegerGenerator;
             this.parameters = parameters;
         }
 
-        public LinearSimultaneousEquations GenerateQuestionAndAnswer()
+        public override LinearSimultaneousEquations GenerateQuestionAndAnswer()
         {
             var equations = GenerateValidEquations();
             var solver = new LinearSimultaneousEquationsAnalysisFunctions();
@@ -35,8 +33,14 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
         {
             LinearEquation first;
             LinearEquation second;
+
+            var numberOfTries = 0;
             do
             {
+                if (numberOfTries > MaxNumberOfTries)
+                {
+                    throw new Exception("Could not generate equations satisfying conditions.");
+                }
                 first = GenerateRandomEquation();
                 second = GenerateRandomEquation();
             } while (!CheckValidEquations(first, second));

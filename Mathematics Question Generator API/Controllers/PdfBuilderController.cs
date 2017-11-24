@@ -13,12 +13,35 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
     [Route("api/worksheet")]
     public class PdfBuilderController : Controller
     {     
-        [Route("default")]
+        [Route("defaultQuadraticEquations")]
         [HttpPost]
-        public void GenerateDefaultWorksheet([FromBody] string emailAddress)
+        public void GenerateDefaultQuadraticEquationsWorksheet([FromBody] string emailAddress)
         {
             var integerGenerator = new RandomIntegerGenerator();
-            var equationGenerator = new QuadraticEquationGenerator(new QuadraticEquationGeneratorParameters(requireDoubleRoot: true), integerGenerator);
+            var equationGenerator = new QuadraticEquationGenerator(integerGenerator);
+            var questions = new List<IQuestion>();
+            for (int i = 0; i < 10; i++)
+            {
+                questions.Add(equationGenerator.GenerateQuestionAndAnswer());
+            }
+            var pdfBuilder = new BasicPdfBuilder(questions, "title", "instructions");
+            var streams = pdfBuilder.CreatePdfsAsMemoryStreams();
+
+            var mailSender = new SmtpMailSender();
+            mailSender.SendEmail(emailAddress, streams);
+
+            foreach (var stream in streams)
+            {
+                stream.Dispose();
+            }
+        }
+
+        [Route("defaultSimultaneousEquations")]
+        [HttpPost]
+        public void GenerateDefaultSimultaneousEquationsWorksheet([FromBody] string emailAddress)
+        {
+            var integerGenerator = new RandomIntegerGenerator();
+            var equationGenerator = new LinearSimultaneousEquationsGenerator(integerGenerator);
             var questions = new List<IQuestion>();
             for (int i = 0; i < 10; i++)
             {

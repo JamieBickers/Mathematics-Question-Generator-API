@@ -2,30 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using MathematicsQuestionGeneratorAPI.Models.RandomNumberGenerators;
+using MathematicsQuestionGeneratorAPI.Models.MathematicalModels;
 
 namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
 {
-    public class QuadraticEquationGenerator : IQuestionGenerator<QuadraticEquation>
+    public class QuadraticEquationGenerator : QuestionGenerator<QuadraticEquation>
     {
-        private const int MAX_NUMBER_OF_TRIES = 1000000;
-
         private QuadraticEquationGeneratorParameters parameters;
-        private IRandomIntegerGenerator randomNumberGenerator;
 
-        public QuadraticEquationGenerator(IRandomIntegerGenerator randomNumberGenerator)
+        public QuadraticEquationGenerator(IRandomIntegerGenerator randomNumberGenerator) : base(randomNumberGenerator)
         {
             var defaultParameters = new QuadraticEquationGeneratorParameters();
             parameters = defaultParameters;
-            this.randomNumberGenerator = randomNumberGenerator;
         }
 
-        public QuadraticEquationGenerator(QuadraticEquationGeneratorParameters parameters, IRandomIntegerGenerator randomNumberGenerator)
+        public QuadraticEquationGenerator(QuadraticEquationGeneratorParameters parameters, IRandomIntegerGenerator randomIntegerGenerator) : base(randomIntegerGenerator)
         {
             this.parameters = parameters;
-            this.randomNumberGenerator = randomNumberGenerator;
         }
 
-        public QuadraticEquation GenerateQuestionAndAnswer()
+        public override QuadraticEquation GenerateQuestionAndAnswer()
         {
             if (!parameters.CheckValidParameters())
             {
@@ -70,9 +66,9 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
 
             do
             {
-                if (numberOfTries > MAX_NUMBER_OF_TRIES)
+                if (numberOfTries > MaxNumberOfTries)
                 {
-                    throw new Exception("Could not generate polynomial satisfying conditions.");
+                    throw new Exception("Could not generate quadratic satisfying conditions.");
                 }
                 coefficients = GenerateRandomcoefficients();
                 numberOfTries++;
@@ -95,8 +91,8 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
             {
                 int uUpperBound = (int)Math.Round(Math.Sqrt(parameters.AUpperBound));
                 int vUpperBound = (int)Math.Round(Math.Sqrt(parameters.CUpperBound));
-                int u = randomNumberGenerator.GenerateRandomInteger(uUpperBound);
-                int v = randomNumberGenerator.GenerateRandomInteger(vUpperBound);
+                int u = randomIntegerGenerator.GenerateRandomInteger(uUpperBound);
+                int v = randomIntegerGenerator.GenerateRandomInteger(vUpperBound);
                 coefficients["a"] = u * u;
                 coefficients["b"] = 2 * u * v;
                 coefficients["c"] = v * v;
@@ -139,9 +135,9 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
         {
             var coefficients = new Dictionary<string, int>
             {
-                { "a", randomNumberGenerator.GenerateRandomInteger(parameters.ALowerBound, parameters.AUpperBound) },
-                { "b", randomNumberGenerator.GenerateRandomInteger(parameters.BLowerBound, parameters.BUpperBound) },
-                { "c", randomNumberGenerator.GenerateRandomInteger(parameters.CLowerBound, parameters.CUpperBound) }
+                { "a", randomIntegerGenerator.GenerateRandomInteger(parameters.ALowerBound, parameters.AUpperBound) },
+                { "b", randomIntegerGenerator.GenerateRandomInteger(parameters.BLowerBound, parameters.BUpperBound) },
+                { "c", randomIntegerGenerator.GenerateRandomInteger(parameters.CLowerBound, parameters.CUpperBound) }
             };
 
             return coefficients;
