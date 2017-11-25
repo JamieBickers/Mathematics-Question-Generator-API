@@ -62,7 +62,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
         private Paragraph CreateAnswerArea(bool showAnswers)
         {
             var xAnswer = showAnswers ? Math.Round(Solution.FirstSolution, 2).ToString() : "........";
-            var yAnswer = showAnswers ? Math.Round(Solution.FirstSolution, 2).ToString() : "........";
+            var yAnswer = showAnswers ? Math.Round(Solution.SecondSolution, 2).ToString() : "........";
 
             var answerArea = new Paragraph($"Answer: x={xAnswer}, y={yAnswer}")
             {
