@@ -9,6 +9,7 @@ using MathematicsQuestionGeneratorAPI.Models.MathematicalModels.SimultaneousEqua
 using MathematicsQuestionGeneratorAPI.Models.MathematicalModels;
 using System;
 using System.ComponentModel.DataAnnotations;
+using MathematicsQuestionGeneratorAPI.Exceptions;
 
 namespace MathematicsQuestionGeneratorAPI.Controllers
 {
@@ -46,6 +47,10 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
         public IActionResult GenerateUserSpecifiedQuadraticEquationWorksheet(
             [FromBody] WorksheetGeneratorParameters<QuadraticEquation, QuadraticEquationGeneratorParameters> worksheetParameters)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             Func<QuadraticEquationGeneratorParameters, QuadraticEquationGenerator> quadraticEquationGeneratorConstructor
                 = parameter => new QuadraticEquationGenerator(randomIntegerGenerator, parameter);
             BuildAndSendPdf<QuadraticEquationGenerator, QuadraticEquationGeneratorParameters, QuadraticEquation>(
@@ -58,6 +63,10 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
         public IActionResult GenerateUserSpecifiedSimultaneousEquationsWorksheet(
             [FromBody] WorksheetGeneratorParameters<LinearSimultaneousEquations, LinearSimultaneousEquationsGeneratorParameters> worksheetParameters)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             Func<LinearSimultaneousEquationsGeneratorParameters, LinearSimultaneousEquationsGenerator> quadraticEquationGeneratorConstructor
                 = parameter => new LinearSimultaneousEquationsGenerator(randomIntegerGenerator, parameter);
             BuildAndSendPdf<LinearSimultaneousEquationsGenerator, LinearSimultaneousEquationsGeneratorParameters, LinearSimultaneousEquations>(
@@ -67,12 +76,20 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
 
         private void BuildAndSendPdf(IQuestionGenerator<IQuestion> questionGenerator, string emailAddress)
         {
-            var questions = new List<IQuestion>();
-            for (int i = 0; i < 10; i++)
+            try
             {
-                questions.Add(questionGenerator.GenerateQuestionAndAnswer());
+                var questions = new List<IQuestion>();
+                for (int i = 0; i < 10; i++)
+                {
+                    questions.Add(questionGenerator.GenerateQuestionAndAnswer());
+                }
+                EmailWorksheetWithGivenQuestions(emailAddress, questions);
             }
-            EmailWorksheetWithGivenQuestions(emailAddress, questions);
+            catch (Exception exception)
+            {
+                //TODO: Logging here
+                throw exception;
+            }
         }
 
         private void BuildAndSendPdf<GeneratorType, ParameterType, QuestionType>(
@@ -82,12 +99,24 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
             where QuestionType : IQuestion
         {
             var questions = new List<IQuestion>();
-            for (int i = 0; i < parameters.Count; i++)
+            try
             {
-                var generator = generatorConstructor(parameters[i]);
-                questions.Add(generator.GenerateQuestionAndAnswer());
+                for (int i = 0; i < parameters.Count; i++)
+                {
+                    var generator = generatorConstructor(parameters[i]);
+                    questions.Add(generator.GenerateQuestionAndAnswer());
+                }
+                EmailWorksheetWithGivenQuestions(emailAddress, questions);
             }
-            EmailWorksheetWithGivenQuestions(emailAddress, questions);
+            catch (FailedToGenerateQuestionSatisfyingParametersException exception)
+            {
+                throw exception;
+            }
+            catch (Exception exception)
+            {
+                //TODO: Logging here
+                throw exception;
+            }
         }
 
         private static void EmailWorksheetWithGivenQuestions(string emailAddress, List<IQuestion> questions)

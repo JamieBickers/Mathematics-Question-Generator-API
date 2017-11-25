@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.SimultaneousEquations
 {
@@ -16,8 +15,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
 
         protected override LinearSimultaneousEquationsSolution CalculateSolutions(List<int> coefficients)
         {
-            var solver = new LinearSimultaneousEquationsAnalysisFunctions();
-            return solver.CalculateSolution(coefficients);
+            return LinearSimultaneousEquationsAnalysisFunctions.CalculateSolution(coefficients);
         }
 
         protected override bool CheckValidCoefficients(List<int> coefficients)
@@ -27,8 +25,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
                 return false;
             }
 
-            var solver = new LinearSimultaneousEquationsAnalysisFunctions();
-            var solution = solver.CalculateSolution(coefficients);
+            var solution = LinearSimultaneousEquationsAnalysisFunctions.CalculateSolution(coefficients);
 
             if (!solution.InfiniteSolutions && parameters.RequireInfiniteSolutions)
             {

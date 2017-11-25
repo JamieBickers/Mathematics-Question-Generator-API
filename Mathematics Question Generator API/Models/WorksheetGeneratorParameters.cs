@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MathematicsQuestionGeneratorAPI.Models
 {
-    public class WorksheetGeneratorParameters<QuestionType, QuestionGeneratorParameterType>
+    public class WorksheetGeneratorParameters<QuestionType, QuestionGeneratorParameterType> : IValidatableObject
         where QuestionType : IQuestion
         where QuestionGeneratorParameterType : IValidatableObject
     {
@@ -19,6 +19,11 @@ namespace MathematicsQuestionGeneratorAPI.Models
         {
             EmailAddress = emailAddress;
             QuestionGeneratorParameters = questionGeneratorParameters;
+        }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            return QuestionGeneratorParameters.SelectMany(parameter => parameter.Validate(new ValidationContext(parameter)));
         }
     }
 }

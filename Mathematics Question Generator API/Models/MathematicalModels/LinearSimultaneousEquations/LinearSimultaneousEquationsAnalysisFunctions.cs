@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.SimultaneousEquations
 {
-    public class LinearSimultaneousEquationsAnalysisFunctions
+    public static class LinearSimultaneousEquationsAnalysisFunctions
     {
-        public LinearSimultaneousEquationsSolution CalculateSolution(List<int> coefficients)
+        public static LinearSimultaneousEquationsSolution CalculateSolution(List<int> coefficients)
         {
             var a = coefficients[0];
             var b = coefficients[1];
@@ -42,7 +42,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
             }
         }
 
-        private bool GivenParallelCheckIfInfiniteSolutions(List<int> coefficients)
+        private static bool GivenParallelCheckIfInfiniteSolutions(List<int> coefficients)
         {
             var a = coefficients[0];
             var b = coefficients[1];
@@ -61,7 +61,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
             }
         }
 
-        private LinearSimultaneousEquationsSolution ComputeInfiniteSolution(List<int> coefficients)
+        private static LinearSimultaneousEquationsSolution ComputeInfiniteSolution(List<int> coefficients)
         {
             var a = coefficients[0];
             var b = coefficients[1];
@@ -84,7 +84,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
             }
         }
 
-        private bool CheckIfParallel(List<int> coefficients)
+        private static bool CheckIfParallel(List<int> coefficients)
         {
             var a = coefficients[0];
             var b = coefficients[1];
@@ -109,7 +109,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
             throw new MathematicalImpossibilityException();
         }
 
-        private double Divide(int a, int b)
+        private static double Divide(int a, int b)
         {
             return Convert.ToDouble(a) / Convert.ToDouble(b);
         }

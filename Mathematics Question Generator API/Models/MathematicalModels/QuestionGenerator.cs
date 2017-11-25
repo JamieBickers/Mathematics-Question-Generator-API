@@ -36,9 +36,9 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels
 
         public TQuestion GenerateQuestionAndAnswer()
         {
-            TCoefficients coefficients = GenerateValidCoefficients();
-            TSolution solutions = CalculateSolutions(coefficients);
-            TQuestion question = ConstructorForQuestion(coefficients, solutions);
+            var coefficients = GenerateValidCoefficients();
+            var solutions = CalculateSolutions(coefficients);
+            var question = ConstructorForQuestion(coefficients, solutions);
             return question;
         }
 
