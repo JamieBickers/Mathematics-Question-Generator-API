@@ -6,60 +6,30 @@ using System.Threading.Tasks;
 
 namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.SimultaneousEquations
 {
-    public class LinearSimultaneousEquationsGenerator : IQuestionGenerator<LinearSimultaneousEquations>
+    public class LinearSimultaneousEquationsGenerator
+        : QuestionGenerator<LinearSimultaneousEquations, LinearSimultaneousEquationsGeneratorParameters, int,
+            LinearSimultaneousEquationsSolution, List<int>, List<LinearSimultaneousEquationsSolution>>
     {
-        private LinearSimultaneousEquationsGeneratorParameters parameters;
-        private readonly IRandomIntegerGenerator randomIntegerGenerator;
-        private const int MaxNumberOfTries = 1000000;
-
-        public LinearSimultaneousEquationsGenerator(IRandomIntegerGenerator randomIntegerGenerator)
-        {
-            this.randomIntegerGenerator = randomIntegerGenerator;
-            parameters = new LinearSimultaneousEquationsGeneratorParameters();
-        }
+        public LinearSimultaneousEquationsGenerator(IRandomIntegerGenerator randomIntegerGenerator) : base(randomIntegerGenerator) { }
 
         public LinearSimultaneousEquationsGenerator(IRandomIntegerGenerator randomIntegerGenerator, LinearSimultaneousEquationsGeneratorParameters parameters)
-        {
-            this.randomIntegerGenerator = randomIntegerGenerator;
-            this.parameters = parameters;
-        }
+            : base(randomIntegerGenerator, parameters) { }
 
-        public LinearSimultaneousEquations GenerateQuestionAndAnswer()
+        protected override List<LinearSimultaneousEquationsSolution> CalculateSolutions(List<int> coefficients)
         {
-            var equations = GenerateValidEquations();
             var solver = new LinearSimultaneousEquationsAnalysisFunctions();
-            var solution = solver.CalculateSolution(equations[0], equations[1]);
-            return new LinearSimultaneousEquations(equations[0], equations[1], solution);
+            return new List<LinearSimultaneousEquationsSolution>() { solver.CalculateSolution(coefficients) };
         }
 
-        private List<LinearEquation> GenerateValidEquations()
+        protected override bool CheckValidCoefficients(List<int> coefficients)
         {
-            LinearEquation first;
-            LinearEquation second;
-
-            var numberOfTries = 0;
-            do
-            {
-                if (numberOfTries > MaxNumberOfTries)
-                {
-                    throw new Exception("Could not generate equations satisfying conditions.");
-                }
-                first = GenerateRandomEquation();
-                second = GenerateRandomEquation();
-            } while (!CheckValidEquations(first, second));
-
-            return new List<LinearEquation>() { first, second };
-        }
-
-        private bool CheckValidEquations(LinearEquation first, LinearEquation second)
-        {
-            if ((first.XTerm == 0 && first.YTerm == 0) || (second.XTerm == 0 && second.YTerm == 0))
+            if ((coefficients[0] == 0 && coefficients[1] == 0) || (coefficients[3] == 0 && coefficients[4] == 0))
             {
                 return false;
             }
 
             var solver = new LinearSimultaneousEquationsAnalysisFunctions();
-            var solution = solver.CalculateSolution(first, second);
+            var solution = solver.CalculateSolution(coefficients);
 
             if (!solution.InfiniteSolutions && parameters.RequireInfiniteSolutions)
             {
@@ -75,13 +45,20 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
             }
         }
 
-        private LinearEquation GenerateRandomEquation()
+        protected override List<int> GenerateRandomCoefficients()
         {
-            var xTerm = randomIntegerGenerator.GenerateRandomInteger(parameters.CoefficientLowerBound, parameters.CoefficientUpperBound);
-            var yTerm = randomIntegerGenerator.GenerateRandomInteger(parameters.CoefficientLowerBound, parameters.CoefficientUpperBound);
-            var constantTerm = randomIntegerGenerator.GenerateRandomInteger(parameters.CoefficientLowerBound, parameters.CoefficientUpperBound);
+            return Enumerable.Range(0, 6)
+                .Select(x => randomIntegerGenerator.GenerateRandomInteger(parameters.CoefficientLowerBound, parameters.CoefficientUpperBound)).ToList();
+        }
 
-            return new LinearEquation(xTerm, yTerm, constantTerm);
+        protected override Func<List<int>, List<LinearSimultaneousEquationsSolution>, LinearSimultaneousEquations> ComputeContructorForQuestion()
+        {
+            return (coefficients, solutions) => new LinearSimultaneousEquations(coefficients, solutions);
+        }
+
+        protected override Func<LinearSimultaneousEquationsGeneratorParameters> ComputeContructorForParameters()
+        {
+            return () => new LinearSimultaneousEquationsGeneratorParameters();
         }
     }
 }

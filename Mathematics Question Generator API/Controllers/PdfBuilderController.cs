@@ -44,7 +44,7 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
             [FromBody] WorksheetGeneratorParameters<QuadraticEquation, QuadraticEquationGeneratorParameters> worksheetParameters)
         {
             Func<QuadraticEquationGeneratorParameters, QuadraticEquationGenerator> quadraticEquationGeneratorConstructor
-                = parameter => new QuadraticEquationGenerator(parameter, randomIntegerGenerator);
+                = parameter => new QuadraticEquationGenerator(randomIntegerGenerator, parameter);
             BuildAndSendPdf<QuadraticEquationGenerator, QuadraticEquationGeneratorParameters, QuadraticEquation>(
                 quadraticEquationGeneratorConstructor, worksheetParameters.QuestionGeneratorParameters, worksheetParameters.EmailAddress);
         }

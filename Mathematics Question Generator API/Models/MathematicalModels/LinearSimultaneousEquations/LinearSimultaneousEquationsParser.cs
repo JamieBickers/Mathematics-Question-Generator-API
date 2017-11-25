@@ -10,16 +10,16 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
     {
         public static string ParseToString(LinearSimultaneousEquations equations)
         {
-            var firstParsed = ParseLinearEquationToString(equations.FirstEquation);
-            var secondParsed = ParseLinearEquationToString(equations.SecondEquation);
+            var firstParsed = ParseLinearEquationToString(equations.Coefficients.GetRange(0, 3));
+            var secondParsed = ParseLinearEquationToString(equations.Coefficients.GetRange(3, 3));
 
             return $"{firstParsed}\n{secondParsed}=0\nx={equations.Solution.FirstSolution}, y={equations.Solution.SecondSolution}";
         }
 
         public static PdfPCell ParseToPdfParagraph(LinearSimultaneousEquations equations, bool showAnswers)
         {
-            var firstParsed = ParseLinearEquationToString(equations.FirstEquation);
-            var secondParsed = ParseLinearEquationToString(equations.SecondEquation);
+            var firstParsed = ParseLinearEquationToString(equations.Coefficients.GetRange(0, 3));
+            var secondParsed = ParseLinearEquationToString(equations.Coefficients.GetRange(3, 3));
 
             var firstEquation = new Chunk(firstParsed);
             var secondEquation = new Chunk(secondParsed);
@@ -51,13 +51,13 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
             return answerArea;
         }
 
-        public static string ParseLinearEquationToString(LinearEquation equation)
+        public static string ParseLinearEquationToString(List<int> equation)
         {
             var pairs = new List<KeyValuePair<string, int>>()
             {
-                new KeyValuePair<string, int>("x", equation.XTerm),
-                new KeyValuePair<string, int>("y", equation.YTerm),
-                new KeyValuePair<string, int>("", equation.ConstantTerm)
+                new KeyValuePair<string, int>("x", equation[0]),
+                new KeyValuePair<string, int>("y", equation[1]),
+                new KeyValuePair<string, int>("", equation[2])
             };
 
 

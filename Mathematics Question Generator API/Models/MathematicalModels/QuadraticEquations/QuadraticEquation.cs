@@ -9,10 +9,10 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
 {
     public class QuadraticEquation : IQuestion
     {
-        public Dictionary<string, int> Coefficients;
+        public List<int> Coefficients;
         public List<double> Roots;
 
-        public QuadraticEquation(Dictionary<string, int> coefficients, List<double> roots)
+        public QuadraticEquation(List<int> coefficients, List<double> roots)
         {
             Coefficients = coefficients;
             Roots = roots;
@@ -20,9 +20,9 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
 
         public string ParseToString()
         {
-            int a = Coefficients["a"];
-            int b = Coefficients["b"];
-            int c = Coefficients["c"];
+            int a = Coefficients[0];
+            int b = Coefficients[1];
+            int c = Coefficients[2];
             double root1 = Roots[0];
             double root2 = Roots[1];
 
@@ -80,9 +80,9 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
 
         private Paragraph CreateQuestionParagraph(int questionNumber)
         {
-            int a = Coefficients["a"];
-            int b = Coefficients["b"];
-            int c = Coefficients["c"];
+            int a = Coefficients[0];
+            int b = Coefficients[1];
+            int c = Coefficients[2];
 
             var equation = new Paragraph($"{questionNumber}.    {ConvertLeadingTermToString()}x"); // 4 spaces
 
@@ -100,7 +100,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
 
         private string ConvertCTermToString()
         {
-            var c = Coefficients["c"];
+            var c = Coefficients[2];
             if (c == 0)
             {
                 return "";
@@ -121,7 +121,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
 
         private string ConvertBTermToString()
         {
-            var b = Coefficients["b"];
+            var b = Coefficients[1];
             if (b == 0)
             {
                 return "";
@@ -146,7 +146,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
 
         private string ConvertLeadingTermToString()
         {
-            int a = Coefficients["a"];
+            int a = Coefficients[0];
             if (a == 0)
             {
                 throw new Exception("a term cannot be 0.");

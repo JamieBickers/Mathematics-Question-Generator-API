@@ -10,29 +10,27 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
 {
     public class LinearSimultaneousEquations : IQuestion
     {
-        public LinearEquation FirstEquation;
-        public LinearEquation SecondEquation;
+        public List<int> Coefficients;
         public LinearSimultaneousEquationsSolution Solution;
 
-        public LinearSimultaneousEquations(LinearEquation firstEquation, LinearEquation secondEquation, LinearSimultaneousEquationsSolution solution)
+        public LinearSimultaneousEquations(List<int> coefficients, List<LinearSimultaneousEquationsSolution> solution)
         {
-            FirstEquation = firstEquation;
-            SecondEquation = secondEquation;
-            Solution = solution;
+            Coefficients = coefficients;
+            Solution = solution[0];
         }
 
         public string ParseToString()
         {
-            var firstParsed = ParseLinearEquationToString(FirstEquation);
-            var secondParsed = ParseLinearEquationToString(SecondEquation);
+            var firstParsed = ParseLinearEquationToString(Coefficients.GetRange(0, 3));
+            var secondParsed = ParseLinearEquationToString(Coefficients.GetRange(3, 3));
 
             return $"{firstParsed}\n{secondParsed}=0\nx={Solution.FirstSolution}, y={Solution.SecondSolution}";
         }
 
         public PdfPCell ParseToPdfPCell(int questionNumber, bool showAnswers)
         {
-            var firstParsed = ParseLinearEquationToString(FirstEquation);
-            var secondParsed = ParseLinearEquationToString(SecondEquation);
+            var firstParsed = ParseLinearEquationToString(Coefficients.GetRange(0, 3));
+            var secondParsed = ParseLinearEquationToString(Coefficients.GetRange(3, 3));
 
             var firstEquation = new Paragraph($"      {firstParsed}"); // 6 spaces
             firstEquation.Font = PdfStylings.FONT_BODY;
@@ -73,13 +71,13 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
             return answerArea;
         }
 
-        public string ParseLinearEquationToString(LinearEquation equation)
+        public string ParseLinearEquationToString(List<int> coefficients)
         {
             var pairs = new List<KeyValuePair<string, int>>()
             {
-                new KeyValuePair<string, int>("x", equation.XTerm),
-                new KeyValuePair<string, int>("y", equation.YTerm),
-                new KeyValuePair<string, int>("", equation.ConstantTerm)
+                new KeyValuePair<string, int>("x", coefficients[0]),
+                new KeyValuePair<string, int>("y", coefficients[1]),
+                new KeyValuePair<string, int>("", coefficients[2])
             };
 
 

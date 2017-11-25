@@ -6,32 +6,12 @@ using MathematicsQuestionGeneratorAPI.Models.MathematicalModels;
 
 namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
 {
-    public class QuadraticEquationGenerator : IQuestionGenerator<QuadraticEquation>
+    public class QuadraticEquationGenerator
+        : QuestionGenerator<QuadraticEquation, QuadraticEquationGeneratorParameters, int, double, List<int>, List<double>>
     {
-        private QuadraticEquationGeneratorParameters parameters;
-        private readonly IRandomIntegerGenerator randomIntegerGenerator;
-        private const int MaxNumberOfTries = 1000000;
-
-        public QuadraticEquationGenerator(IRandomIntegerGenerator randomIntegerGenerator)
-        {
-            var defaultParameters = new QuadraticEquationGeneratorParameters();
-            parameters = defaultParameters;
-            this.randomIntegerGenerator = randomIntegerGenerator;
-        }
-
-        public QuadraticEquationGenerator(QuadraticEquationGeneratorParameters parameters, IRandomIntegerGenerator randomIntegerGenerator)
-        {
-            this.randomIntegerGenerator = randomIntegerGenerator;
-            this.parameters = parameters;
-        }
-
-        public QuadraticEquation GenerateQuestionAndAnswer()
-        {
-            var coefficients = GenerateValidcoefficients();
-            List<double> roots = CalculateRoots(coefficients);
-            QuadraticEquation quadraticEquation = new QuadraticEquation(coefficients, roots);
-            return quadraticEquation;
-        }
+        public QuadraticEquationGenerator(IRandomIntegerGenerator randomIntegerGenerator) : base(randomIntegerGenerator) { }
+        public QuadraticEquationGenerator(IRandomIntegerGenerator randomIntegerGenerator, QuadraticEquationGeneratorParameters parameters)
+            : base(randomIntegerGenerator, parameters) { }
 
         public string GenerateQuestionAndAnswerAsString()
         {
@@ -39,20 +19,20 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
             return quadraticEquation.ParseToString();
         }
 
-        private List<double> CalculateRoots(Dictionary<string, int> coefficients)
+        protected override List<double> CalculateSolutions(List<int> coefficients)
         {
-            int a = coefficients["a"];
-            int b = coefficients["b"];
-            int c = coefficients["c"];
+            int a = coefficients[0];
+            int b = coefficients[1];
+            int c = coefficients[2];
 
             var roots = QuadraticEquationAnalysisFunctions.ComputeRoots(a, b, c);
 
             return roots;
         }
 
-        private Dictionary<string, int> GenerateValidcoefficients()
+        protected override List<int> GenerateValidCoefficients()
         {
-            Dictionary<string, int> coefficients;
+            List<int> coefficients;
 
             // for performance reasons generate double root equations separately
             if (parameters.RequireDoubleRoot)
@@ -68,9 +48,9 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
                 {
                     throw new Exception("Could not generate quadratic satisfying conditions.");
                 }
-                coefficients = GenerateRandomcoefficients();
+                coefficients = GenerateRandomCoefficients();
                 numberOfTries++;
-            } while (!CheckValidcoefficients(coefficients));
+            } while (!CheckValidCoefficients(coefficients));
 
             return coefficients;
         }
@@ -81,9 +61,9 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
          * restriction that u^2 <= aUpper and v^2 <= cUpper which helps narrow down the possible valid values.
          * This also means we only need to check for b being in range.
          * */
-        private Dictionary<string, int> GenerateDoubleRootCoefficients()
+        private List<int> GenerateDoubleRootCoefficients()
         {
-            var coefficients = new Dictionary<string, int>();
+            var coefficients = new List<int>();
 
             do
             {
@@ -91,19 +71,19 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
                 int vUpperBound = (int)Math.Round(Math.Sqrt(parameters.CUpperBound));
                 int u = randomIntegerGenerator.GenerateRandomInteger(uUpperBound);
                 int v = randomIntegerGenerator.GenerateRandomInteger(vUpperBound);
-                coefficients["a"] = u * u;
-                coefficients["b"] = 2 * u * v;
-                coefficients["c"] = v * v;
-            } while (!CheckValidcoefficients(coefficients) || (coefficients["b"] > parameters.BUpperBound) || (coefficients["b"] < parameters.BLowerBound));
+                coefficients.Add(u * u);
+                coefficients.Add(2 * u * v);
+                coefficients.Add(v * v);
+            } while (!CheckValidCoefficients(coefficients) || (coefficients[1] > parameters.BUpperBound) || (coefficients[1] < parameters.BLowerBound));
 
             return coefficients;
         }
 
-        private bool CheckValidcoefficients(Dictionary<string, int> coefficients)
+        protected override bool CheckValidCoefficients(List<int> coefficients)
         {
-            var a = coefficients["a"];
-            var b = coefficients["b"];
-            var c = coefficients["c"];
+            var a = coefficients[0];
+            var b = coefficients[1];
+            var c = coefficients[2];
 
             var discriminant = QuadraticEquationAnalysisFunctions.ComputeDiscriminant(a, b, c);
 
@@ -129,16 +109,26 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
             }
         }
 
-        private Dictionary<string, int> GenerateRandomcoefficients()
+        protected override List<int> GenerateRandomCoefficients()
         {
-            var coefficients = new Dictionary<string, int>
+            var coefficients = new List<int>
             {
-                { "a", randomIntegerGenerator.GenerateRandomInteger(parameters.ALowerBound, parameters.AUpperBound) },
-                { "b", randomIntegerGenerator.GenerateRandomInteger(parameters.BLowerBound, parameters.BUpperBound) },
-                { "c", randomIntegerGenerator.GenerateRandomInteger(parameters.CLowerBound, parameters.CUpperBound) }
+                randomIntegerGenerator.GenerateRandomInteger(parameters.ALowerBound, parameters.AUpperBound),
+                randomIntegerGenerator.GenerateRandomInteger(parameters.BLowerBound, parameters.BUpperBound),
+                randomIntegerGenerator.GenerateRandomInteger(parameters.CLowerBound, parameters.CUpperBound)
             };
 
             return coefficients;
+        }
+
+        protected override Func<List<int>, List<double>, QuadraticEquation> ComputeContructorForQuestion()
+        {
+            return (coefficients, solutions) => new QuadraticEquation(coefficients, solutions);
+        }
+
+        protected override Func<QuadraticEquationGeneratorParameters> ComputeContructorForParameters()
+        {
+            return () => new QuadraticEquationGeneratorParameters();
         }
     }
 }

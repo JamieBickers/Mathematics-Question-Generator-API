@@ -7,14 +7,14 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
 {
     public class LinearSimultaneousEquationsAnalysisFunctions
     {
-        public LinearSimultaneousEquationsSolution CalculateSolution(LinearEquation first, LinearEquation second)
+        public LinearSimultaneousEquationsSolution CalculateSolution(List<int> coefficients)
         {
-            var a = first.XTerm;
-            var b = first.YTerm;
-            var c = first.ConstantTerm;
-            var d = second.XTerm;
-            var e = second.YTerm;
-            var f = second.ConstantTerm;
+            var a = coefficients[0];
+            var b = coefficients[1];
+            var c = coefficients[2];
+            var d = coefficients[3];
+            var e = coefficients[4];
+            var f = coefficients[5];
 
             var NaN = Double.NaN;
             var noSolution = new LinearSimultaneousEquationsSolution(NaN, NaN, true, false);
@@ -23,9 +23,9 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
             {
                 throw new Exception("Invalid equation.");
             }
-            else if (CheckIfParallel(first, second))
+            else if (CheckIfParallel(coefficients))
             {
-                return GivenParallelCheckIfInfiniteSolutions(first, second) ? ComputeInfiniteSolution(first, second) : noSolution;
+                return GivenParallelCheckIfInfiniteSolutions(coefficients) ? ComputeInfiniteSolution(coefficients) : noSolution;
             }
             else if (a != 0)
             {
@@ -41,14 +41,14 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
             }
         }
 
-        private bool GivenParallelCheckIfInfiniteSolutions(LinearEquation first, LinearEquation second)
+        private bool GivenParallelCheckIfInfiniteSolutions(List<int> coefficients)
         {
-            var a = first.XTerm;
-            var b = first.YTerm;
-            var c = first.ConstantTerm;
-            var d = second.XTerm;
-            var e = second.YTerm;
-            var f = second.ConstantTerm;
+            var a = coefficients[0];
+            var b = coefficients[1];
+            var c = coefficients[2];
+            var d = coefficients[3];
+            var e = coefficients[4];
+            var f = coefficients[5];
 
             if (a != 0)
             {
@@ -60,14 +60,14 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
             }
         }
 
-        private LinearSimultaneousEquationsSolution ComputeInfiniteSolution(LinearEquation first, LinearEquation second)
+        private LinearSimultaneousEquationsSolution ComputeInfiniteSolution(List<int> coefficients)
         {
-            var a = first.XTerm;
-            var b = first.YTerm;
-            var c = first.ConstantTerm;
-            var d = second.XTerm;
-            var e = second.YTerm;
-            var f = second.ConstantTerm;
+            var a = coefficients[0];
+            var b = coefficients[1];
+            var c = coefficients[2];
+            var d = coefficients[3];
+            var e = coefficients[4];
+            var f = coefficients[5];
 
             if (a != 0)
             {
@@ -83,14 +83,14 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
             }
         }
 
-        private bool CheckIfParallel(LinearEquation first, LinearEquation second)
+        private bool CheckIfParallel(List<int> coefficients)
         {
-            var a = first.XTerm;
-            var b = first.YTerm;
-            var c = first.ConstantTerm;
-            var d = second.XTerm;
-            var e = second.YTerm;
-            var f = second.ConstantTerm;
+            var a = coefficients[0];
+            var b = coefficients[1];
+            var c = coefficients[2];
+            var d = coefficients[3];
+            var e = coefficients[4];
+            var f = coefficients[5];
 
             if (b != 0 && e != 0)
             {
