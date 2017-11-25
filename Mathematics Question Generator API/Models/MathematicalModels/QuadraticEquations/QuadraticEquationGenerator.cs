@@ -32,27 +32,8 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
 
         protected override List<int> GenerateValidCoefficients()
         {
-            List<int> coefficients;
-
             // for performance reasons generate double root equations separately
-            if (parameters.RequireDoubleRoot)
-            {
-                return GenerateDoubleRootCoefficients();
-            }
-
-            var numberOfTries = 0;
-
-            do
-            {
-                if (numberOfTries > MaxNumberOfTries)
-                {
-                    throw new Exception("Could not generate quadratic satisfying conditions.");
-                }
-                coefficients = GenerateRandomCoefficients();
-                numberOfTries++;
-            } while (!CheckValidCoefficients(coefficients));
-
-            return coefficients;
+            return parameters.RequireDoubleRoot ? GenerateDoubleRootCoefficients() : base.GenerateValidCoefficients();
         }
 
         /* *
