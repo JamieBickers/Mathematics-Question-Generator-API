@@ -36,23 +36,20 @@ namespace MathematicsQuestionGeneratorAPI.Models.PolynomialEquations
             RequireARealDoubleRoot = requireADoubleRoot;
         }
 
+        // leave this here until I properly implement this question type
         private void CheckValidParameters()
         {
             if ((LeadingTermLowerBound > LeadingTermUpperBound) || (OtherTermsLowerBound > OtherTermsUpperBound))
             {
-                throw new InvalidParametersException();
             }
             else if (Degree <= 0)
             {
-                throw new InvalidParametersException();
             }
             else if (RequireOnlyComplexRoots && RequireARealRoot)
             {
-                throw new InvalidParametersException();
             }
             else if (RequireARealDoubleRoot && RequireOnlyComplexRoots)
             {
-                throw new InvalidParametersException();
             }
         }
     }

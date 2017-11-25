@@ -22,41 +22,25 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
 
         // returns a random quadratic equation and its roots
         [HttpGet]
-        public QuadraticEquation GetQuadraticEquation()
+        public IActionResult GetQuadraticEquation()
         {
             var equationGenerator = new QuadraticEquationGenerator(randomIntegerGenerator);
-            return equationGenerator.GenerateQuestionAndAnswer();
+            return Ok(equationGenerator.GenerateQuestionAndAnswer());
         }
 
         // return a quadratic equation satisfying the user entered parameters
         [HttpPost]
-        public QuadraticEquation GetQuadraticEquation([FromBody] QuadraticEquationGeneratorParameters parameters)
+        public IActionResult GetQuadraticEquation([FromBody] QuadraticEquationGeneratorParameters parameters)
         {
             if (!ModelState.IsValid)
             {
-                return new QuadraticEquation(new List<int>() { 1, 2, 3 }, new List<double>() { 0, 0 });
+                return BadRequest(ModelState);
             }
-            try
+            else
             {
                 var equationGenerator = new QuadraticEquationGenerator(randomIntegerGenerator, parameters);
-                return equationGenerator.GenerateQuestionAndAnswer();
+                return Ok(equationGenerator.GenerateQuestionAndAnswer());
             }
-            catch (InvalidParametersException e)
-            {
-                //TODO: return exception to client
-                Response.WriteAsync("Invalid parameters");
-            }
-            catch (MathematicalImpossibilityException e)
-            {
-                // TODO: log this
-            }
-            catch (Exception e)
-            {
-                // TODO: also log
-            }
-
-            // just to make the code compile for now
-            throw new Exception();
         }
     }
 }

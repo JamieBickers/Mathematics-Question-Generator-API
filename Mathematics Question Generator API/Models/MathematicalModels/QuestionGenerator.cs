@@ -2,13 +2,14 @@
 using MathematicsQuestionGeneratorAPI.Models.RandomNumberGenerators;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels
 {
     public abstract class QuestionGenerator<TQuestion, TParameters, TCoefficients, TSolution> : IQuestionGenerator<TQuestion>
-        where TParameters : QuestionParameters
+        where TParameters : IValidatableObject
         where TQuestion : IQuestion
     {
         protected TParameters parameters;

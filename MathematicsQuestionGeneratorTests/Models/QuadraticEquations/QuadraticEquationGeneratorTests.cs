@@ -59,7 +59,7 @@ namespace MathematicsQuestionGeneratorTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidParametersException))]
+        [ExpectedException(typeof(Exception))]
         public void ExpectExceptionWhenUsingInvalidBounds()
         {
             var integerGenerator = new FixedRandomIntegerGenerator(71);

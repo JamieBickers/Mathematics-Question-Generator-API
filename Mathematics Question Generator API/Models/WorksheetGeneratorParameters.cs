@@ -2,6 +2,7 @@
 using MathematicsQuestionGeneratorAPI.Models.QuadraticEquations;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,7 +10,7 @@ namespace MathematicsQuestionGeneratorAPI.Models
 {
     public class WorksheetGeneratorParameters<QuestionType, QuestionGeneratorParameterType>
         where QuestionType : IQuestion
-        where QuestionGeneratorParameterType : QuestionParameters
+        where QuestionGeneratorParameterType : IValidatableObject
     {
         public string EmailAddress;
         public List<QuestionGeneratorParameterType> QuestionGeneratorParameters;

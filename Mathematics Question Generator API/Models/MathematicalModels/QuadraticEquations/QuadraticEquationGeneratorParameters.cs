@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
 {
-    public class QuadraticEquationGeneratorParameters : QuestionParameters, IValidatableObject
+    public class QuadraticEquationGeneratorParameters : IValidatableObject
     {
         [DefaultValue(-10)]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
@@ -64,38 +64,21 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
             RequireRealRoot = requireRealRoot;
             RequireComplexRoot = requireComplexRoot;
             RequireDoubleRoot = requireDoubleRoot;
-
-            if (!CheckValidParameters())
-            {
-                throw new InvalidParametersException();
-            }
-        }
-
-        protected override bool CheckValidParameters()
-        {
-            if (/*(ALowerBound > AUpperBound) || */(BLowerBound > BUpperBound) || (CLowerBound > CUpperBound))
-            {
-                return false;
-            }
-            else if ((RequireIntegerRoot || RequireRealRoot) && RequireComplexRoot)
-            {
-                return false;
-            }
-            else if (RequireDoubleRoot && RequireComplexRoot)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
         }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if(ALowerBound > AUpperBound)
+            if ((ALowerBound > AUpperBound) || (BLowerBound > BUpperBound) || (CLowerBound > CUpperBound))
             {
-                yield return new ValidationResult("qwertyuiop");
+                yield return new ValidationResult("Upper bound is greater than lower bound for one of the coefficients.");
+            }
+            else if ((RequireIntegerRoot || RequireRealRoot) && RequireComplexRoot)
+            {
+                yield return new ValidationResult("Cannot have a complex root alongside either a reel root or an integer root.");
+            }
+            else if (RequireDoubleRoot && RequireComplexRoot)
+            {
+                yield return new ValidationResult("Cannot have a double complex root.");
             }
         }
     }
