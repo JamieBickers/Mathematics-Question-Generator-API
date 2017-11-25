@@ -3,10 +3,12 @@ using MathematicsQuestionGeneratorAPI.Models.MathematicalModels;
 using Newtonsoft.Json;
 using System;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 
 namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
 {
-    public class QuadraticEquationGeneratorParameters : QuestionParameters
+    public class QuadraticEquationGeneratorParameters : QuestionParameters, IValidatableObject
     {
         [DefaultValue(-10)]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
@@ -71,7 +73,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
 
         protected override bool CheckValidParameters()
         {
-            if ((ALowerBound > AUpperBound) || (BLowerBound > BUpperBound) || (CLowerBound > CUpperBound))
+            if (/*(ALowerBound > AUpperBound) || */(BLowerBound > BUpperBound) || (CLowerBound > CUpperBound))
             {
                 return false;
             }
@@ -86,6 +88,14 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
             else
             {
                 return true;
+            }
+        }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if(ALowerBound > AUpperBound)
+            {
+                yield return new ValidationResult("qwertyuiop");
             }
         }
     }

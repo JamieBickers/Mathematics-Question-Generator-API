@@ -5,6 +5,7 @@ using System.Reflection;
 using MathematicsQuestionGeneratorAPI.Exceptions;
 using System;
 using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 
 namespace MathematicsQuestionGeneratorAPI.Controllers
 {
@@ -31,6 +32,10 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
         [HttpPost]
         public QuadraticEquation GetQuadraticEquation([FromBody] QuadraticEquationGeneratorParameters parameters)
         {
+            if (!ModelState.IsValid)
+            {
+                return new QuadraticEquation(new List<int>() { 1, 2, 3 }, new List<double>() { 0, 0 });
+            }
             try
             {
                 var equationGenerator = new QuadraticEquationGenerator(randomIntegerGenerator, parameters);
