@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MathematicsQuestionGeneratorAPI.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,7 +22,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
 
             if ((a == 0 && b == 0) || (d == 0 && e == 0))
             {
-                throw new Exception("Invalid equation.");
+                throw new ArgumentException("Invalid equation.");
             }
             else if (CheckIfParallel(coefficients))
             {
@@ -37,7 +38,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
             }
             else
             {
-                throw new Exception("Mathematically impossible.");
+                throw new MathematicalImpossibilityException();
             }
         }
 
@@ -105,7 +106,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
                 return b == 0;
             }
 
-            throw new Exception("Impossible situation.");
+            throw new MathematicalImpossibilityException();
         }
 
         private double Divide(int a, int b)

@@ -2,6 +2,9 @@
 using MathematicsQuestionGeneratorAPI.Models.QuadraticEquations;
 using MathematicsQuestionGeneratorAPI.Models.RandomNumberGenerators;
 using System.Reflection;
+using MathematicsQuestionGeneratorAPI.Exceptions;
+using System;
+using Microsoft.AspNetCore.Http;
 
 namespace MathematicsQuestionGeneratorAPI.Controllers
 {
@@ -28,8 +31,27 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
         [HttpPost]
         public QuadraticEquation GetQuadraticEquation([FromBody] QuadraticEquationGeneratorParameters parameters)
         {
-            var equationGenerator = new QuadraticEquationGenerator(randomIntegerGenerator, parameters);
-            return equationGenerator.GenerateQuestionAndAnswer();
+            try
+            {
+                var equationGenerator = new QuadraticEquationGenerator(randomIntegerGenerator, parameters);
+                return equationGenerator.GenerateQuestionAndAnswer();
+            }
+            catch (InvalidParametersException e)
+            {
+                //TODO: return exception to client
+                Response.WriteAsync("Invalid parameters");
+            }
+            catch (MathematicalImpossibilityException e)
+            {
+                // TODO: log this
+            }
+            catch (Exception e)
+            {
+                // TODO: also log
+            }
+
+            // just to make the code compile for now
+            throw new Exception();
         }
     }
 }

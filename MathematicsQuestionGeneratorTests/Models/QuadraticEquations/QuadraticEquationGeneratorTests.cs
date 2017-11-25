@@ -3,6 +3,7 @@ using MathematicsQuestionGeneratorAPI.Models.RandomNumberGenerators;
 using MathematicsQuestionGeneratorAPI.Models.QuadraticEquations;
 using System;
 using System.Linq;
+using MathematicsQuestionGeneratorAPI.Exceptions;
 
 namespace MathematicsQuestionGeneratorTests
 {
@@ -58,7 +59,7 @@ namespace MathematicsQuestionGeneratorTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(InvalidParametersException))]
         public void ExpectExceptionWhenUsingInvalidBounds()
         {
             var integerGenerator = new FixedRandomIntegerGenerator(71);

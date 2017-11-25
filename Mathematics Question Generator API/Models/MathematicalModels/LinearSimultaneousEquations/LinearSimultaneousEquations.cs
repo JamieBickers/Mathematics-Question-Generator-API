@@ -13,10 +13,10 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
         public List<int> Coefficients;
         public LinearSimultaneousEquationsSolution Solution;
 
-        public LinearSimultaneousEquations(List<int> coefficients, List<LinearSimultaneousEquationsSolution> solution)
+        public LinearSimultaneousEquations(List<int> coefficients, LinearSimultaneousEquationsSolution solution)
         {
             Coefficients = coefficients;
-            Solution = solution[0];
+            Solution = solution;
         }
 
         public string ParseToString()

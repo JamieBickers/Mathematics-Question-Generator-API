@@ -1,4 +1,5 @@
-﻿using MathematicsQuestionGeneratorAPI.Models.MathematicalModels;
+﻿using MathematicsQuestionGeneratorAPI.Exceptions;
+using MathematicsQuestionGeneratorAPI.Models.MathematicalModels;
 using Newtonsoft.Json;
 using System;
 using System.ComponentModel;
@@ -64,7 +65,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
 
             if (!CheckValidParameters())
             {
-                throw new Exception("Invalid quadratic parameters.");
+                throw new InvalidParametersException();
             }
         }
 

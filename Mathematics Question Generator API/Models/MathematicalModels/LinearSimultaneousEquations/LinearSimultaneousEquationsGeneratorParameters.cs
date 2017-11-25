@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using MathematicsQuestionGeneratorAPI.Exceptions;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -39,7 +40,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
             CoefficientUpperBound = coefficientUpperBound;
             if (!CheckValidParameters())
             {
-                throw new Exception("Invalid parameters.");
+                throw new InvalidParametersException();
             }
         }
 
