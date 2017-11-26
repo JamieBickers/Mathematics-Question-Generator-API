@@ -6,6 +6,7 @@ using MathematicsQuestionGeneratorAPI.Exceptions;
 using System;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using MathematicsQuestionGeneratorAPI.Models;
 
 namespace MathematicsQuestionGeneratorAPI.Controllers
 {
@@ -24,16 +25,11 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
         [HttpGet]
         public IActionResult GetQuadraticEquation()
         {
-            try
+            return ControllerTryCatchBlocks.TryCatchLoggingAllExceptions(() =>
             {
                 var equationGenerator = new QuadraticEquationGenerator(randomIntegerGenerator);
                 return Ok(equationGenerator.GenerateQuestionAndAnswer());
-            }
-            catch (Exception exception)
-            {
-                //TODO: Logging here
-                throw exception;
-            }
+            });
         }
 
         // return a quadratic equation satisfying the user entered parameters
@@ -45,20 +41,12 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            try
-            {
-                var equationGenerator = new QuadraticEquationGenerator(randomIntegerGenerator, parameters);
-                return Ok(equationGenerator.GenerateQuestionAndAnswer());
-            }
-            catch (FailedToGenerateQuestionSatisfyingParametersException)
-            {
-                return BadRequest("Failed to generate question matching those parameters. Tried 1,000,000 times but all failed.");
-            }
-            catch (Exception exception)
-            {
-                //TODO: Logging here
-                throw exception;
-            }
+            return ControllerTryCatchBlocks.TryCatchReturningBadRequestOnFailedToGenerateExceptionLoggingAllOthers(() =>
+                {
+                    var equationGenerator = new QuadraticEquationGenerator(randomIntegerGenerator, parameters);
+                    return Ok(equationGenerator.GenerateQuestionAndAnswer());
+                },
+                BadRequest);
         }
     }
 }

@@ -50,7 +50,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public bool RequireDoubleRoot { get; set; }
 
-        public QuadraticEquationGeneratorParameters(int aLowerBound = -10, int bLowerBound = -100, int cLowerBound = -100, int aUpperBound = 10,
+        public QuadraticEquationGeneratorParameters(int aLowerBound = -100, int bLowerBound = -100, int cLowerBound = -100, int aUpperBound = 10,
             int bUpperBound = 100, int cUpperBound = 100, bool requireIntegerRoot = false,
             bool requireRealRoot = false, bool requireComplexRoot = false, bool requireDoubleRoot = false)
         {
