@@ -1,14 +1,13 @@
-﻿using MathematicsQuestionGeneratorAPI.Exceptions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.SimultaneousEquations
 {
-    public static class LinearSimultaneousEquationsAnalysisFunctions
+    public class LinearSimultaneousEquationsAnalysisFunctions
     {
-        public static LinearSimultaneousEquationsSolution CalculateSolution(List<int> coefficients)
+        public LinearSimultaneousEquationsSolution CalculateSolution(List<int> coefficients)
         {
             var a = coefficients[0];
             var b = coefficients[1];
@@ -22,7 +21,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
 
             if ((a == 0 && b == 0) || (d == 0 && e == 0))
             {
-                throw new ArgumentException("Invalid equation.");
+                throw new Exception("Invalid equation.");
             }
             else if (CheckIfParallel(coefficients))
             {
@@ -38,11 +37,11 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
             }
             else
             {
-                throw new MathematicalImpossibilityException();
+                throw new Exception("Mathematically impossible.");
             }
         }
 
-        private static bool GivenParallelCheckIfInfiniteSolutions(List<int> coefficients)
+        private bool GivenParallelCheckIfInfiniteSolutions(List<int> coefficients)
         {
             var a = coefficients[0];
             var b = coefficients[1];
@@ -61,7 +60,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
             }
         }
 
-        private static LinearSimultaneousEquationsSolution ComputeInfiniteSolution(List<int> coefficients)
+        private LinearSimultaneousEquationsSolution ComputeInfiniteSolution(List<int> coefficients)
         {
             var a = coefficients[0];
             var b = coefficients[1];
@@ -84,7 +83,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
             }
         }
 
-        private static bool CheckIfParallel(List<int> coefficients)
+        private bool CheckIfParallel(List<int> coefficients)
         {
             var a = coefficients[0];
             var b = coefficients[1];
@@ -106,10 +105,10 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
                 return b == 0;
             }
 
-            throw new MathematicalImpossibilityException();
+            throw new Exception("Impossible situation.");
         }
 
-        private static double Divide(int a, int b)
+        private double Divide(int a, int b)
         {
             return Convert.ToDouble(a) / Convert.ToDouble(b);
         }

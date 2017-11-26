@@ -149,7 +149,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
             int a = Coefficients[0];
             if (a == 0)
             {
-                throw new ArgumentException("a term cannot be 0.");
+                throw new Exception("a term cannot be 0.");
             }
             else if (a == 1)
             {

@@ -15,7 +15,8 @@ namespace MathematicsQuestionGeneratorTests.Models.SimultaneousEquations
         {
             var coefficients = new List<int>() { 3, 2, -36, 5, 4, -64 };
 
-            var actualSolution = LinearSimultaneousEquationsAnalysisFunctions.CalculateSolution(coefficients);
+            var solver = new LinearSimultaneousEquationsAnalysisFunctions();
+            var actualSolution = solver.CalculateSolution(coefficients);
             var expectedSolution = new LinearSimultaneousEquationsSolution(8, 6, false, false);
 
             Assert.IsTrue(EqualSolutions(expectedSolution, actualSolution));
@@ -26,7 +27,8 @@ namespace MathematicsQuestionGeneratorTests.Models.SimultaneousEquations
         {
             var coefficients = new List<int>() { 18, -3, 46, 6, -1, 12 };
 
-            var actualSolution = LinearSimultaneousEquationsAnalysisFunctions.CalculateSolution(coefficients);
+            var solver = new LinearSimultaneousEquationsAnalysisFunctions();
+            var actualSolution = solver.CalculateSolution(coefficients);
             var expectedSolution = new LinearSimultaneousEquationsSolution(Double.NaN, Double.NaN, true, false);
 
             Assert.IsTrue(EqualSolutions(expectedSolution, actualSolution));
@@ -37,7 +39,8 @@ namespace MathematicsQuestionGeneratorTests.Models.SimultaneousEquations
         {
             var coefficients = new List<int>() { 18, -3, 45, 6, -1, 15 };
 
-            var actualSolution = LinearSimultaneousEquationsAnalysisFunctions.CalculateSolution(coefficients);
+            var solver = new LinearSimultaneousEquationsAnalysisFunctions();
+            var actualSolution = solver.CalculateSolution(coefficients);
             var expectedSolution = new LinearSimultaneousEquationsSolution(Convert.ToDouble(-14) / Convert.ToDouble(6), 1, false, true);
 
             Assert.IsTrue(EqualSolutions(expectedSolution, actualSolution));
