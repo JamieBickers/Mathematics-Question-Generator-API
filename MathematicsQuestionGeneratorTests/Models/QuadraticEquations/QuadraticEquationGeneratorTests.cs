@@ -3,6 +3,7 @@ using MathematicsQuestionGeneratorAPI.Models.RandomNumberGenerators;
 using MathematicsQuestionGeneratorAPI.Models.QuadraticEquations;
 using System;
 using System.Linq;
+using MathematicsQuestionGeneratorAPI.Exceptions;
 
 namespace MathematicsQuestionGeneratorTests
 {

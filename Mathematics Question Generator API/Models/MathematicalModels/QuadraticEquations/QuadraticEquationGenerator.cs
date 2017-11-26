@@ -7,7 +7,7 @@ using MathematicsQuestionGeneratorAPI.Models.MathematicalModels;
 namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
 {
     public class QuadraticEquationGenerator
-        : QuestionGenerator<QuadraticEquation, QuadraticEquationGeneratorParameters, int, double, List<int>, List<double>>
+        : QuestionGenerator<QuadraticEquation, QuadraticEquationGeneratorParameters, List<int>, List<double>>
     {
         public QuadraticEquationGenerator(IRandomIntegerGenerator randomIntegerGenerator) : base(randomIntegerGenerator) { }
         public QuadraticEquationGenerator(IRandomIntegerGenerator randomIntegerGenerator, QuadraticEquationGeneratorParameters parameters)

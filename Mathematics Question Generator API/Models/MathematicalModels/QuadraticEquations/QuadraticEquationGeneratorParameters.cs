@@ -1,11 +1,14 @@
-﻿using MathematicsQuestionGeneratorAPI.Models.MathematicalModels;
+﻿using MathematicsQuestionGeneratorAPI.Exceptions;
+using MathematicsQuestionGeneratorAPI.Models.MathematicalModels;
 using Newtonsoft.Json;
 using System;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 
 namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
 {
-    public class QuadraticEquationGeneratorParameters : QuestionParameters
+    public class QuadraticEquationGeneratorParameters : IValidatableObject
     {
         [DefaultValue(-10)]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
@@ -47,7 +50,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public bool RequireDoubleRoot { get; set; }
 
-        public QuadraticEquationGeneratorParameters(int aLowerBound = -10, int bLowerBound = -100, int cLowerBound = -100, int aUpperBound = 10,
+        public QuadraticEquationGeneratorParameters(int aLowerBound = -100, int bLowerBound = -100, int cLowerBound = -100, int aUpperBound = 10,
             int bUpperBound = 100, int cUpperBound = 100, bool requireIntegerRoot = false,
             bool requireRealRoot = false, bool requireComplexRoot = false, bool requireDoubleRoot = false)
         {
@@ -61,30 +64,21 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
             RequireRealRoot = requireRealRoot;
             RequireComplexRoot = requireComplexRoot;
             RequireDoubleRoot = requireDoubleRoot;
-
-            if (!CheckValidParameters())
-            {
-                throw new Exception("Invalid quadratic parameters.");
-            }
         }
 
-        protected override bool CheckValidParameters()
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if ((ALowerBound > AUpperBound) || (BLowerBound > BUpperBound) || (CLowerBound > CUpperBound))
             {
-                return false;
+                yield return new ValidationResult("Upper bound is greater than lower bound for one of the coefficients.");
             }
             else if ((RequireIntegerRoot || RequireRealRoot) && RequireComplexRoot)
             {
-                return false;
+                yield return new ValidationResult("Cannot have a complex root alongside either a reel root or an integer root.");
             }
             else if (RequireDoubleRoot && RequireComplexRoot)
             {
-                return false;
-            }
-            else
-            {
-                return true;
+                yield return new ValidationResult("Cannot have a double complex root.");
             }
         }
     }

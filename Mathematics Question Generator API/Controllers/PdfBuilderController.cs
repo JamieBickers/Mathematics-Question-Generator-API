@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using MathematicsQuestionGeneratorAPI.Models.MathematicalModels.SimultaneousEquations;
 using MathematicsQuestionGeneratorAPI.Models.MathematicalModels;
 using System;
+using System.ComponentModel.DataAnnotations;
+using MathematicsQuestionGeneratorAPI.Exceptions;
 
 namespace MathematicsQuestionGeneratorAPI.Controllers
 {
@@ -24,40 +26,68 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
 
         [Route("defaultQuadraticEquations")]
         [HttpPost]
-        public void GenerateDefaultQuadraticEquationsWorksheet([FromBody] string emailAddress)
+        public IActionResult GenerateDefaultQuadraticEquationsWorksheet([FromBody] string emailAddress)
         {
-            IQuestionGenerator<QuadraticEquation> equationGenerator = new QuadraticEquationGenerator(randomIntegerGenerator);
-            BuildAndSendPdf(equationGenerator, emailAddress);
+            return ControllerTryCatchBlocks.TryCatchLoggingAllExceptions(() =>
+            {
+                IQuestionGenerator<QuadraticEquation> equationGenerator = new QuadraticEquationGenerator(randomIntegerGenerator);
+                BuildAndSendPdf(equationGenerator, emailAddress);
+                return Ok(ModelState);
+            });
         }
 
         [Route("defaultSimultaneousEquations")]
         [HttpPost]
-        public void GenerateDefaultSimultaneousEquationsWorksheet([FromBody] string emailAddress)
+        public IActionResult GenerateDefaultSimultaneousEquationsWorksheet([FromBody] string emailAddress)
         {
-            IQuestionGenerator<LinearSimultaneousEquations> equationGenerator = new LinearSimultaneousEquationsGenerator(randomIntegerGenerator);
-            BuildAndSendPdf(equationGenerator, emailAddress);
+            return ControllerTryCatchBlocks.TryCatchLoggingAllExceptions(() =>
+            {
+                IQuestionGenerator<LinearSimultaneousEquations> equationGenerator = new LinearSimultaneousEquationsGenerator(randomIntegerGenerator);
+                BuildAndSendPdf(equationGenerator, emailAddress);
+                return Ok(ModelState);
+            });
         }
 
         [Route("specifiedQuadraticEquations")]
         [HttpPost]
-        public void GenerateUserSpecifiedQuadraticEquationWorksheet(
+        public IActionResult GenerateUserSpecifiedQuadraticEquationWorksheet(
             [FromBody] WorksheetGeneratorParameters<QuadraticEquation, QuadraticEquationGeneratorParameters> worksheetParameters)
         {
-            Func<QuadraticEquationGeneratorParameters, QuadraticEquationGenerator> quadraticEquationGeneratorConstructor
-                = parameter => new QuadraticEquationGenerator(randomIntegerGenerator, parameter);
-            BuildAndSendPdf<QuadraticEquationGenerator, QuadraticEquationGeneratorParameters, QuadraticEquation>(
-                quadraticEquationGeneratorConstructor, worksheetParameters.QuestionGeneratorParameters, worksheetParameters.EmailAddress);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            return ControllerTryCatchBlocks.TryCatchReturningBadRequestOnFailedToGenerateExceptionLoggingAllOthers(() =>
+            {
+                Func<QuadraticEquationGeneratorParameters, QuadraticEquationGenerator> quadraticEquationGeneratorConstructor
+                    = parameter => new QuadraticEquationGenerator(randomIntegerGenerator, parameter);
+                BuildAndSendPdf<QuadraticEquationGenerator, QuadraticEquationGeneratorParameters, QuadraticEquation>(
+                    quadraticEquationGeneratorConstructor, worksheetParameters.QuestionGeneratorParameters, worksheetParameters.EmailAddress);
+                return Ok(ModelState);
+            },
+            BadRequest);
         }
 
         [Route("specifiedSimultaneousEquations")]
         [HttpPost]
-        public void GenerateUserSpecifiedSimultaneousEquationsWorksheet(
+        public IActionResult GenerateUserSpecifiedSimultaneousEquationsWorksheet(
             [FromBody] WorksheetGeneratorParameters<LinearSimultaneousEquations, LinearSimultaneousEquationsGeneratorParameters> worksheetParameters)
         {
-            Func<LinearSimultaneousEquationsGeneratorParameters, LinearSimultaneousEquationsGenerator> quadraticEquationGeneratorConstructor
-                = parameter => new LinearSimultaneousEquationsGenerator(randomIntegerGenerator, parameter);
-            BuildAndSendPdf<LinearSimultaneousEquationsGenerator, LinearSimultaneousEquationsGeneratorParameters, LinearSimultaneousEquations>(
-                quadraticEquationGeneratorConstructor, worksheetParameters.QuestionGeneratorParameters, worksheetParameters.EmailAddress);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            return ControllerTryCatchBlocks.TryCatchReturningBadRequestOnFailedToGenerateExceptionLoggingAllOthers(() =>
+            {
+                Func<LinearSimultaneousEquationsGeneratorParameters, LinearSimultaneousEquationsGenerator> quadraticEquationGeneratorConstructor
+                    = parameter => new LinearSimultaneousEquationsGenerator(randomIntegerGenerator, parameter);
+                BuildAndSendPdf<LinearSimultaneousEquationsGenerator, LinearSimultaneousEquationsGeneratorParameters, LinearSimultaneousEquations>(
+                    quadraticEquationGeneratorConstructor, worksheetParameters.QuestionGeneratorParameters, worksheetParameters.EmailAddress);
+                return Ok(ModelState);
+            },
+            BadRequest);
         }
 
         private void BuildAndSendPdf(IQuestionGenerator<IQuestion> questionGenerator, string emailAddress)
@@ -73,7 +103,7 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
         private void BuildAndSendPdf<GeneratorType, ParameterType, QuestionType>(
             Func<ParameterType, GeneratorType> generatorConstructor, List<ParameterType> parameters, string emailAddress)
             where GeneratorType : IQuestionGenerator<QuestionType>
-            where ParameterType : QuestionParameters
+            where ParameterType : IValidatableObject
             where QuestionType : IQuestion
         {
             var questions = new List<IQuestion>();

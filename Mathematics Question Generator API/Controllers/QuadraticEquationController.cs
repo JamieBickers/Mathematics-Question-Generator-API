@@ -2,6 +2,11 @@
 using MathematicsQuestionGeneratorAPI.Models.QuadraticEquations;
 using MathematicsQuestionGeneratorAPI.Models.RandomNumberGenerators;
 using System.Reflection;
+using MathematicsQuestionGeneratorAPI.Exceptions;
+using System;
+using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
+using MathematicsQuestionGeneratorAPI.Models;
 
 namespace MathematicsQuestionGeneratorAPI.Controllers
 {
@@ -18,18 +23,30 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
 
         // returns a random quadratic equation and its roots
         [HttpGet]
-        public QuadraticEquation GetQuadraticEquation()
+        public IActionResult GetQuadraticEquation()
         {
-            var equationGenerator = new QuadraticEquationGenerator(randomIntegerGenerator);
-            return equationGenerator.GenerateQuestionAndAnswer();
+            return ControllerTryCatchBlocks.TryCatchLoggingAllExceptions(() =>
+            {
+                var equationGenerator = new QuadraticEquationGenerator(randomIntegerGenerator);
+                return Ok(equationGenerator.GenerateQuestionAndAnswer());
+            });
         }
 
         // return a quadratic equation satisfying the user entered parameters
         [HttpPost]
-        public QuadraticEquation GetQuadraticEquation([FromBody] QuadraticEquationGeneratorParameters parameters)
+        public IActionResult GetQuadraticEquation([FromBody] QuadraticEquationGeneratorParameters parameters)
         {
-            var equationGenerator = new QuadraticEquationGenerator(randomIntegerGenerator, parameters);
-            return equationGenerator.GenerateQuestionAndAnswer();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            return ControllerTryCatchBlocks.TryCatchReturningBadRequestOnFailedToGenerateExceptionLoggingAllOthers(() =>
+                {
+                    var equationGenerator = new QuadraticEquationGenerator(randomIntegerGenerator, parameters);
+                    return Ok(equationGenerator.GenerateQuestionAndAnswer());
+                },
+                BadRequest);
         }
     }
 }

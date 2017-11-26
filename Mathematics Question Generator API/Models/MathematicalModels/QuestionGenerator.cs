@@ -1,21 +1,21 @@
-﻿using MathematicsQuestionGeneratorAPI.Models.RandomNumberGenerators;
+﻿using MathematicsQuestionGeneratorAPI.Exceptions;
+using MathematicsQuestionGeneratorAPI.Models.RandomNumberGenerators;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels
 {
-    public abstract class QuestionGenerator<TQuestion, TParameters, TCoefficient, TSolution, TCoefficients, TSolutions> : IQuestionGenerator<TQuestion>
-        where TParameters : QuestionParameters
-        where TCoefficients : IEnumerable<TCoefficient>
-        where TSolutions : IEnumerable<TSolution>
+    public abstract class QuestionGenerator<TQuestion, TParameters, TCoefficients, TSolution> : IQuestionGenerator<TQuestion>
+        where TParameters : IValidatableObject
         where TQuestion : IQuestion
     {
         protected TParameters parameters;
         protected readonly IRandomIntegerGenerator randomIntegerGenerator;
         protected const int MaxNumberOfTries = 1000000;
-        protected Func<TCoefficients, TSolutions, TQuestion> ConstructorForQuestion;
+        protected Func<TCoefficients, TSolution, TQuestion> ConstructorForQuestion;
         protected Func<TParameters> ContructorForParameters;
 
         public QuestionGenerator(IRandomIntegerGenerator randomIntegerGenerator)
@@ -36,13 +36,13 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels
 
         public TQuestion GenerateQuestionAndAnswer()
         {
-            TCoefficients coefficients = GenerateValidCoefficients();
-            TSolutions solutions = CalculateSolutions(coefficients);
-            TQuestion question = ConstructorForQuestion(coefficients, solutions);
+            var coefficients = GenerateValidCoefficients();
+            var solutions = CalculateSolutions(coefficients);
+            var question = ConstructorForQuestion(coefficients, solutions);
             return question;
         }
 
-        protected abstract TSolutions CalculateSolutions(TCoefficients coefficients);
+        protected abstract TSolution CalculateSolutions(TCoefficients coefficients);
 
         protected virtual TCoefficients GenerateValidCoefficients()
         {
@@ -54,7 +54,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels
             {
                 if (numberOfTries > MaxNumberOfTries)
                 {
-                    throw new Exception("Could not generate question satisfying conditions.");
+                    throw new FailedToGenerateQuestionSatisfyingParametersException();
                 }
                 coefficients = GenerateRandomCoefficients();
                 numberOfTries++;
@@ -67,7 +67,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels
 
         protected abstract TCoefficients GenerateRandomCoefficients();
 
-        protected abstract Func<TCoefficients, TSolutions, TQuestion> ComputeContructorForQuestion();
+        protected abstract Func<TCoefficients, TSolution, TQuestion> ComputeContructorForQuestion();
         protected abstract Func<TParameters> ComputeContructorForParameters();
     }
 }

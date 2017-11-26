@@ -1,13 +1,15 @@
-﻿using Newtonsoft.Json;
+﻿using MathematicsQuestionGeneratorAPI.Exceptions;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.SimultaneousEquations
 {
-    public class LinearSimultaneousEquationsGeneratorParameters : QuestionParameters
+    public class LinearSimultaneousEquationsGeneratorParameters : IValidatableObject
     {
         [DefaultValue(false)]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
@@ -37,27 +39,22 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
             RequireInfiniteSolutions = requireInfiniteSolutions;
             CoefficientLowerBound = coefficientLowerBound;
             CoefficientUpperBound = coefficientUpperBound;
-            if (!CheckValidParameters())
-            {
-                throw new Exception("Invalid parameters.");
-            }
         }
 
-        protected override bool CheckValidParameters()
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (RequireUniqueSolution && (RequireNoSolutions || RequireInfiniteSolutions))
             {
-                return false;
+                yield return new ValidationResult("Cannot have unique solution alongside either no solution or infinite solutions.");
             }
             else if (RequireNoSolutions && RequireInfiniteSolutions)
             {
-                return false;
+                yield return new ValidationResult("Cannot have no solutions and infinite solutions.");
             }
             else if (CoefficientLowerBound > CoefficientUpperBound)
             {
-                return false;
+                yield return new ValidationResult("Lower bound cannot be above upper bound.");
             }
-            return true;
         }
     }
 }

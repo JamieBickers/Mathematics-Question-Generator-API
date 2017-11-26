@@ -21,7 +21,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.PolynomialEquations
         {
             if (Coefficients.Count() < 2)
             {
-                throw new Exception("Need at least two coefficients.");
+                throw new ArgumentException("Need at least two coefficients.");
             }
             return $"Equation: {FormattedEquation()}\nRoot{(Roots.Count() == 1 ? "" : "s")}: {FormattedRoots()}";
         }
@@ -81,7 +81,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.PolynomialEquations
         {
             if (leadingcoefficient == 0)
             {
-                throw new Exception("Invalid polynomial, cannot have leading term be zero.");
+                throw new ArgumentException("Invalid polynomial, cannot have leading term be zero.");
             }
             else if (leadingcoefficient == 1)
             {

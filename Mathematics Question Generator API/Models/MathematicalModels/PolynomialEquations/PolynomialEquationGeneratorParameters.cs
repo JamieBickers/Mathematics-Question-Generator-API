@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MathematicsQuestionGeneratorAPI.Exceptions;
+using System;
 
 namespace MathematicsQuestionGeneratorAPI.Models.PolynomialEquations
 {
@@ -35,23 +36,20 @@ namespace MathematicsQuestionGeneratorAPI.Models.PolynomialEquations
             RequireARealDoubleRoot = requireADoubleRoot;
         }
 
+        // leave this here until I properly implement this question type
         private void CheckValidParameters()
         {
             if ((LeadingTermLowerBound > LeadingTermUpperBound) || (OtherTermsLowerBound > OtherTermsUpperBound))
             {
-                throw new Exception("Invalid bounds");
             }
             else if (Degree <= 0)
             {
-                throw new Exception("Degree must be positive.");
             }
             else if (RequireOnlyComplexRoots && RequireARealRoot)
             {
-                throw new Exception("Cannot have a real root as well as only complex roots.");
             }
             else if (RequireARealDoubleRoot && RequireOnlyComplexRoots)
             {
-                throw new Exception("Cannot have a real double root as well as only complex roots.");
             }
         }
     }

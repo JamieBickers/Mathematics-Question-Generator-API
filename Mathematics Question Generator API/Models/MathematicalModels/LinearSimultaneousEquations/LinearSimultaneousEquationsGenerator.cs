@@ -2,23 +2,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.SimultaneousEquations
 {
     public class LinearSimultaneousEquationsGenerator
-        : QuestionGenerator<LinearSimultaneousEquations, LinearSimultaneousEquationsGeneratorParameters, int,
-            LinearSimultaneousEquationsSolution, List<int>, List<LinearSimultaneousEquationsSolution>>
+        : QuestionGenerator<LinearSimultaneousEquations, LinearSimultaneousEquationsGeneratorParameters,List<int>, LinearSimultaneousEquationsSolution>
     {
         public LinearSimultaneousEquationsGenerator(IRandomIntegerGenerator randomIntegerGenerator) : base(randomIntegerGenerator) { }
 
         public LinearSimultaneousEquationsGenerator(IRandomIntegerGenerator randomIntegerGenerator, LinearSimultaneousEquationsGeneratorParameters parameters)
             : base(randomIntegerGenerator, parameters) { }
 
-        protected override List<LinearSimultaneousEquationsSolution> CalculateSolutions(List<int> coefficients)
+        protected override LinearSimultaneousEquationsSolution CalculateSolutions(List<int> coefficients)
         {
-            var solver = new LinearSimultaneousEquationsAnalysisFunctions();
-            return new List<LinearSimultaneousEquationsSolution>() { solver.CalculateSolution(coefficients) };
+            return LinearSimultaneousEquationsAnalysisFunctions.CalculateSolution(coefficients);
         }
 
         protected override bool CheckValidCoefficients(List<int> coefficients)
@@ -28,8 +25,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
                 return false;
             }
 
-            var solver = new LinearSimultaneousEquationsAnalysisFunctions();
-            var solution = solver.CalculateSolution(coefficients);
+            var solution = LinearSimultaneousEquationsAnalysisFunctions.CalculateSolution(coefficients);
 
             if (!solution.InfiniteSolutions && parameters.RequireInfiniteSolutions)
             {
@@ -51,7 +47,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
                 .Select(x => randomIntegerGenerator.GenerateRandomInteger(parameters.CoefficientLowerBound, parameters.CoefficientUpperBound)).ToList();
         }
 
-        protected override Func<List<int>, List<LinearSimultaneousEquationsSolution>, LinearSimultaneousEquations> ComputeContructorForQuestion()
+        protected override Func<List<int>, LinearSimultaneousEquationsSolution, LinearSimultaneousEquations> ComputeContructorForQuestion()
         {
             return (coefficients, solutions) => new LinearSimultaneousEquations(coefficients, solutions);
         }
