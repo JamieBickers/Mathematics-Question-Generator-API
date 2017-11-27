@@ -1,12 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MathematicsQuestionGeneratorAPI.Models.QuadraticEquations;
 using MathematicsQuestionGeneratorAPI.Models.RandomNumberGenerators;
-using System.Reflection;
-using MathematicsQuestionGeneratorAPI.Exceptions;
-using System;
-using Microsoft.AspNetCore.Http;
-using System.Collections.Generic;
 using MathematicsQuestionGeneratorAPI.Models;
+using Microsoft.AspNetCore.Cors;
 
 namespace MathematicsQuestionGeneratorAPI.Controllers
 {
@@ -25,11 +21,12 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
         [HttpGet]
         public IActionResult GetQuadraticEquation()
         {
-            return ControllerTryCatchBlocks.TryCatchLoggingAllExceptions(() =>
+            var x = ControllerTryCatchBlocks.TryCatchLoggingAllExceptions(() =>
             {
                 var equationGenerator = new QuadraticEquationGenerator(randomIntegerGenerator);
                 return Ok(equationGenerator.GenerateQuestionAndAnswer());
             });
+            return x;
         }
 
         // return a quadratic equation satisfying the user entered parameters

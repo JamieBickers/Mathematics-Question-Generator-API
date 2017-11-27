@@ -19,6 +19,8 @@ namespace MathematicsQuestionGeneratorAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddCors();
+
             services.AddSingleton<IRandomIntegerGenerator>(new RandomIntegerGenerator());
         }
 
@@ -29,6 +31,8 @@ namespace MathematicsQuestionGeneratorAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors(options => options.WithOrigins("http://localhost:3000").AllowAnyMethod());
 
             app.UseMvc();
         }

@@ -6,10 +6,8 @@ using MathematicsQuestionGeneratorAPI.Models.RandomNumberGenerators;
 using MathematicsQuestionGeneratorAPI.Models.QuadraticEquations;
 using System.Collections.Generic;
 using MathematicsQuestionGeneratorAPI.Models.MathematicalModels.SimultaneousEquations;
-using MathematicsQuestionGeneratorAPI.Models.MathematicalModels;
 using System;
 using System.ComponentModel.DataAnnotations;
-using MathematicsQuestionGeneratorAPI.Exceptions;
 
 namespace MathematicsQuestionGeneratorAPI.Controllers
 {
