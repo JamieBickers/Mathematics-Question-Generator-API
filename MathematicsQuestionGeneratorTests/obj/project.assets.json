@@ -14538,31 +14538,31 @@
       "hideWarningsAndErrors": true
     },
     "restore": {
-      "projectUniqueName": "C:\\Users\\Jamie\\Desktop\\Mathematics-Question-Generator-API\\MathematicsQuestionGeneratorTests\\MathematicsQuestionGeneratorTests.csproj",
+      "projectUniqueName": "C:\\Users\\Jamie\\Desktop\\MathematicsQuestionGeneratorAPI\\MathematicsQuestionGeneratorTests\\MathematicsQuestionGeneratorTests.csproj",
       "projectName": "MathematicsQuestionGeneratorTests",
-      "projectPath": "C:\\Users\\Jamie\\Desktop\\Mathematics-Question-Generator-API\\MathematicsQuestionGeneratorTests\\MathematicsQuestionGeneratorTests.csproj",
+      "projectPath": "C:\\Users\\Jamie\\Desktop\\MathematicsQuestionGeneratorAPI\\MathematicsQuestionGeneratorTests\\MathematicsQuestionGeneratorTests.csproj",
       "packagesPath": "C:\\Users\\Jamie\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Jamie\\Desktop\\Mathematics-Question-Generator-API\\MathematicsQuestionGeneratorTests\\obj\\",
+      "outputPath": "C:\\Users\\Jamie\\Desktop\\MathematicsQuestionGeneratorAPI\\MathematicsQuestionGeneratorTests\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
         "C:\\Users\\Jamie\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp2.0"
       ],
       "sources": {
-        "C:\\Program Files\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "netcoreapp2.0": {
           "projectReferences": {
-            "C:\\Users\\Jamie\\Desktop\\Mathematics-Question-Generator-API\\Mathematics Question Generator API\\MathematicsQuestionGeneratorAPI.csproj": {
-              "projectPath": "C:\\Users\\Jamie\\Desktop\\Mathematics-Question-Generator-API\\Mathematics Question Generator API\\MathematicsQuestionGeneratorAPI.csproj"
+            "C:\\Users\\Jamie\\Desktop\\MathematicsQuestionGeneratorAPI\\Mathematics Question Generator API\\MathematicsQuestionGeneratorAPI.csproj": {
+              "projectPath": "C:\\Users\\Jamie\\Desktop\\MathematicsQuestionGeneratorAPI\\Mathematics Question Generator API\\MathematicsQuestionGeneratorAPI.csproj"
             }
           }
         }
