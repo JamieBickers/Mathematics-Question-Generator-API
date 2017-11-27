@@ -6,11 +6,11 @@ namespace MathematicsQuestionGeneratorAPI.Models
 {
     public static class ControllerTryCatchBlocks
     {
-        public static IActionResult TryCatchLoggingAllExceptions(Func<IActionResult> codeBlock)
+        public static IActionResult TryCatchLoggingAllExceptions(Func<IActionResult> codeeBlock)
         {
             try
             {
-                return codeBlock();
+                return codeeBlock();
             }
             catch (Exception exception)
             {
