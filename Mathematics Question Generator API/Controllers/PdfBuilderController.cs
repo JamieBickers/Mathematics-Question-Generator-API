@@ -9,6 +9,7 @@ using MathematicsQuestionGeneratorAPI.Models.MathematicalModels.SimultaneousEqua
 using System;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Cors;
+using MathematicsQuestionGeneratorAPI.Models.WorksheetGeneratorParameters;
 
 namespace MathematicsQuestionGeneratorAPI.Controllers
 {
@@ -25,24 +26,24 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
 
         [Route("defaultQuadraticEquations")]
         [HttpPost]
-        public IActionResult GenerateDefaultQuadraticEquationsWorksheet([FromBody] Params stuff)
+        public IActionResult GenerateDefaultQuadraticEquationsWorksheet([FromBody] BasicWorksheetGeneratorparameters parameters)
         {
             return ControllerTryCatchBlocks.TryCatchLoggingAllExceptions(() =>
             {
                 IQuestionGenerator<QuadraticEquation> equationGenerator = new QuadraticEquationGenerator(randomIntegerGenerator);
-                BuildAndSendPdf(equationGenerator, stuff.emailAddress);
+                BuildAndSendPdf(equationGenerator, parameters.EmailAddress, parameters.NumberOfQuestions);
                 return Ok(ModelState);
             });
         }
 
         [Route("defaultSimultaneousEquations")]
         [HttpPost]
-        public IActionResult GenerateDefaultSimultaneousEquationsWorksheet([FromBody] string emailAddress)
+        public IActionResult GenerateDefaultSimultaneousEquationsWorksheet([FromBody] BasicWorksheetGeneratorparameters parameters)
         {
             return ControllerTryCatchBlocks.TryCatchLoggingAllExceptions(() =>
             {
                 IQuestionGenerator<LinearSimultaneousEquations> equationGenerator = new LinearSimultaneousEquationsGenerator(randomIntegerGenerator);
-                BuildAndSendPdf(equationGenerator, emailAddress);
+                BuildAndSendPdf(equationGenerator, parameters.EmailAddress, parameters.NumberOfQuestions);
                 return Ok(ModelState);
             });
         }
@@ -50,7 +51,7 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
         [Route("specifiedQuadraticEquations")]
         [HttpPost]
         public IActionResult GenerateUserSpecifiedQuadraticEquationWorksheet(
-            [FromBody] WorksheetGeneratorParameters<QuadraticEquation, QuadraticEquationGeneratorParameters> worksheetParameters)
+            [FromBody] WorksheetGeneratorParametersWithCustomParameters<QuadraticEquation, QuadraticEquationGeneratorParameters> worksheetParameters)
         {
             if (!ModelState.IsValid)
             {
@@ -71,7 +72,7 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
         [Route("specifiedSimultaneousEquations")]
         [HttpPost]
         public IActionResult GenerateUserSpecifiedSimultaneousEquationsWorksheet(
-            [FromBody] WorksheetGeneratorParameters<LinearSimultaneousEquations, LinearSimultaneousEquationsGeneratorParameters> worksheetParameters)
+            [FromBody] WorksheetGeneratorParametersWithCustomParameters<LinearSimultaneousEquations, LinearSimultaneousEquationsGeneratorParameters> worksheetParameters)
         {
             if (!ModelState.IsValid)
             {
@@ -89,10 +90,10 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
             BadRequest);
         }
 
-        private void BuildAndSendPdf(IQuestionGenerator<IQuestion> questionGenerator, string emailAddress)
+        private void BuildAndSendPdf(IQuestionGenerator<IQuestion> questionGenerator, string emailAddress, int numberOfQuestions)
         {
             var questions = new List<IQuestion>();
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < numberOfQuestions; i++)
             {
                 questions.Add(questionGenerator.GenerateQuestionAndAnswer());
             }
@@ -127,10 +128,5 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
                 stream.Dispose();
             }
         }
-    }
-
-    public class Params
-    {
-        public string emailAddress;
     }
 }
