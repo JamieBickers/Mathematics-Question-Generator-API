@@ -36,17 +36,19 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels
 
         public TQuestion GenerateQuestionAndAnswer()
         {
-            var coefficients = GenerateValidCoefficients();
-            var solutions = CalculateSolutions(coefficients);
-            var question = ConstructorForQuestion(coefficients, solutions);
+            TSolution solution;
+            var coefficients = GenerateValidCoefficients(out solution);
+            var question = ConstructorForQuestion(coefficients, solution);
             return question;
         }
 
-        protected abstract TSolution CalculateSolutions(TCoefficients coefficients);
+        // If the coefficients are invalid, set invalidCoefficients to true and return a stub.
+        protected abstract TSolution CalculateSolution(TCoefficients coefficients, out bool invalidCoefficients);
 
-        protected virtual TCoefficients GenerateValidCoefficients()
+        protected virtual TCoefficients GenerateValidCoefficients(out TSolution solution)
         {
             TCoefficients coefficients;
+            bool invalidCoefficients = false;
 
             var numberOfTries = 0;
 
@@ -57,13 +59,18 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels
                     throw new FailedToGenerateQuestionSatisfyingParametersException();
                 }
                 coefficients = GenerateRandomCoefficients();
+                solution = CalculateSolution(coefficients, out invalidCoefficients);
                 numberOfTries++;
-            } while (!CheckValidCoefficients(coefficients));
+                if (invalidCoefficients)
+                {
+                    continue;
+                }
+            } while (!CheckValidQuestion(coefficients, solution));
 
             return coefficients;
         }
 
-        protected abstract bool CheckValidCoefficients(TCoefficients coefficients);
+        protected abstract bool CheckValidQuestion(TCoefficients coefficients, TSolution solution);
 
         protected abstract TCoefficients GenerateRandomCoefficients();
 

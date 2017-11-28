@@ -1,44 +1,41 @@
-﻿using System;
+﻿using MathematicsQuestionGeneratorAPI.Models.MathematicalModels;
+using MathematicsQuestionGeneratorAPI.Models.MathematicalModels.PolynomialEquations;
+using MathematicsQuestionGeneratorAPI.Models.RandomNumberGenerators;
+using System;
 using System.Collections.Generic;
 
 namespace MathematicsQuestionGeneratorAPI.Models.PolynomialEquations
 {
-    public class PolynomialEquationGenerator : IQuestionGenerator<PolynomialEquationData>
+    public class PolynomialEquationGenerator : QuestionGenerator<PolynomialEquation, PolynomialEquationGeneratorParameters, List<int>, PolynomialEquationSolution>
     {
-        private PolynomialEquationGeneratorParameters parameters;
+        public PolynomialEquationGenerator(IRandomIntegerGenerator randomIntegerGenerator) : base(randomIntegerGenerator) { }
+        public PolynomialEquationGenerator(IRandomIntegerGenerator randomIntegerGenerator, PolynomialEquationGeneratorParameters parameters)
+            : base(randomIntegerGenerator, parameters) { }
 
-        public PolynomialEquationGenerator()
+        // Stub, implementing this will be a mini project in itself.
+        protected override PolynomialEquationSolution CalculateSolution(List<int> coefficients, out bool invalidCoefficients)
         {
-            parameters = new PolynomialEquationGeneratorParameters();
+            invalidCoefficients = false;
+            return new PolynomialEquationSolution(new List<RealRoot>(), false, 0);
         }
 
-        public PolynomialEquationGenerator(PolynomialEquationGeneratorParameters parameters)
+        // For testing reasons don't implement until solutions can be calculated.
+        protected override bool CheckValidQuestion(List<int> coefficients, PolynomialEquationSolution solution)
         {
-            this.parameters = parameters;
+            return true;
         }
 
-        /* *
-         * The list of coefficients will start with the constant term, end with the leading term.
-         * */
-        public PolynomialEquationData GenerateQuestionAndAnswer()
+        protected override Func<PolynomialEquationGeneratorParameters> ComputeContructorForParameters()
         {
-            PolynomialEquationData polynomialEquation;
-
-            do
-            {
-                List<int> coefficients = GenerateRandomCoefficients();
-                polynomialEquation = ComputePolynomialData(coefficients);
-            } while (!polynomialEquation.MatchesCriteria(parameters));
-
-            return polynomialEquation;
+            return () => new PolynomialEquationGeneratorParameters();
         }
 
-        private PolynomialEquationData ComputePolynomialData(List<int> coefficients)
+        protected override Func<List<int>, PolynomialEquationSolution, PolynomialEquation> ComputeContructorForQuestion()
         {
-            return new PolynomialEquationData(coefficients, new List<RealRoot>(), false, 0);
+            return (coefficients, solution) => new PolynomialEquation(coefficients, solution);
         }
 
-        private List<int> GenerateRandomCoefficients()
+        protected override List<int> GenerateRandomCoefficients()
         {
             Random randomNumberGenerator = new Random();
             List<int> coefficients = new List<int>();

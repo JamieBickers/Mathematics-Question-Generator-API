@@ -1,24 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using iTextSharp.text.pdf;
+using MathematicsQuestionGeneratorAPI.Models.MathematicalModels.PolynomialEquations;
 
 namespace MathematicsQuestionGeneratorAPI.Models.PolynomialEquations
 {
-    public class PolynomialEquationData
+    public class PolynomialEquation : IQuestion
     {
         public List<int> Coefficients;
-        public List<RealRoot> RealRoots;
-        public bool HasComplexRoot;
-        public int Discriminant;
+        public PolynomialEquationSolution Solution;
 
-        public PolynomialEquationData(List<int> coefficients, List<RealRoot> realRoots, bool hasComplexRoot, int discriminant)
+        public PolynomialEquation(List<int> coefficients, PolynomialEquationSolution solution)
         {
             Coefficients = coefficients;
-            RealRoots = realRoots;
-            HasComplexRoot = hasComplexRoot;
-            Discriminant = discriminant;
+            Solution = solution;
         }
 
-        public bool MatchesCriteria(PolynomialEquationGeneratorParameters parameters)
+        /*public bool MatchesCriteria(PolynomialEquationGeneratorParameters parameters)
         {
             int numberOfNonZeroCoefficients = Coefficients.Count(coefficient => coefficient != 0);
 
@@ -69,6 +67,11 @@ namespace MathematicsQuestionGeneratorAPI.Models.PolynomialEquations
             {
                 return true;
             }
+        }*/
+
+        public PdfPCell ParseToPdfPCell(int questionNumber, bool showAnswers)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

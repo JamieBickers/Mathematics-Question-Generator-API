@@ -8,7 +8,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
 {
     public static class LinearSimultaneousEquationsAnalysisFunctions
     {
-        public static LinearSimultaneousEquationsSolution CalculateSolution(List<int> coefficients)
+        public static LinearSimultaneousEquationsSolution CalculateSolution(List<int> coefficients, out bool invalidCoefficients)
         {
             var a = coefficients[0];
             var b = coefficients[1];
@@ -19,10 +19,12 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
 
             var NaN = Double.NaN;
             var noSolution = new LinearSimultaneousEquationsSolution(NaN, NaN, true, false);
+            invalidCoefficients = false;
 
             if ((a == 0 && b == 0) || (d == 0 && e == 0))
             {
-                throw new ArgumentException("Invalid equation.");
+                invalidCoefficients = true;
+                return new LinearSimultaneousEquationsSolution(Double.NaN, Double.NaN, false, false);
             }
             else if (CheckIfParallel(coefficients))
             {

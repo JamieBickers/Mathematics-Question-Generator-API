@@ -13,21 +13,18 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
         public LinearSimultaneousEquationsGenerator(IRandomIntegerGenerator randomIntegerGenerator, LinearSimultaneousEquationsGeneratorParameters parameters)
             : base(randomIntegerGenerator, parameters) { }
 
-        protected override LinearSimultaneousEquationsSolution CalculateSolutions(List<int> coefficients)
+        protected override LinearSimultaneousEquationsSolution CalculateSolution(List<int> coefficients, out bool invalidCoefficients)
         {
-            return LinearSimultaneousEquationsAnalysisFunctions.CalculateSolution(coefficients);
+            return LinearSimultaneousEquationsAnalysisFunctions.CalculateSolution(coefficients, out invalidCoefficients);
         }
 
-        protected override bool CheckValidCoefficients(List<int> coefficients)
+        protected override bool CheckValidQuestion(List<int> coefficients, LinearSimultaneousEquationsSolution solution)
         {
             if ((coefficients[0] == 0 && coefficients[1] == 0) || (coefficients[3] == 0 && coefficients[4] == 0))
             {
                 return false;
             }
-
-            var solution = LinearSimultaneousEquationsAnalysisFunctions.CalculateSolution(coefficients);
-
-            if (!solution.InfiniteSolutions && parameters.RequireInfiniteSolutions)
+            else if (!solution.InfiniteSolutions && parameters.RequireInfiniteSolutions)
             {
                 return false;
             }

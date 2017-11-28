@@ -19,8 +19,9 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
             return quadraticEquation.ParseToString();
         }
 
-        protected override List<double> CalculateSolutions(List<int> coefficients)
+        protected override List<double> CalculateSolution(List<int> coefficients, out bool invalidCoefficients)
         {
+            invalidCoefficients = false;
             int a = coefficients[0];
             int b = coefficients[1];
             int c = coefficients[2];
@@ -30,10 +31,10 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
             return roots;
         }
 
-        protected override List<int> GenerateValidCoefficients()
+        protected override List<int> GenerateValidCoefficients(out List<double> solution)
         {
             // for performance reasons generate double root equations separately
-            return parameters.RequireDoubleRoot ? GenerateDoubleRootCoefficients() : base.GenerateValidCoefficients();
+            return parameters.RequireDoubleRoot ? GenerateDoubleRootCoefficients(out solution) : base.GenerateValidCoefficients(out solution);
         }
 
         /* *
@@ -42,9 +43,10 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
          * restriction that u^2 <= aUpper and v^2 <= cUpper which helps narrow down the possible valid values.
          * This also means we only need to check for b being in range.
          * */
-        private List<int> GenerateDoubleRootCoefficients()
+        private List<int> GenerateDoubleRootCoefficients(out List<double> solution)
         {
             var coefficients = new List<int>();
+            bool invalidCoefficients;
 
             do
             {
@@ -55,12 +57,14 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
                 coefficients.Add(u * u);
                 coefficients.Add(2 * u * v);
                 coefficients.Add(v * v);
-            } while (!CheckValidCoefficients(coefficients) || (coefficients[1] > parameters.BUpperBound) || (coefficients[1] < parameters.BLowerBound));
+                solution = CalculateSolution(coefficients, out invalidCoefficients);
+            } while (!CheckValidQuestion(coefficients, solution) || (coefficients[1] > parameters.BUpperBound)
+            || (coefficients[1] < parameters.BLowerBound) || invalidCoefficients);
 
             return coefficients;
         }
 
-        protected override bool CheckValidCoefficients(List<int> coefficients)
+        protected override bool CheckValidQuestion(List<int> coefficients, List<double> solution)
         {
             var a = coefficients[0];
             var b = coefficients[1];
