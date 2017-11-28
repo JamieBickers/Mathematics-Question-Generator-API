@@ -9,27 +9,27 @@ namespace MathematicsQuestionGeneratorAPI.Models.PolynomialEquations
 {
     public class PolynomialEquationGeneratorParameters : IValidatableObject
     {
-        [DefaultValue(false)]
+        [DefaultValue(2)]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public int Degree { get; set; }
 
-        [DefaultValue(false)]
+        [DefaultValue(-1)]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public int MinimumNumberOfTerms { get; set; }
 
-        [DefaultValue(false)]
+        [DefaultValue(-10)]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public int LeadingTermLowerBound { get; set; }
 
-        [DefaultValue(false)]
+        [DefaultValue(10)]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public int LeadingTermUpperBound { get; set; }
 
-        [DefaultValue(false)]
+        [DefaultValue(-100)]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public int OtherTermsLowerBound { get; set; }
 
-        [DefaultValue(false)]
+        [DefaultValue(100)]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public int OtherTermsUpperBound { get; set; }
 
@@ -87,23 +87,6 @@ namespace MathematicsQuestionGeneratorAPI.Models.PolynomialEquations
             if (RequireARealDoubleRoot && RequireOnlyComplexRoots)
             {
                 yield return new ValidationResult("Cannot have only complex roots and a double root.");
-            }
-        }
-
-        // leave this here until I properly implement this question type
-        private void CheckValidParameters()
-        {
-            if ((LeadingTermLowerBound > LeadingTermUpperBound) || (OtherTermsLowerBound > OtherTermsUpperBound))
-            {
-            }
-            else if (Degree <= 0)
-            {
-            }
-            else if (RequireOnlyComplexRoots && RequireARealRoot)
-            {
-            }
-            else if (RequireARealDoubleRoot && RequireOnlyComplexRoots)
-            {
             }
         }
     }

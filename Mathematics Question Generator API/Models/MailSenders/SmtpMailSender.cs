@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Threading.Tasks;
 
 namespace MathematicsQuestionGeneratorAPI.Models.MailSenders
 {
@@ -44,11 +41,10 @@ namespace MathematicsQuestionGeneratorAPI.Models.MailSenders
             try
             {
                 client.Send(message);
-                Console.WriteLine("Sent");
             }
             catch
             {
-                Console.WriteLine("Error");
+                //TODO: Logging here
             }
             finally
             {

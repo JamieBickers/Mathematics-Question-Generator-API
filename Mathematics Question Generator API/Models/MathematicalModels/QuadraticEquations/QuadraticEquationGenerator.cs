@@ -88,6 +88,10 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
             {
                 return false;
             }
+            else if (parameters.RequireIntegerRoot && !(Math.Abs(solution[0] % 1) < 0.0001 && Math.Abs(solution[1] % 1) < 0.0001))
+            {
+                return false;
+            }
             else
             {
                 return true;

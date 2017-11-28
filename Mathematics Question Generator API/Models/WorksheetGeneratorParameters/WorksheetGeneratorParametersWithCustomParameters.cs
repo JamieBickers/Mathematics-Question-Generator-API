@@ -23,7 +23,18 @@ namespace MathematicsQuestionGeneratorAPI.Models
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            return QuestionGeneratorParameters.SelectMany(parameter => parameter.Validate(new ValidationContext(parameter)));
+            var parameterErrors = QuestionGeneratorParameters.SelectMany(parameter => parameter.Validate(new ValidationContext(parameter)));
+            var attribute = new EmailAddressAttribute();
+
+            foreach (var error in parameterErrors)
+            {
+                yield return error;
+            }
+
+            if (!attribute.IsValid(EmailAddress))
+            {
+                yield return new ValidationResult("Invalid email address.");
+            }
         }
     }
 }

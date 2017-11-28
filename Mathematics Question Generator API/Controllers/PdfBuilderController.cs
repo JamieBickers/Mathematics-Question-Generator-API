@@ -28,6 +28,11 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
         [HttpPost]
         public IActionResult GenerateDefaultQuadraticEquationsWorksheet([FromBody] BasicWorksheetGeneratorparameters parameters)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             return ControllerTryCatchBlocks.TryCatchLoggingAllExceptions(() =>
             {
                 IQuestionGenerator<QuadraticEquation> equationGenerator = new QuadraticEquationGenerator(randomIntegerGenerator);
@@ -40,6 +45,11 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
         [HttpPost]
         public IActionResult GenerateDefaultSimultaneousEquationsWorksheet([FromBody] BasicWorksheetGeneratorparameters parameters)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             return ControllerTryCatchBlocks.TryCatchLoggingAllExceptions(() =>
             {
                 IQuestionGenerator<LinearSimultaneousEquations> equationGenerator = new LinearSimultaneousEquationsGenerator(randomIntegerGenerator);
