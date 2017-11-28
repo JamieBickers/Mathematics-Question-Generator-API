@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MathematicsQuestionGeneratorAPI.Models.RandomNumberGenerators;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 
 namespace MathematicsQuestionGeneratorAPI
 {
@@ -18,8 +20,8 @@ namespace MathematicsQuestionGeneratorAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
             services.AddCors();
+            services.AddMvc();
 
             services.AddSingleton<IRandomIntegerGenerator>(new RandomIntegerGenerator());
         }
@@ -32,7 +34,7 @@ namespace MathematicsQuestionGeneratorAPI
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors(options => options.WithOrigins("http://localhost:3000").AllowAnyMethod());
+            app.UseCors(options => options.WithOrigins("http://localhost:3000", "*", "*").AllowAnyMethod().AllowAnyMethod().AllowAnyHeader().AllowCredentials());
 
             app.UseMvc();
         }

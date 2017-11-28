@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using MathematicsQuestionGeneratorAPI.Models.MathematicalModels.SimultaneousEquations;
 using System;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Cors;
 
 namespace MathematicsQuestionGeneratorAPI.Controllers
 {
@@ -24,12 +25,12 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
 
         [Route("defaultQuadraticEquations")]
         [HttpPost]
-        public IActionResult GenerateDefaultQuadraticEquationsWorksheet([FromBody] string emailAddress)
+        public IActionResult GenerateDefaultQuadraticEquationsWorksheet([FromBody] Params stuff)
         {
             return ControllerTryCatchBlocks.TryCatchLoggingAllExceptions(() =>
             {
                 IQuestionGenerator<QuadraticEquation> equationGenerator = new QuadraticEquationGenerator(randomIntegerGenerator);
-                BuildAndSendPdf(equationGenerator, emailAddress);
+                BuildAndSendPdf(equationGenerator, stuff.emailAddress);
                 return Ok(ModelState);
             });
         }
@@ -126,5 +127,10 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
                 stream.Dispose();
             }
         }
+    }
+
+    public class Params
+    {
+        public string emailAddress;
     }
 }
