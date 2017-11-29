@@ -59,11 +59,15 @@ namespace MathematicsQuestionGeneratorTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
-        public void ExpectExceptionWhenUsingInvalidBounds()
+        [ExpectedException(typeof(FailedToGenerateQuestionSatisfyingParametersException))]
+        public void ExpectExceptionWhenUsingImpossibleCondition()
         {
             var integerGenerator = new FixedRandomIntegerGenerator(71);
-            var parameters = new QuadraticEquationGeneratorParameters(bLowerBound: 5, bUpperBound: 1);
+
+            // These parameters are mathematically impossible to fulfill as an equation
+            // with such coefficients will have a real root. This is because f(0)>0, f(x) -> infinity
+            // as |x| -> infinity
+            var parameters = new QuadraticEquationGeneratorParameters(aLowerBound: 1, cUpperBound: -1, requireComplexRoot: true);
             var equationGenerator = new QuadraticEquationGenerator(integerGenerator, parameters);
 
             equationGenerator.GenerateQuestionAndAnswer();
