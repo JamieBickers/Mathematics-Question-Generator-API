@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using MathematicsQuestionGeneratorAPI.Models.MathematicalModels.SimultaneousEquations;
 using System;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Cors;
 using MathematicsQuestionGeneratorAPI.Models.WorksheetGeneratorParameters;
 
 namespace MathematicsQuestionGeneratorAPI.Controllers

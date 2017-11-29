@@ -1,36 +1,35 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MathematicsQuestionGeneratorAPI.Models.QuadraticEquations;
 using MathematicsQuestionGeneratorAPI.Models.RandomNumberGenerators;
 using MathematicsQuestionGeneratorAPI.Models;
-using Microsoft.AspNetCore.Cors;
+using MathematicsQuestionGeneratorAPI.Models.MathematicalModels.SimultaneousEquations;
 
 namespace MathematicsQuestionGeneratorAPI.Controllers
 {
     [Produces("application/json")]
-    [Route("api/QuadraticEquation")]
-    public class QuadraticEquationController : Controller
+    [Route("api/simultaneousequations")]
+    public class LinearSimultaneousEquationsController : Controller
     {
         private readonly IRandomIntegerGenerator randomIntegerGenerator;
 
-        public QuadraticEquationController(IRandomIntegerGenerator randomIntegerGenerator)
+        public LinearSimultaneousEquationsController(IRandomIntegerGenerator randomIntegerGenerator)
         {
             this.randomIntegerGenerator = randomIntegerGenerator;
         }
 
-        // returns a random quadratic equation and its roots
+        // returns random simultaneous equations and its solutions
         [HttpGet]
-        public IActionResult GetQuadraticEquation()
+        public IActionResult GetLinearSimultaneousEquations()
         {
             return ControllerTryCatchBlocks.TryCatchLoggingAllExceptions(() =>
             {
-                var equationGenerator = new QuadraticEquationGenerator(randomIntegerGenerator);
+                var equationGenerator = new LinearSimultaneousEquationsGenerator(randomIntegerGenerator);
                 return Ok(equationGenerator.GenerateQuestionAndAnswer());
             });
         }
 
-        // return a quadratic equation satisfying the user entered parameters
+        // return simultaneous equations equation satisfying the user entered parameters
         [HttpPost]
-        public IActionResult GetQuadraticEquation([FromBody] QuadraticEquationGeneratorParameters parameters)
+        public IActionResult GetLinearSimultaneousEquations([FromBody] LinearSimultaneousEquationsGeneratorParameters parameters)
         {
             if (!ModelState.IsValid)
             {
@@ -39,7 +38,7 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
 
             return ControllerTryCatchBlocks.TryCatchReturningBadRequestOnFailedToGenerateExceptionLoggingAllOthers(() =>
                 {
-                    var equationGenerator = new QuadraticEquationGenerator(randomIntegerGenerator, parameters);
+                    var equationGenerator = new LinearSimultaneousEquationsGenerator(randomIntegerGenerator, parameters);
                     return Ok(equationGenerator.GenerateQuestionAndAnswer());
                 },
                 BadRequest);

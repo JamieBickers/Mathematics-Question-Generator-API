@@ -6,21 +6,21 @@ using System.Linq;
 namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.SimultaneousEquations
 {
     public class LinearSimultaneousEquationsGenerator
-        : QuestionGenerator<LinearSimultaneousEquations, LinearSimultaneousEquationsGeneratorParameters,List<int>, LinearSimultaneousEquationsSolution>
+        : QuestionGenerator<LinearSimultaneousEquations, LinearSimultaneousEquationsGeneratorParameters,List<LinearEquation>, LinearSimultaneousEquationsSolution>
     {
         public LinearSimultaneousEquationsGenerator(IRandomIntegerGenerator randomIntegerGenerator) : base(randomIntegerGenerator) { }
 
         public LinearSimultaneousEquationsGenerator(IRandomIntegerGenerator randomIntegerGenerator, LinearSimultaneousEquationsGeneratorParameters parameters)
             : base(randomIntegerGenerator, parameters) { }
 
-        protected override LinearSimultaneousEquationsSolution CalculateSolution(List<int> coefficients, out bool invalidCoefficients)
+        protected override LinearSimultaneousEquationsSolution CalculateSolution(List<LinearEquation> coefficients, out bool invalidCoefficients)
         {
             return LinearSimultaneousEquationsAnalysisFunctions.CalculateSolution(coefficients, out invalidCoefficients);
         }
 
-        protected override bool CheckValidQuestion(List<int> coefficients, LinearSimultaneousEquationsSolution solution)
+        protected override bool CheckValidQuestion(List<LinearEquation> coefficients, LinearSimultaneousEquationsSolution solution)
         {
-            if ((coefficients[0] == 0 && coefficients[1] == 0) || (coefficients[3] == 0 && coefficients[4] == 0))
+            if ((coefficients[0].XTerm == 0 && coefficients[0].YTerm == 0) || (coefficients[1].XTerm == 0 && coefficients[1].YTerm == 0))
             {
                 return false;
             }
@@ -38,13 +38,18 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.Simultaneous
             }
         }
 
-        protected override List<int> GenerateRandomCoefficients()
+        protected override List<LinearEquation> GenerateRandomCoefficients()
         {
-            return Enumerable.Range(0, 6)
+            var randomNumbers = Enumerable.Range(0, 6)
                 .Select(x => randomIntegerGenerator.GenerateRandomInteger(parameters.CoefficientLowerBound, parameters.CoefficientUpperBound)).ToList();
+
+            var firstEquation = new LinearEquation(randomNumbers[0], randomNumbers[1], randomNumbers[2]);
+            var secondEquation = new LinearEquation(randomNumbers[3], randomNumbers[4], randomNumbers[5]);
+
+            return new List<LinearEquation>() { firstEquation, secondEquation };
         }
 
-        protected override Func<List<int>, LinearSimultaneousEquationsSolution, LinearSimultaneousEquations> ComputeContructorForQuestion()
+        protected override Func<List<LinearEquation>, LinearSimultaneousEquationsSolution, LinearSimultaneousEquations> ComputeContructorForQuestion()
         {
             return (coefficients, solutions) => new LinearSimultaneousEquations(coefficients, solutions);
         }

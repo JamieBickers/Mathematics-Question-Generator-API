@@ -13,7 +13,9 @@ namespace MathematicsQuestionGeneratorTests.Models.SimultaneousEquations
         [TestMethod]
         public void TestFindsUniqueSolution()
         {
-            var coefficients = new List<int>() { 3, 2, -36, 5, 4, -64 };
+            var firstEquation = new LinearEquation(3, 2, -36);
+            var secondEquation = new LinearEquation(5, 4, -64);
+            var coefficients = new List<LinearEquation>() { firstEquation, secondEquation };
 
             bool invalidCoefficients;
             var actualSolution = LinearSimultaneousEquationsAnalysisFunctions.CalculateSolution(coefficients, out invalidCoefficients);
@@ -26,7 +28,10 @@ namespace MathematicsQuestionGeneratorTests.Models.SimultaneousEquations
         [TestMethod]
         public void TestFindsNoSolution()
         {
-            var coefficients = new List<int>() { 18, -3, 46, 6, -1, 12 };
+            var firstEquation = new LinearEquation(18, -3, 46);
+            var secondEquation = new LinearEquation(6, -1, 12);
+            var coefficients = new List<LinearEquation>() { firstEquation, secondEquation };
+
             bool invalidCoefficients;
             var actualSolution = LinearSimultaneousEquationsAnalysisFunctions.CalculateSolution(coefficients, out invalidCoefficients);
             var expectedSolution = new LinearSimultaneousEquationsSolution(Double.NaN, Double.NaN, true, false);
@@ -37,7 +42,10 @@ namespace MathematicsQuestionGeneratorTests.Models.SimultaneousEquations
         [TestMethod]
         public void TestFindsInfiniteSolutions()
         {
-            var coefficients = new List<int>() { 18, -3, 45, 6, -1, 15 };
+            var firstEquation = new LinearEquation(18, -3, 45);
+            var secondEquation = new LinearEquation(6, -1, 15);
+            var coefficients = new List<LinearEquation>() { firstEquation, secondEquation };
+
             bool invalidCoefficients;
             var actualSolution = LinearSimultaneousEquationsAnalysisFunctions.CalculateSolution(coefficients, out invalidCoefficients);
             var expectedSolution = new LinearSimultaneousEquationsSolution(Convert.ToDouble(-14) / Convert.ToDouble(6), 1, false, true);
@@ -70,14 +78,14 @@ namespace MathematicsQuestionGeneratorTests.Models.SimultaneousEquations
         }
 
         // returns true if solution doesn't exist
-        private bool VerifySolutionIfSolutionExists(List<int> coefficients, LinearSimultaneousEquationsSolution solution)
+        private bool VerifySolutionIfSolutionExists(List<LinearEquation> coefficients, LinearSimultaneousEquationsSolution solution)
         {
-            var a = coefficients[0];
-            var b = coefficients[1];
-            var c = coefficients[2];
-            var d = coefficients[3];
-            var e = coefficients[4];
-            var f = coefficients[5];
+            var a = coefficients[0].XTerm;
+            var b = coefficients[0].YTerm;
+            var c = coefficients[0].ConstantTerm;
+            var d = coefficients[1].XTerm;
+            var e = coefficients[1].YTerm;
+            var f = coefficients[1].ConstantTerm;
             var x = solution.FirstSolution;
             var y = solution.SecondSolution;
 
