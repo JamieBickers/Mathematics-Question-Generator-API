@@ -6,26 +6,26 @@ using System.Net.Mail;
 namespace MathematicsQuestionGeneratorAPI.Models.MailSenders
 {
 
-    public class SmtpMailSender
+    public class SmtpMailSender : IMailSender
     {
-        private static string password = "Ga173VC0GW9z";
+        private const string FromAddress = "randomizedmathematicsquestions@gmail.com";
+        private const string Password = "Ga173VC0GW9z";
 
-        public void SendEmail(string reciever, List<MemoryStream> streams = null)
+        public void SendEmail(string reciever, List<MemoryStream> streams)
         {
             var client = new SmtpClient();
-            var message = new MailMessage();
-
-            message.From = new MailAddress(reciever);
-            message.To.Add("bickersjamie@googlemail.com");
-            message.Subject = "my subject";
-            message.Body = "my body";
+            var message = new MailMessage(FromAddress, reciever)
+            {
+                Subject = "Worksheet",
+                Body = "A pdf of the worksheet is attached."
+            };
 
             if (streams != null)
             {
                 foreach (var stream in streams)
                 {
                     stream.Position = 0;
-                    var attachment = new Attachment(stream, "Test.pdf");
+                    var attachment = new Attachment(stream, "Worksheet.pdf");
                     message.Attachments.Add(attachment);
                 }
             }
@@ -34,7 +34,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.MailSenders
             client.Port = 587;
             client.EnableSsl = true;
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
-            client.Credentials = new NetworkCredential("randomizedmathematicsquestions@gmail.com", password);
+            client.Credentials = new NetworkCredential(FromAddress, Password);
 
             client.Timeout = 100000;
 

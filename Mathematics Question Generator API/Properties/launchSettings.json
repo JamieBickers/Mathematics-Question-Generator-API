@@ -10,11 +10,11 @@
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
-      "launchBrowser": true,
-      "launchUrl": "api/worksheet",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "launchBrowser": true,
+      "launchUrl": "api/worksheet"
     },
     "Mathematics_Question_Generator_API": {
       "commandName": "Project",

@@ -55,7 +55,7 @@ namespace MathematicsQuestionGeneratorTests
 
             var equation = equationGenerator.GenerateQuestionAndAnswer();
 
-            Assert.AreEqual(equation.Roots.Count(root => Double.IsNaN(root)), 0);
+            Assert.AreEqual(equation.Roots.Count(root => double.IsNaN(root)), 0);
         }
 
         [TestMethod]
@@ -71,6 +71,33 @@ namespace MathematicsQuestionGeneratorTests
             var equationGenerator = new QuadraticEquationGenerator(integerGenerator, parameters);
 
             equationGenerator.GenerateQuestionAndAnswer();
+        }
+
+        [TestMethod]
+        public void TestLotsOfQuadraticEquations()
+        {
+            var integerGenerator = new FixedRandomIntegerGenerator(4243);
+            var equationGenerator = new QuadraticEquationGenerator(integerGenerator);
+
+            for (var i = 0; i < 1000000; i++)
+            {
+                var equation = equationGenerator.GenerateQuestionAndAnswer();
+                Assert.IsTrue(VerifySolutionIfSolutionIsReal(equation), $"{i}");
+            }
+        }
+
+        private bool VerifySolutionIfSolutionIsReal(QuadraticEquation equation)
+        {
+            if (equation.Roots.Exists(root => double.IsNaN(root)))
+            {
+                return true;
+            }
+
+            var a = equation.Coefficients[0];
+            var b = equation.Coefficients[1];
+            var c = equation.Coefficients[2];
+
+            return equation.Roots.Exists(x => Math.Abs(a * x * x + b * x + c) < 0.00000001);
         }
     }
 }

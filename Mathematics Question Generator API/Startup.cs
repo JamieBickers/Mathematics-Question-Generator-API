@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MathematicsQuestionGeneratorAPI.Models.RandomNumberGenerators;
-using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Cors.Infrastructure;
+using MathematicsQuestionGeneratorAPI.Models.MailSenders;
+using MathematicsQuestionGeneratorAPI.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace MathematicsQuestionGeneratorAPI
 {
@@ -22,8 +23,11 @@ namespace MathematicsQuestionGeneratorAPI
         {
             services.AddCors();
             services.AddMvc();
+            services.AddDbContext<QuestionGeneratorContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddSingleton<IRandomIntegerGenerator>(new RandomIntegerGenerator());
+            services.AddTransient<IMailSender, SmtpMailSender>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+using MathematicsQuestionGeneratorAPI.Data;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MathematicsQuestionGeneratorAPI
 {
@@ -14,7 +10,24 @@ namespace MathematicsQuestionGeneratorAPI
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            var webHost = BuildWebHost(args);
+
+            using (var scope = webHost.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var context = services.GetRequiredService<QuestionGeneratorContext>();
+                    DbInitialiser.Initialise(context);
+                }
+                catch (Exception exception)
+                {
+                    //TODO: Logging here
+                    throw exception;
+                }
+            }
+
+            webHost.Run();
         }
 
         public static IWebHost BuildWebHost(string[] args) =>

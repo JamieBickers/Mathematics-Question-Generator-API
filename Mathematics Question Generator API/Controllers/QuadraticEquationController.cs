@@ -21,7 +21,7 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
         [HttpGet]
         public IActionResult GetQuadraticEquation()
         {
-            return ControllerTryCatchBlocks.TryCatchLoggingAllExceptions(() =>
+            return ControllerTryCatchBlocks.LoggingAllExceptions(() =>
             {
                 var equationGenerator = new QuadraticEquationGenerator(randomIntegerGenerator);
                 return Ok(equationGenerator.GenerateQuestionAndAnswer());
@@ -37,7 +37,7 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            return ControllerTryCatchBlocks.TryCatchReturningBadRequestOnFailedToGenerateExceptionLoggingAllOthers(() =>
+            return ControllerTryCatchBlocks.ReturnBadRequestOnFailedToGenerateExceptionLoggingAllOthers(() =>
                 {
                     var equationGenerator = new QuadraticEquationGenerator(randomIntegerGenerator, parameters);
                     return Ok(equationGenerator.GenerateQuestionAndAnswer());

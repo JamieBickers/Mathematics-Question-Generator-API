@@ -17,10 +17,12 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
     public class PdfBuilderController : Controller
     {
         private readonly IRandomIntegerGenerator randomIntegerGenerator;
+        private readonly IMailSender mailSender;
 
-        public PdfBuilderController(IRandomIntegerGenerator randomIntegerGenerator)
+        public PdfBuilderController(IRandomIntegerGenerator randomIntegerGenerator, IMailSender mailSender)
         {
             this.randomIntegerGenerator = randomIntegerGenerator;
+            this.mailSender = mailSender;
         }
 
         [Route("defaultQuadraticEquations")]
@@ -32,7 +34,7 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            return ControllerTryCatchBlocks.TryCatchLoggingAllExceptions(() =>
+            return ControllerTryCatchBlocks.LoggingAllExceptions(() =>
             {
                 IQuestionGenerator<QuadraticEquation> equationGenerator = new QuadraticEquationGenerator(randomIntegerGenerator);
                 BuildAndSendPdf(equationGenerator, parameters.EmailAddress, parameters.NumberOfQuestions);
@@ -49,7 +51,7 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            return ControllerTryCatchBlocks.TryCatchLoggingAllExceptions(() =>
+            return ControllerTryCatchBlocks.LoggingAllExceptions(() =>
             {
                 IQuestionGenerator<LinearSimultaneousEquations> equationGenerator = new LinearSimultaneousEquationsGenerator(randomIntegerGenerator);
                 BuildAndSendPdf(equationGenerator, parameters.EmailAddress, parameters.NumberOfQuestions);
@@ -67,7 +69,7 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            return ControllerTryCatchBlocks.TryCatchReturningBadRequestOnFailedToGenerateExceptionLoggingAllOthers(() =>
+            return ControllerTryCatchBlocks.ReturnBadRequestOnFailedToGenerateExceptionLoggingAllOthers(() =>
             {
                 Func<QuadraticEquationGeneratorParameters, QuadraticEquationGenerator> quadraticEquationGeneratorConstructor
                     = parameter => new QuadraticEquationGenerator(randomIntegerGenerator, parameter);
@@ -88,7 +90,7 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            return ControllerTryCatchBlocks.TryCatchReturningBadRequestOnFailedToGenerateExceptionLoggingAllOthers(() =>
+            return ControllerTryCatchBlocks.ReturnBadRequestOnFailedToGenerateExceptionLoggingAllOthers(() =>
             {
                 Func<LinearSimultaneousEquationsGeneratorParameters, LinearSimultaneousEquationsGenerator> quadraticEquationGeneratorConstructor
                     = parameter => new LinearSimultaneousEquationsGenerator(randomIntegerGenerator, parameter);
@@ -102,7 +104,7 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
         private void BuildAndSendPdf(IQuestionGenerator<IQuestion> questionGenerator, string emailAddress, int numberOfQuestions)
         {
             var questions = new List<IQuestion>();
-            for (int i = 0; i < numberOfQuestions; i++)
+            for (var i = 0; i < numberOfQuestions; i++)
             {
                 questions.Add(questionGenerator.GenerateQuestionAndAnswer());
             }
@@ -116,7 +118,7 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
             where QuestionType : IQuestion
         {
             var questions = new List<IQuestion>();
-            for (int i = 0; i < parameters.Count; i++)
+            for (var i = 0; i < parameters.Count; i++)
             {
                 var generator = generatorConstructor(parameters[i]);
                 questions.Add(generator.GenerateQuestionAndAnswer());
@@ -124,12 +126,11 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
             EmailWorksheetWithGivenQuestions(emailAddress, questions);
         }
 
-        private static void EmailWorksheetWithGivenQuestions(string emailAddress, List<IQuestion> questions)
+        private void EmailWorksheetWithGivenQuestions(string emailAddress, List<IQuestion> questions)
         {
             var pdfBuilder = new BasicPdfBuilder(questions, "title", "instructions");
             var streams = pdfBuilder.CreatePdfsAsMemoryStreams();
 
-            var mailSender = new SmtpMailSender();
             mailSender.SendEmail(emailAddress, streams);
 
             foreach (var stream in streams)

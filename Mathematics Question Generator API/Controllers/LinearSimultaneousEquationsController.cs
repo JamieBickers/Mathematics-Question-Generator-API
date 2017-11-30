@@ -20,7 +20,7 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
         [HttpGet]
         public IActionResult GetLinearSimultaneousEquations()
         {
-            return ControllerTryCatchBlocks.TryCatchLoggingAllExceptions(() =>
+            return ControllerTryCatchBlocks.LoggingAllExceptions(() =>
             {
                 var equationGenerator = new LinearSimultaneousEquationsGenerator(randomIntegerGenerator);
                 return Ok(equationGenerator.GenerateQuestionAndAnswer());
@@ -36,7 +36,7 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            return ControllerTryCatchBlocks.TryCatchReturningBadRequestOnFailedToGenerateExceptionLoggingAllOthers(() =>
+            return ControllerTryCatchBlocks.ReturnBadRequestOnFailedToGenerateExceptionLoggingAllOthers(() =>
                 {
                     var equationGenerator = new LinearSimultaneousEquationsGenerator(randomIntegerGenerator, parameters);
                     return Ok(equationGenerator.GenerateQuestionAndAnswer());

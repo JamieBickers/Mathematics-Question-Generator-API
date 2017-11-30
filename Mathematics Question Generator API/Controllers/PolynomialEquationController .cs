@@ -21,7 +21,7 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
         [Route("{degree}")]
         public IActionResult GetPolynomialEquation(int degree)
         {
-            var x = ControllerTryCatchBlocks.TryCatchLoggingAllExceptions(() =>
+            var x = ControllerTryCatchBlocks.LoggingAllExceptions(() =>
             {
                 var equationGenerator = new PolynomialEquationGenerator(randomIntegerGenerator, new PolynomialEquationGeneratorParameters(degree: degree));
                 return Ok(equationGenerator.GenerateQuestionAndAnswer());
@@ -38,7 +38,7 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            return ControllerTryCatchBlocks.TryCatchReturningBadRequestOnFailedToGenerateExceptionLoggingAllOthers(() =>
+            return ControllerTryCatchBlocks.ReturnBadRequestOnFailedToGenerateExceptionLoggingAllOthers(() =>
                 {
                     var equationGenerator = new PolynomialEquationGenerator(randomIntegerGenerator, parameters);
                     return Ok(equationGenerator.GenerateQuestionAndAnswer());

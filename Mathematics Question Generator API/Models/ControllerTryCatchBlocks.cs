@@ -6,7 +6,7 @@ namespace MathematicsQuestionGeneratorAPI.Models
 {
     public static class ControllerTryCatchBlocks
     {
-        public static IActionResult TryCatchLoggingAllExceptions(Func<IActionResult> codeBlock)
+        public static IActionResult LoggingAllExceptions(Func<IActionResult> codeBlock)
         {
             try
             {
@@ -19,7 +19,7 @@ namespace MathematicsQuestionGeneratorAPI.Models
             }
         }
 
-        public static IActionResult TryCatchReturningBadRequestOnFailedToGenerateExceptionLoggingAllOthers(
+        public static IActionResult ReturnBadRequestOnFailedToGenerateExceptionLoggingAllOthers(
             Func<IActionResult> codeBlock, Func<string, IActionResult> onException)
         {
             try
