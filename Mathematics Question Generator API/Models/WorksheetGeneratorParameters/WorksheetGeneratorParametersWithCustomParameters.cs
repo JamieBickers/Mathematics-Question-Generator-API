@@ -1,4 +1,5 @@
-﻿using MathematicsQuestionGeneratorAPI.Models.MathematicalModels;
+﻿using MathematicsQuestionGeneratorAPI.Models.MailSenders;
+using MathematicsQuestionGeneratorAPI.Models.MathematicalModels;
 using MathematicsQuestionGeneratorAPI.Models.QuadraticEquations;
 using System;
 using System.Collections.Generic;
@@ -12,10 +13,10 @@ namespace MathematicsQuestionGeneratorAPI.Models
         where QuestionType : IQuestion
         where QuestionGeneratorParameterType : IValidatableObject
     {
-        public string EmailAddress;
+        public EmailAddress EmailAddress;
         public List<QuestionGeneratorParameterType> QuestionGeneratorParameters;
 
-        public WorksheetGeneratorParametersWithCustomParameters(string emailAddress, List<QuestionGeneratorParameterType> questionGeneratorParameters)
+        public WorksheetGeneratorParametersWithCustomParameters(EmailAddress emailAddress, List<QuestionGeneratorParameterType> questionGeneratorParameters)
         {
             EmailAddress = emailAddress;
             QuestionGeneratorParameters = questionGeneratorParameters;
@@ -24,16 +25,16 @@ namespace MathematicsQuestionGeneratorAPI.Models
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var parameterErrors = QuestionGeneratorParameters.SelectMany(parameter => parameter.Validate(new ValidationContext(parameter)));
-            var attribute = new EmailAddressAttribute();
+            var emailErrors = EmailAddress.Validate(new ValidationContext(EmailAddress));
 
             foreach (var error in parameterErrors)
             {
                 yield return error;
             }
 
-            if (!attribute.IsValid(EmailAddress))
+            foreach (var error in emailErrors)
             {
-                yield return new ValidationResult("Invalid email address.");
+                yield return error;
             }
         }
     }

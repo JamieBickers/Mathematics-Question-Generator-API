@@ -24,16 +24,16 @@ namespace MathematicsQuestionGeneratorAPI.Data
 
             var users = new List<UserDbo>()
             {
-                new UserDbo() { EmailAddress = "bickersjamie@googlemail.com" }
+                //new UserDbo("bickersjamie@googlemail.com")
             };
 
             var worksheets = new List<WorksheetDbo>()
             {
-                new WorksheetDbo() { User = users[0], DateSent = DateTimeOffset.Parse("2017/01/01 00:00:00")},
-                new WorksheetDbo() { User = users[0], DateSent = DateTimeOffset.Parse("2017/02/16 13:30:00")},
-                new WorksheetDbo() { User = users[0], DateSent = DateTimeOffset.Parse("2017/01/01 14:38:00")},
-                new WorksheetDbo() { User = users[0], DateSent = DateTimeOffset.Parse("2017/07/09 7:30:09")},
-                new WorksheetDbo() { User = users[0], DateSent = DateTimeOffset.Parse("2017/11/29 13:30:00")}
+                //new WorksheetDbo() { User = users[0], DateSent = DateTimeOffset.Parse("2017/01/01 00:00:00")},
+                //new WorksheetDbo() { User = users[0], DateSent = DateTimeOffset.Parse("2017/02/16 13:30:00")},
+                //new WorksheetDbo() { User = users[0], DateSent = DateTimeOffset.Parse("2017/01/01 14:38:00")},
+                //new WorksheetDbo() { User = users[0], DateSent = DateTimeOffset.Parse("2017/07/09 7:30:09")},
+                //new WorksheetDbo() { User = users[0], DateSent = DateTimeOffset.Parse("2017/11/29 13:30:00")}
             };
 
             var questionTypes = new List<QuestionTypeDbo>()
@@ -43,16 +43,16 @@ namespace MathematicsQuestionGeneratorAPI.Data
             };
 
             var quadraticEquationGenerator = new QuadraticEquationGenerator(integerGenerator);
-            var quadraticEquations =
-                Enumerable.Range(0, 100)
-                .Select(x => new QuadraticEquationDbo(quadraticEquationGenerator.GenerateQuestionAndAnswer()))
-                .ToList();
+            var quadraticEquations = new List<QuadraticEquationDbo>();
+                //Enumerable.Range(0, 100)
+                //.Select(x => new QuadraticEquationDbo(quadraticEquationGenerator.GenerateQuestionAndAnswer()))
+                //.ToList();
 
             var simultaneousEquationsGenerator = new LinearSimultaneousEquationsGenerator(integerGenerator);
-            var simultaneousEquations =
-                Enumerable.Range(0, 100)
-                .Select(x => new LinearSimultaneousEquationsDbo(simultaneousEquationsGenerator.GenerateQuestionAndAnswer()))
-                .ToList();
+            var simultaneousEquations = new List<LinearSimultaneousEquationsDbo>();
+            //    Enumerable.Range(0, 100)
+            //    .Select(x => new LinearSimultaneousEquationsDbo(simultaneousEquationsGenerator.GenerateQuestionAndAnswer()))
+            //    .ToList();
 
             var quadraticQuestions = quadraticEquations
                 .Select(equation => new QuestionDbo(equation.ID, questionTypes[0]))
@@ -66,13 +66,13 @@ namespace MathematicsQuestionGeneratorAPI.Data
                 .Select((quadratic, index) => new QuestionDbo(index, questionTypes[0]))
                 .ToList();
 
-                questions.AddRange(simultaneousEquations
-                .Select((equation, index) => new QuestionDbo(index, questionTypes[1])));
+            questions.AddRange(simultaneousEquations
+            .Select((equation, index) => new QuestionDbo(index, questionTypes[1])));
 
-            var worksheetQuestions =
-                Enumerable.Range(0, 50)
-                .Select(x => new WorksheetQuestionDbo(questions[integerGenerator.GenerateRandomInteger(200)], worksheets[integerGenerator.GenerateRandomInteger(5)]))
-                .ToList();
+            //var worksheetQuestions =
+            //    Enumerable.Range(0, 50)
+            //    .Select(x => new WorksheetQuestionDbo(questions[integerGenerator.GenerateRandomInteger(200)], worksheets[integerGenerator.GenerateRandomInteger(5)], x))
+            //    .ToList();
 
             users.ForEach(user => context.UserDbo.Add(user));
             worksheets.ForEach(worksheet => context.WorksheetDbo.Add(worksheet));
@@ -80,7 +80,7 @@ namespace MathematicsQuestionGeneratorAPI.Data
             questionTypes.ForEach(questionType => context.QuestionTypeDbo.Add(questionType));
             simultaneousEquations.ForEach(equation => context.LinearSimultaneousEquationsDbo.Add(equation));
             questions.ForEach(question => context.QuestionDbo.Add(question));
-            worksheetQuestions.ForEach(worksheetQuestion => context.WorksheetQuestionDbo.Add(worksheetQuestion));
+            //worksheetQuestions.ForEach(worksheetQuestion => context.WorksheetQuestionDbo.Add(worksheetQuestion));
 
             context.SaveChanges();
         }

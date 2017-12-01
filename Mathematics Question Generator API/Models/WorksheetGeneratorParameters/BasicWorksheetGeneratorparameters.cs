@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MathematicsQuestionGeneratorAPI.Models.MailSenders;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -8,17 +9,12 @@ namespace MathematicsQuestionGeneratorAPI.Models.WorksheetGeneratorParameters
 {
     public class BasicWorksheetGeneratorparameters : IValidatableObject
     {
-        public string EmailAddress;
+        public EmailAddress EmailAddress;
         public int NumberOfQuestions;
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var attribute = new EmailAddressAttribute();
-
-            if (!attribute.IsValid(EmailAddress))
-            {
-                yield return new ValidationResult("Invalid email address.");
-            }
+            return EmailAddress.Validate(new ValidationContext(EmailAddress));
         }
     }
 }

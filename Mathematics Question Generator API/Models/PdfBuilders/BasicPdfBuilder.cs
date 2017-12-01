@@ -40,7 +40,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.PdfBuilders
 
         private void WriteDocumentToGivenStream(Stream stream, bool displayAnswers)
         {
-            Document document = new Document(PageSize.A4, PdfStylings.MARGIN, PdfStylings.MARGIN, PdfStylings.MARGIN, PdfStylings.MARGIN);
+            var document = new Document(PageSize.A4, PdfStylings.MARGIN, PdfStylings.MARGIN, PdfStylings.MARGIN, PdfStylings.MARGIN);
             WriteTitleAndInstructions(stream, document);
 
             var table = new PdfPTable(1);
@@ -60,16 +60,17 @@ namespace MathematicsQuestionGeneratorAPI.Models.PdfBuilders
             var writer = PdfWriter.GetInstance(document, stream);
             document.Open();
 
-            Paragraph introductoryParagraph;
-            var titleParagraph = new Paragraph(title);
-            titleParagraph.Alignment = Element.ALIGN_RIGHT;
-            titleParagraph.Font = PdfStylings.FONT_TITLE;
+            var titleParagraph = new Paragraph(title)
+            {
+                Alignment = Element.ALIGN_RIGHT,
+                Font = PdfStylings.FONT_TITLE
+            };
             document.Add(titleParagraph);
 
-            Paragraph line = new Paragraph(new Chunk(new iTextSharp.text.pdf.draw.LineSeparator(0.0F, 100.0F, BaseColor.Black, Element.ALIGN_LEFT, 1)));
+            var line = new Paragraph(new Chunk(new iTextSharp.text.pdf.draw.LineSeparator(0.0F, 100.0F, BaseColor.Black, Element.ALIGN_LEFT, 1)));
             document.Add(line);
 
-            introductoryParagraph = new Paragraph
+            var introductoryParagraph = new Paragraph
             {
                 instrutions
             };

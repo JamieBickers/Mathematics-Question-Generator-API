@@ -8,5 +8,12 @@ namespace MathematicsQuestionGeneratorAPI.Models
         public int ID { get; set; }
 
         public string EmailAddress { get; set; }
+
+        public UserDbo() { }
+
+        public UserDbo(string emailAddress)
+        {
+            EmailAddress = emailAddress;
+        }
     }
 }

@@ -11,6 +11,8 @@ namespace MathematicsQuestionGeneratorAPI.Data
         public int SpecificQuestionID { get; set; }
         public QuestionTypeDbo QuestionType { get; set; }
 
+        public QuestionDbo() { }
+
         public QuestionDbo(int specificQuestionID, QuestionTypeDbo questionType)
         {
             SpecificQuestionID = specificQuestionID;
