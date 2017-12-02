@@ -45,24 +45,22 @@ namespace MathematicsQuestionGeneratorAPI.Data
 
         public List<List<IQuestion>> SelectAllWorksheetsByUser(string userEmailAddress)
         {
-            //TODO: make neater
-            var worksheetDbos = context.WorksheetDbo.Where(worksheetDbo => worksheetDbo.User.EmailAddress == userEmailAddress).ToList();
-
-            var returnValue = worksheetDbos.Select(SelectWorksheetQuestions);
-            
-            return returnValue.ToList();
+            return context.WorksheetDbo
+                .Include(worksheet => worksheet.User)
+                .Where(worksheetDbo => worksheetDbo.User.EmailAddress == userEmailAddress)
+                .Select(SelectWorksheetQuestions)
+                .ToList();
         }
 
         private List<IQuestion> SelectWorksheetQuestions(WorksheetDbo worksheetDbo)
         {
-            //TODO: make neater
-            var debug = context.WorksheetQuestionDbo;
-            var debug2 = debug.Select(x => x).ToList();
-            var questionDbos = debug2.Where(worksheetQuestion => worksheetQuestion.Worksheet.ID == worksheetDbo.ID).ToList();
-
-            questionDbos.OrderBy(worksheetQuestion => worksheetQuestion.QuestionNumber).ToList();
-
-            return questionDbos.Select(worksheetQuestion => FindQuestionCorrespondingToQuestionDbo(worksheetQuestion.Question))
+            return context.WorksheetQuestionDbo
+                .Include(worksheetQuestion => worksheetQuestion.Question)
+                .Include(worksheetQuestion => worksheetQuestion.Question.QuestionType)
+                .Include(worksheetQuestion => worksheetQuestion.Worksheet.User)
+                .Where(worksheetQuestion => worksheetQuestion.Worksheet.ID == worksheetDbo.ID)
+                .OrderBy(worksheetQuestion => worksheetQuestion.QuestionNumber)
+                .Select(worksheetQuestion => FindQuestionCorrespondingToQuestionDbo(worksheetQuestion.Question))
                 .ToList();
         }
 

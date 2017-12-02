@@ -120,21 +120,24 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
 
             foreach (var worksheet in worksheets)
             {
-                EmailWorksheetWithGivenQuestionsAsync(emailAddress.Address, worksheet);
+                EmailWorksheetWithGivenQuestionsAsync(emailAddress.Address, worksheet, false);
             }
             return Ok();
         }
 
-        private void BuildAndSendPdf(IQuestionGenerator<IQuestion> questionGenerator, string emailAddress, int numberOfQuestions)
+        private void BuildAndSendPdf(IQuestionGenerator<IQuestion> questionGenerator, string emailAddress,
+            int numberOfQuestions, bool addToDatabase = true)
         {
             var questions = Enumerable.Range(0, numberOfQuestions)
                 .Select(x => questionGenerator.GenerateQuestionAndAnswer())
                 .ToList();
-            EmailWorksheetWithGivenQuestionsAsync(emailAddress, questions);
+            EmailWorksheetWithGivenQuestionsAsync(emailAddress, questions, addToDatabase);
         }
 
         private void BuildAndSendPdf<GeneratorType, ParameterType, QuestionType>(
-            Func<ParameterType, GeneratorType> generatorConstructor, List<ParameterType> parameters, string emailAddress)
+            Func<ParameterType, GeneratorType> generatorConstructor, List<ParameterType> parameters,
+            string emailAddress, bool addToDatabase = true)
+
             where GeneratorType : IQuestionGenerator<QuestionType>
             where ParameterType : IValidatableObject
             where QuestionType : IQuestion
@@ -145,12 +148,15 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
                 var generator = generatorConstructor(parameters[i]);
                 questions.Add(generator.GenerateQuestionAndAnswer());
             }
-            EmailWorksheetWithGivenQuestionsAsync(emailAddress, questions);
+            EmailWorksheetWithGivenQuestionsAsync(emailAddress, questions, addToDatabase);
         }
 
-        private async void EmailWorksheetWithGivenQuestionsAsync(string emailAddress, List<IQuestion> questions)
+        private async void EmailWorksheetWithGivenQuestionsAsync(string emailAddress, List<IQuestion> questions, bool addToDatabase)
         {
-            await AddToDatabase(emailAddress, questions);
+            if (addToDatabase)
+            {
+                await AddToDatabase(emailAddress, questions);
+            }
 
             var pdfBuilder = new BasicPdfBuilder(questions, "title", "instructions");
             var streams = pdfBuilder.CreatePdfsAsMemoryStreams();
