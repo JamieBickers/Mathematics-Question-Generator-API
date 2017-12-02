@@ -6,15 +6,17 @@ using System.Threading.Tasks;
 
 namespace MathematicsQuestionGeneratorAPI.Models.PolynomialEquations
 {
-    public class RealRoot
+    public class Root
     {
-        public double Value;
-        public double Degree;
+        public double RealPart;
+        public double ImaginaryPart;
+        public int Degree;
         public bool IsInteger;
 
-        public RealRoot(double value, int degree, bool isInteger)
+        public Root(double realPart, double imaginaryPart, int degree, bool isInteger)
         {
-            Value = value;
+            RealPart = realPart;
+            ImaginaryPart = imaginaryPart;
             Degree = degree;
             IsInteger = isInteger;
         }

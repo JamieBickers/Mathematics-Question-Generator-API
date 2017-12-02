@@ -8,14 +8,12 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.PolynomialEq
 {
     public class PolynomialEquationSolution
     {
-        public List<RealRoot> RealRoots;
-        public bool HasComplexRoot;
+        public List<Root> Roots;
         public int Discriminant;
 
-        public PolynomialEquationSolution(List<RealRoot> realRoots, bool hasComplexRoot, int discriminant)
+        public PolynomialEquationSolution(List<Root> roots, int discriminant)
         {
-            RealRoots = realRoots;
-            HasComplexRoot = hasComplexRoot;
+            Roots = roots;
             Discriminant = discriminant;
         }
     }

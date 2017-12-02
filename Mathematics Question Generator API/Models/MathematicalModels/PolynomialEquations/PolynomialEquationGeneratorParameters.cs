@@ -51,7 +51,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.PolynomialEquations
 
         [DefaultValue(false)]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
-        public bool RequireARealDoubleRoot { get; set; }
+        public bool RequireADoubleRoot { get; set; }
 
         public PolynomialEquationGeneratorParameters(int degree = 2, int leadingTermLowerBound = -10, int leadingTermUpperBound = 10, int otherTermsLowerBound = -100,
             int otherTermsUpperBound = 100, int minimumNumberOfTerms = -1,  bool requireAnIntegerRoot = false, bool requireARealRoot = false,
@@ -67,7 +67,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.PolynomialEquations
             RequireARealRoot = requireARealRoot;
             RequireAComplexRoot = requireAComplexRoot;
             RequireOnlyComplexRoots = requireOnlyComplexRoots;
-            RequireARealDoubleRoot = requireADoubleRoot;
+            RequireADoubleRoot = requireADoubleRoot;
         }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
@@ -84,7 +84,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.PolynomialEquations
             {
                 yield return new ValidationResult("Cannot have only complex roots and a real root.");
             }
-            if (RequireARealDoubleRoot && RequireOnlyComplexRoots)
+            if (RequireADoubleRoot && RequireOnlyComplexRoots)
             {
                 yield return new ValidationResult("Cannot have only complex roots and a double root.");
             }

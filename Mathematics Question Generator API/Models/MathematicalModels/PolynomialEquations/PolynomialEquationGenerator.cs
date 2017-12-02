@@ -3,6 +3,7 @@ using MathematicsQuestionGeneratorAPI.Models.MathematicalModels.PolynomialEquati
 using MathematicsQuestionGeneratorAPI.Models.RandomNumberGenerators;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MathematicsQuestionGeneratorAPI.Models.PolynomialEquations
 {
@@ -12,17 +13,44 @@ namespace MathematicsQuestionGeneratorAPI.Models.PolynomialEquations
         public PolynomialEquationGenerator(IRandomIntegerGenerator randomIntegerGenerator, PolynomialEquationGeneratorParameters parameters)
             : base(randomIntegerGenerator, parameters) { }
 
-        // Stub, implementing this will be a mini project in itself.
         protected override PolynomialEquationSolution CalculateSolution(List<int> coefficients, out bool invalidCoefficients)
         {
-            invalidCoefficients = false;
-            return new PolynomialEquationSolution(new List<RealRoot>(), false, 0);
+            if (coefficients[coefficients.Count - 1] == 0 || coefficients.Count(term => term != 0) < parameters.MinimumNumberOfTerms)
+            {
+                invalidCoefficients = true;
+                return new PolynomialEquationSolution(new List<Root>(), 0);
+            }
+
+            invalidCoefficients = true;
+            return PolynomialEquationAnalysisFunctions.ComputePolynomialEquationSolution(coefficients);
         }
 
-        // For testing reasons don't implement until solutions can be calculated.
         protected override bool CheckValidQuestion(List<int> coefficients, PolynomialEquationSolution solution)
         {
-            return true;
+            if (parameters.RequireAnIntegerRoot && !solution.Roots.Exists(root => root.IsInteger))
+            {
+                return false;
+            }
+            else if (parameters.RequireARealRoot && !solution.Roots.Exists(root => root.ImaginaryPart == 0))
+            {
+                return false;
+            }
+            else if (parameters.RequireAComplexRoot && !solution.Roots.Exists(root => root.ImaginaryPart != 0))
+            {
+                return false;
+            }
+            else if (parameters.RequireOnlyComplexRoots && solution.Roots.Exists(root => root.ImaginaryPart == 0))
+            {
+                return false;
+            }
+            else if (parameters.RequireADoubleRoot && !solution.Roots.Exists(root => root.Degree > 1))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
 
         protected override Func<PolynomialEquationGeneratorParameters> ComputeContructorForParameters()
@@ -37,11 +65,11 @@ namespace MathematicsQuestionGeneratorAPI.Models.PolynomialEquations
 
         protected override List<int> GenerateRandomCoefficients()
         {
-            Random randomNumberGenerator = new Random();
-            List<int> coefficients = new List<int>();
+            var randomNumberGenerator = new Random();
+            var coefficients = new List<int>();
 
             // Add the non-leading coefficients
-            for (int i = 0; i < parameters.Degree; i++)
+            for (var i = 0; i < parameters.Degree; i++)
             {
                 coefficients.Add(randomNumberGenerator.Next(parameters.OtherTermsLowerBound, parameters.OtherTermsUpperBound));
             }
