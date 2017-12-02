@@ -59,6 +59,7 @@ namespace MathematicsQuestionGeneratorAPI.Data
                 .Include(worksheetQuestion => worksheetQuestion.Question.QuestionType)
                 .Include(worksheetQuestion => worksheetQuestion.Worksheet.User)
                 .Where(worksheetQuestion => worksheetQuestion.Worksheet.ID == worksheetDbo.ID)
+                .ToList()
                 .OrderBy(worksheetQuestion => worksheetQuestion.QuestionNumber)
                 .Select(worksheetQuestion => FindQuestionCorrespondingToQuestionDbo(worksheetQuestion.Question))
                 .ToList();
