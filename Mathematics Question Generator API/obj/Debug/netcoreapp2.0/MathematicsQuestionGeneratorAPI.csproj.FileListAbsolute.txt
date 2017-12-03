@@ -15,9 +15,9 @@ C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\Mathematics Question Gene
 C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\Mathematics Question Generator API\bin\Debug\netcoreapp2.0\MathematicsQuestionGeneratorAPI.dll
 C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\Mathematics Question Generator API\bin\Debug\netcoreapp2.0\MathematicsQuestionGeneratorAPI.pdb
 C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\Mathematics Question Generator API\bin\Debug\netcoreapp2.0\PolyLib.dll
-C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\Mathematics Question Generator API\obj\Debug\netcoreapp2.0\MathematicsQuestionGeneratorAPI.csprojResolveAssemblyReference.cache
 C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\Mathematics Question Generator API\obj\Debug\netcoreapp2.0\MathematicsQuestionGeneratorAPI.csproj.CoreCompileInputs.cache
 C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\Mathematics Question Generator API\obj\Debug\netcoreapp2.0\MathematicsQuestionGeneratorAPI.AssemblyInfoInputs.cache
 C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\Mathematics Question Generator API\obj\Debug\netcoreapp2.0\MathematicsQuestionGeneratorAPI.AssemblyInfo.cs
 C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\Mathematics Question Generator API\obj\Debug\netcoreapp2.0\MathematicsQuestionGeneratorAPI.dll
 C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\Mathematics Question Generator API\obj\Debug\netcoreapp2.0\MathematicsQuestionGeneratorAPI.pdb
+C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\Mathematics Question Generator API\obj\Debug\netcoreapp2.0\MathematicsQuestionGeneratorAPI.csprojResolveAssemblyReference.cache

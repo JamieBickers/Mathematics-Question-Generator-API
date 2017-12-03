@@ -37,22 +37,6 @@ namespace MathematicsQuestionGeneratorAPI.Data
             return context.UserDbo.Any(user => user.EmailAddress == emailAddress);
         }
 
-        public void InsertQuadraticWorksheet(List<QuadraticEquation> equations, string userEmailAddress)
-        {
-            Func<QuadraticEquation, QuadraticEquationDbo> dboConstructor =
-                quadratic => new QuadraticEquationDbo(quadratic);
-
-            InsertWorksheet(equations, userEmailAddress, dboConstructor, AddQuadratic);
-        }
-
-        public void InsertSimultaneousWorksheet(List<LinearSimultaneousEquations> equations, string userEmailAddress)
-        {
-            Func<LinearSimultaneousEquations, LinearSimultaneousEquationsDbo> dboConstructor =
-                linearEquations => new LinearSimultaneousEquationsDbo(linearEquations);
-
-            InsertWorksheet(equations, userEmailAddress, dboConstructor, AddSimultaneous);
-        }
-
         public List<List<IQuestion>> SelectAllWorksheetsByUser(string userEmailAddress)
         {
             if (!EmailAddress.IsEmailAddressValid(userEmailAddress))
@@ -102,8 +86,7 @@ namespace MathematicsQuestionGeneratorAPI.Data
             }
         }
 
-        private void InsertWorksheet<TQuestion, TQuestionDbo>(List<TQuestion> equations, string userEmailAddress,
-            Func<TQuestion, TQuestionDbo> dboConstructor, Func<TQuestionDbo, QuestionDbo> addSpecificQuestion)
+        public void InsertWorksheet(List<IQuestion> questions, string userEmailAddress)
         {
             if (!EmailAddress.IsEmailAddressValid(userEmailAddress))
             {
@@ -119,15 +102,34 @@ namespace MathematicsQuestionGeneratorAPI.Data
             var currentUser = context.UserDbo.First(user => user.EmailAddress == userEmailAddress);
             var worksheet = new WorksheetDbo() { User = currentUser, DateSent = DateTimeOffset.Now };
 
-            var equationDbos = equations.Select(question => dboConstructor(question));
-            var questions = equationDbos.Select(equation => addSpecificQuestion(equation)).ToList();
+            context.WorksheetDbo.Add(worksheet);
 
-            for (var i = 0; i < questions.Count; i++)
+            var questionDbos = questions.Select(question => InsertQuestion(question))
+                .ToList();
+
+            for (var i = 0; i < questionDbos.Count(); i++)
             {
-                context.WorksheetQuestionDbo.Add(new WorksheetQuestionDbo(questions[i], worksheet, i));
+                context.WorksheetQuestionDbo.Add(new WorksheetQuestionDbo(questionDbos[i], worksheet, i));
             }
-
             context.SaveChanges();
+        }
+
+        private QuestionDbo InsertQuestion(IQuestion question)
+        {
+            if (question is QuadraticEquation quadratic)
+            {
+                var quadraticDbo = new QuadraticEquationDbo(quadratic);
+                return AddQuadratic(quadraticDbo);
+            }
+            else if (question is LinearSimultaneousEquations simultaneous)
+            {
+                var simultaneousDbo = new LinearSimultaneousEquationsDbo(simultaneous);
+                return AddSimultaneous(simultaneousDbo);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
         }
 
         private QuestionDbo AddQuadratic(QuadraticEquationDbo equation)
