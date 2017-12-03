@@ -7,6 +7,7 @@ C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\MathematicsQuestionGenera
 C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\MathematicsQuestionGeneratorTests\bin\Debug\netcoreapp2.0\MathematicsQuestionGeneratorTests.dll
 C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\MathematicsQuestionGeneratorTests\bin\Debug\netcoreapp2.0\MathematicsQuestionGeneratorTests.pdb
 C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\MathematicsQuestionGeneratorTests\bin\Debug\netcoreapp2.0\MathematicsQuestionGeneratorAPI.dll
+C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\MathematicsQuestionGeneratorTests\bin\Debug\netcoreapp2.0\PolyLib.dll
 C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\MathematicsQuestionGeneratorTests\bin\Debug\netcoreapp2.0\MathematicsQuestionGeneratorAPI.pdb
 C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\MathematicsQuestionGeneratorTests\obj\Debug\netcoreapp2.0\MathematicsQuestionGeneratorTests.csprojResolveAssemblyReference.cache
 C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\MathematicsQuestionGeneratorTests\obj\Debug\netcoreapp2.0\MathematicsQuestionGeneratorTests.csproj.CoreCompileInputs.cache
@@ -14,4 +15,3 @@ C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\MathematicsQuestionGenera
 C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\MathematicsQuestionGeneratorTests\obj\Debug\netcoreapp2.0\MathematicsQuestionGeneratorTests.AssemblyInfo.cs
 C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\MathematicsQuestionGeneratorTests\obj\Debug\netcoreapp2.0\MathematicsQuestionGeneratorTests.dll
 C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\MathematicsQuestionGeneratorTests\obj\Debug\netcoreapp2.0\MathematicsQuestionGeneratorTests.pdb
-C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\MathematicsQuestionGeneratorTests\bin\Debug\netcoreapp2.0\PolyLib.dll

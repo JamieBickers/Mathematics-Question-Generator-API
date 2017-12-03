@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using MathematicsQuestionGeneratorAPI.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace MathematicsQuestionGeneratorAPI.Data
 {
@@ -11,11 +12,22 @@ namespace MathematicsQuestionGeneratorAPI.Data
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
+        [Required]
         public int FirstEquationXTerm { get; set; }
+
+        [Required]
         public int FirstEquationYTerm { get; set; }
+
+        [Required]
         public int FirstEquationConstantTerm { get; set; }
+
+        [Required]
         public int SecondEquationXTerm { get; set; }
+
+        [Required]
         public int SecondEquationYTerm { get; set; }
+
+        [Required]
         public int SecondEquationConstantTerm { get; set; }
 
         public LinearSimultaneousEquationsDbo() { }

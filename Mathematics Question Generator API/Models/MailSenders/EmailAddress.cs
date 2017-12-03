@@ -12,12 +12,16 @@ namespace MathematicsQuestionGeneratorAPI.Models.MailSenders
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var attribute = new EmailAddressAttribute();
-
-            if (!attribute.IsValid(Address))
+            if (!IsEmailAddressValid(Address))
             {
                 yield return new ValidationResult("Invalid email address.");
             }
+        }
+
+        public static bool IsEmailAddressValid(string emailAddress)
+        {
+            var attribute = new EmailAddressAttribute();
+            return attribute.IsValid(emailAddress);
         }
     }
 }

@@ -29,7 +29,7 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
             this.randomIntegerGenerator = randomIntegerGenerator;
             this.mailSender = mailSender;
             this.context = context;
-            this.Queries = new DatabaseQueries(context);
+            Queries = new DatabaseQueries(context);
         }
 
         [Route("defaultQuadraticEquations")]
@@ -115,6 +115,11 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
+            }
+
+            if (!Queries.CheckIfUserIsInDatabase(emailAddress.Address))
+            {
+                return BadRequest("This email address has not been used before.");
             }
             var worksheets = Queries.SelectAllWorksheetsByUser(emailAddress.Address);
 

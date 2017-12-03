@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Mail;
@@ -8,8 +9,16 @@ namespace MathematicsQuestionGeneratorAPI.Models.MailSenders
 
     public class SmtpMailSender : IMailSender
     {
-        private const string FromAddress = "randomizedmathematicsquestions@gmail.com";
-        private const string Password = "Ga173VC0GW9z";
+        private readonly string FromAddress;
+        private readonly string Password;
+        private readonly IConfiguration configuration;
+
+        public SmtpMailSender(IConfiguration configuration)
+        {
+            this.configuration = configuration;
+            FromAddress = configuration["EmailSettings:FromAddress"];
+            Password = configuration["Emailsettings:Password"];
+        }
 
         public void SendEmail(string reciever, List<MemoryStream> streams)
         {
@@ -30,7 +39,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.MailSenders
                 }
             }
 
-            client.Host = "smtp.gmail.com";
+            client.Host = configuration["Emailsettings:Host"];
             client.Port = 587;
             client.EnableSsl = true;
             client.DeliveryMethod = SmtpDeliveryMethod.Network;

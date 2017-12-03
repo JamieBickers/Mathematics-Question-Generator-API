@@ -1,4 +1,5 @@
 ﻿using MathematicsQuestionGeneratorAPI.Models;
+using MathematicsQuestionGeneratorAPI.Models.MailSenders;
 using MathematicsQuestionGeneratorAPI.Models.MathematicalModels.SimultaneousEquations;
 using MathematicsQuestionGeneratorAPI.Models.QuadraticEquations;
 using Microsoft.EntityFrameworkCore;
@@ -20,11 +21,20 @@ namespace MathematicsQuestionGeneratorAPI.Data
 
         public void InsertUser(string emailAddress)
         {
-            if (!context.UserDbo.Any(user => user.EmailAddress == emailAddress))
+            if (EmailAddress.IsEmailAddressValid(emailAddress))
             {
-                context.UserDbo.Add(new Models.UserDbo(emailAddress));
+                throw new ArgumentException("Invalid email address.");
+            }
+            else if (!context.UserDbo.Any(user => user.EmailAddress == emailAddress))
+            {
+                context.UserDbo.Add(new UserDbo(emailAddress));
                 context.SaveChanges();
             }
+        }
+
+        public bool CheckIfUserIsInDatabase(string emailAddress)
+        {
+            return context.UserDbo.Any(user => user.EmailAddress == emailAddress);
         }
 
         public void InsertQuadraticWorksheet(List<QuadraticEquation> equations, string userEmailAddress)
@@ -45,6 +55,11 @@ namespace MathematicsQuestionGeneratorAPI.Data
 
         public List<List<IQuestion>> SelectAllWorksheetsByUser(string userEmailAddress)
         {
+            if (!EmailAddress.IsEmailAddressValid(userEmailAddress))
+            {
+                throw new ArgumentException("Invalid email address.");
+            }
+
             return context.WorksheetDbo
                 .Include(worksheet => worksheet.User)
                 .Where(worksheetDbo => worksheetDbo.User.EmailAddress == userEmailAddress)
@@ -90,11 +105,17 @@ namespace MathematicsQuestionGeneratorAPI.Data
         private void InsertWorksheet<TQuestion, TQuestionDbo>(List<TQuestion> equations, string userEmailAddress,
             Func<TQuestion, TQuestionDbo> dboConstructor, Func<TQuestionDbo, QuestionDbo> addSpecificQuestion)
         {
-            if (!context.UserDbo.Any(user => user.EmailAddress == userEmailAddress))
+            if (!EmailAddress.IsEmailAddressValid(userEmailAddress))
+            {
+                throw new ArgumentException("Invalid email address.");
+            }
+
+            if (!CheckIfUserIsInDatabase(userEmailAddress))
             {
                 InsertUser(userEmailAddress);
                 context.SaveChanges();
             }
+
             var currentUser = context.UserDbo.First(user => user.EmailAddress == userEmailAddress);
             var worksheet = new WorksheetDbo() { User = currentUser, DateSent = DateTimeOffset.Now };
 
@@ -105,6 +126,7 @@ namespace MathematicsQuestionGeneratorAPI.Data
             {
                 context.WorksheetQuestionDbo.Add(new WorksheetQuestionDbo(questions[i], worksheet, i));
             }
+
             context.SaveChanges();
         }
 

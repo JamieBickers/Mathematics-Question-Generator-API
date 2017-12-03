@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using MathematicsQuestionGeneratorAPI.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace MathematicsQuestionGeneratorAPI.Data
 {
@@ -11,8 +12,13 @@ namespace MathematicsQuestionGeneratorAPI.Data
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
+        [Required]
         public int ATerm { get; set; }
+
+        [Required]
         public int BTerm { get; set; }
+
+        [Required]
         public int CTerm { get; set; }
 
         public QuadraticEquationDbo() { }

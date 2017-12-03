@@ -6,6 +6,7 @@ using MathematicsQuestionGeneratorAPI.Models.RandomNumberGenerators;
 using MathematicsQuestionGeneratorAPI.Models.MailSenders;
 using MathematicsQuestionGeneratorAPI.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace MathematicsQuestionGeneratorAPI
 {
@@ -26,6 +27,7 @@ namespace MathematicsQuestionGeneratorAPI
             services.AddDbContext<QuestionGeneratorContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddSingleton(Configuration);
             services.AddSingleton<IRandomIntegerGenerator>(new RandomIntegerGenerator());
             services.AddTransient<IMailSender, SmtpMailSender>();
         }

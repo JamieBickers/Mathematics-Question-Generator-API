@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MathematicsQuestionGeneratorAPI.Models
 {
@@ -7,6 +8,8 @@ namespace MathematicsQuestionGeneratorAPI.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
+        [Required]
+        [MaxLength(60)]
         public string EmailAddress { get; set; }
 
         public UserDbo() { }
