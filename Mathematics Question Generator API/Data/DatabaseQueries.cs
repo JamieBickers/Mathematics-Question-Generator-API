@@ -21,7 +21,7 @@ namespace MathematicsQuestionGeneratorAPI.Data
 
         public void InsertUser(string emailAddress)
         {
-            if (EmailAddress.IsEmailAddressValid(emailAddress))
+            if (!EmailAddress.IsEmailAddressValid(emailAddress))
             {
                 throw new ArgumentException("Invalid email address.");
             }

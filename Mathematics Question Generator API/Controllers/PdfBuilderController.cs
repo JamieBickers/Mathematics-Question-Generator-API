@@ -180,12 +180,12 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
             {
                 var type = questions.First().GetType();
 
-                if (type == typeof(QuadraticEquation))
+                if (questions.First() is QuadraticEquation)
                 {
                     var quadraticQuestions = questions.Select(question => (QuadraticEquation)question).ToList();
                     Queries.InsertQuadraticWorksheet(quadraticQuestions, emailAddress);
                 }
-                else if (type == typeof(LinearSimultaneousEquations))
+                else if (questions.First() is LinearSimultaneousEquations)
                 {
                     var simultaneousQuestions = questions.Select(question => (LinearSimultaneousEquations)question).ToList();
                     Queries.InsertSimultaneousWorksheet(simultaneousQuestions, emailAddress);
