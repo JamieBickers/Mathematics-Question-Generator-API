@@ -39,38 +39,14 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
         [HttpPost]
         public IActionResult GenerateDefaultQuadraticEquationsWorksheet([FromBody] BasicWorksheetGeneratorparameters parameters)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            return ControllerTryCatchBlocks.LoggingAllExceptions(() =>
-            {
-                var generators = Enumerable.Range(0, parameters.NumberOfQuestions)
-                .Select(x => new QuadraticEquationGenerator(randomIntegerGenerator))
-                .ToList<IQuestionGenerator<IQuestion>>();
-                BuildAndSendPdf(generators, parameters.EmailAddress.Address);
-                return Ok(ModelState);
-            });
+            return GenerateDefaultWorksheet(parameters, new QuadraticEquationGenerator(randomIntegerGenerator));
         }
 
         [Route("defaultSimultaneousEquations")]
         [HttpPost]
         public IActionResult GenerateDefaultSimultaneousEquationsWorksheet([FromBody] BasicWorksheetGeneratorparameters parameters)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            return ControllerTryCatchBlocks.LoggingAllExceptions(() =>
-            {
-                var generators = Enumerable.Range(0, parameters.NumberOfQuestions)
-                .Select(x => new LinearSimultaneousEquationsGenerator(randomIntegerGenerator))
-                .ToList<IQuestionGenerator<IQuestion>>();
-                BuildAndSendPdf(generators, parameters.EmailAddress.Address);
-                return Ok(ModelState);
-            });
+            return GenerateDefaultWorksheet(parameters, new LinearSimultaneousEquationsGenerator(randomIntegerGenerator));
         }
 
         [Route("specifiedQuadraticEquations")]
@@ -78,22 +54,10 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
         public IActionResult GenerateUserSpecifiedQuadraticEquationWorksheet(
             [FromBody] WorksheetGeneratorParametersWithCustomParameters<QuadraticEquation, QuadraticEquationGeneratorParameters> worksheetParameters)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            Func<QuadraticEquationGeneratorParameters, QuadraticEquationGenerator> generatorConstructor =
+                parameters => new QuadraticEquationGenerator(randomIntegerGenerator, parameters);
 
-            return ControllerTryCatchBlocks.ReturnBadRequestOnFailedToGenerateExceptionLoggingAllOthers(() =>
-            {
-                var generators =
-                worksheetParameters.QuestionGeneratorParameters
-                    .Select(parameter => new QuadraticEquationGenerator(randomIntegerGenerator, parameter))
-                    .ToList<IQuestionGenerator<IQuestion>>();
-
-                BuildAndSendPdf(generators, worksheetParameters.EmailAddress.Address);
-                return Ok(ModelState);
-            },
-            BadRequest);
+            return GenerateuserSpecifiedWorksheet(worksheetParameters, generatorConstructor);
         }
 
         [Route("specifiedSimultaneousEquations")]
@@ -101,22 +65,10 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
         public IActionResult GenerateUserSpecifiedSimultaneousEquationsWorksheet(
             [FromBody] WorksheetGeneratorParametersWithCustomParameters<LinearSimultaneousEquations, LinearSimultaneousEquationsGeneratorParameters> worksheetParameters)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            Func<LinearSimultaneousEquationsGeneratorParameters, LinearSimultaneousEquationsGenerator> generatorConstructor =
+                parameters => new LinearSimultaneousEquationsGenerator(randomIntegerGenerator, parameters);
 
-            return ControllerTryCatchBlocks.ReturnBadRequestOnFailedToGenerateExceptionLoggingAllOthers(() =>
-            {
-                var generators =
-                worksheetParameters.QuestionGeneratorParameters
-                    .Select(parameter => new LinearSimultaneousEquationsGenerator(randomIntegerGenerator, parameter))
-                    .ToList<IQuestionGenerator<IQuestion>>();
-
-                BuildAndSendPdf(generators, worksheetParameters.EmailAddress.Address);
-                return Ok(ModelState);
-            },
-            BadRequest);
+            return GenerateuserSpecifiedWorksheet(worksheetParameters, generatorConstructor);
         }
 
         [Route("mixed")]
@@ -178,9 +130,50 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
             return Ok();
         }
 
+        private IActionResult GenerateDefaultWorksheet(BasicWorksheetGeneratorparameters parameters, IQuestionGenerator<IQuestion> generator)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            return ControllerTryCatchBlocks.LoggingAllExceptions(() =>
+            {
+                var generators = Enumerable.Range(0, parameters.NumberOfQuestions)
+                .Select(t => generator)
+                .ToList();
+
+                BuildAndSendPdf(generators, parameters.EmailAddress.Address);
+                return Ok(ModelState);
+            });
+        }
+
+        private IActionResult GenerateuserSpecifiedWorksheet<TGeneratorParamaters, TQuestion>(
+            WorksheetGeneratorParametersWithCustomParameters<TQuestion, TGeneratorParamaters> worksheetParameters,
+            Func<TGeneratorParamaters, IQuestionGenerator<IQuestion>> generatorConstructor)
+            where TGeneratorParamaters : IValidatableObject
+            where TQuestion : IQuestion
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            return ControllerTryCatchBlocks.ReturnBadRequestOnFailedToGenerateExceptionLoggingAllOthers(() =>
+            {
+                var generators =
+                worksheetParameters.QuestionGeneratorParameters
+                    .Select(parameter => generatorConstructor(parameter))
+                    .ToList();
+
+                BuildAndSendPdf(generators, worksheetParameters.EmailAddress.Address);
+                return Ok(ModelState);
+            },
+            BadRequest);
+        }
+
         private void BuildAndSendPdf(List<IQuestionGenerator<IQuestion>> questionGenerators, string emailAddress, bool addToDatabase = true)
         {
-            //TODO; implement various questions on adding to database
             var questions = questionGenerators.Select(generator => generator.GenerateQuestionAndAnswer()).ToList();
             AddToDatabase(emailAddress, questions);
             EmailWorksheetWithGivenQuestionsAsync(emailAddress, questions, addToDatabase);
