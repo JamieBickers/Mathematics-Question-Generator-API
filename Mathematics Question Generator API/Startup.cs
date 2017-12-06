@@ -6,7 +6,6 @@ using MathematicsQuestionGeneratorAPI.Models.RandomNumberGenerators;
 using MathematicsQuestionGeneratorAPI.Models.MailSenders;
 using MathematicsQuestionGeneratorAPI.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace MathematicsQuestionGeneratorAPI
 {
@@ -40,7 +39,7 @@ namespace MathematicsQuestionGeneratorAPI
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors(options => options.WithOrigins("http://localhost:3000", "*", "*").AllowAnyMethod().AllowAnyMethod().AllowAnyHeader().AllowCredentials());
+            app.UseCors(options => options.WithOrigins("http://jamiebickers.s3-website.eu-west-2.amazonaws.com", "*", "*").AllowAnyMethod().AllowAnyMethod().AllowAnyHeader().AllowCredentials());
 
             app.UseMvc();
         }

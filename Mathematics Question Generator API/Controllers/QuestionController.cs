@@ -5,6 +5,7 @@ using MathematicsQuestionGeneratorAPI.Models;
 using Microsoft.AspNetCore.Cors;
 using MathematicsQuestionGeneratorAPI.Models.MathematicalModels;
 using System;
+using Microsoft.Extensions.Logging;
 
 namespace MathematicsQuestionGeneratorAPI.Controllers
 {
@@ -17,18 +18,21 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
     {
         private readonly IRandomIntegerGenerator randomIntegerGenerator;
         private readonly Func<IRandomIntegerGenerator, TQuestionGenerator> questionGeneratorConstructor;
+        private readonly ILogger logger;
 
-        public QuestionController(IRandomIntegerGenerator randomIntegerGenerator, Func<IRandomIntegerGenerator, TQuestionGenerator> questionGeneratorConstructor)
+        public QuestionController(IRandomIntegerGenerator randomIntegerGenerator, Func<IRandomIntegerGenerator,
+            TQuestionGenerator> questionGeneratorConstructor, ILogger logger)
         {
             this.randomIntegerGenerator = randomIntegerGenerator;
             this.questionGeneratorConstructor = questionGeneratorConstructor;
+            this.logger = logger;
         }
 
         // returns a random question and its solution
         [HttpGet]
         public IActionResult GetQuestion()
         {
-            return ControllerTryCatchBlocks.LoggingAllExceptions(() =>
+            return ControllerTryCatchBlocks.LoggingAllExceptions(logger, () =>
             {
                 var equationGenerator = questionGeneratorConstructor(randomIntegerGenerator);
                 return Ok(equationGenerator.GenerateQuestionAndAnswer());
@@ -44,7 +48,7 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            return ControllerTryCatchBlocks.ReturnBadRequestOnFailedToGenerateExceptionLoggingAllOthers(() =>
+            return ControllerTryCatchBlocks.ReturnBadRequestOnFailedToGenerateExceptionLoggingAllOthers(logger, () =>
                 {
                     var equationGenerator = questionGeneratorConstructor(randomIntegerGenerator);
                     return Ok(equationGenerator.GenerateQuestionAndAnswer());

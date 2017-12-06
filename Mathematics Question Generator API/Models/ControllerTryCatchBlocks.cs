@@ -1,27 +1,36 @@
 ﻿using MathematicsQuestionGeneratorAPI.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 
 namespace MathematicsQuestionGeneratorAPI.Models
 {
     public static class ControllerTryCatchBlocks
     {
-        public static IActionResult LoggingAllExceptions(Func<IActionResult> codeBlock)
+        public static IActionResult LoggingAllExceptions(ILogger logger, Func<IActionResult> codeBlock, object context = null)
         {
+            if (context == null)
+            {
+                context = new object();
+            }
             try
             {
                 return codeBlock();
             }
             catch (Exception exception)
             {
-                //TODO: Logging here
+                logger.LogError(exception, "Unexpected error", new object[1] { context });
                 throw exception;
             }
         }
 
         public static IActionResult ReturnBadRequestOnFailedToGenerateExceptionLoggingAllOthers(
-            Func<IActionResult> codeBlock, Func<string, IActionResult> onException)
+            ILogger logger, Func<IActionResult> codeBlock, Func<string, IActionResult> onException, object context = null)
         {
+            if (context == null)
+            {
+                context = new object();
+            }
             try
             {
                 return codeBlock();
@@ -32,8 +41,8 @@ namespace MathematicsQuestionGeneratorAPI.Models
             }
             catch (Exception exception)
             {
-                //TODO: Logging here
-                throw exception;
+                logger.LogError(exception, "Unexpected error", new object[1] { context });
+                return onException("Unexpected error.");
             }
         }
     }

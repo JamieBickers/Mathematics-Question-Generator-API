@@ -2,7 +2,7 @@
 using MathematicsQuestionGeneratorAPI.Models.QuadraticEquations;
 using MathematicsQuestionGeneratorAPI.Models.RandomNumberGenerators;
 using MathematicsQuestionGeneratorAPI.Models;
-using Microsoft.AspNetCore.Cors;
+using Microsoft.Extensions.Logging;
 
 namespace MathematicsQuestionGeneratorAPI.Controllers
 {
@@ -11,17 +11,19 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
     public class QuadraticEquationController : Controller
     {
         private readonly IRandomIntegerGenerator randomIntegerGenerator;
+        private readonly ILogger logger;
 
-        public QuadraticEquationController(IRandomIntegerGenerator randomIntegerGenerator)
+        public QuadraticEquationController(IRandomIntegerGenerator randomIntegerGenerator, ILogger<QuadraticEquationController> logger)
         {
             this.randomIntegerGenerator = randomIntegerGenerator;
+            this.logger = logger;
         }
 
         // returns a random quadratic equation and its roots
         [HttpGet]
         public IActionResult GetQuadraticEquation()
         {
-            return ControllerTryCatchBlocks.LoggingAllExceptions(() =>
+             return ControllerTryCatchBlocks.LoggingAllExceptions(logger, () =>
             {
                 var equationGenerator = new QuadraticEquationGenerator(randomIntegerGenerator);
                 return Ok(equationGenerator.GenerateQuestionAndAnswer());
@@ -37,12 +39,12 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            return ControllerTryCatchBlocks.ReturnBadRequestOnFailedToGenerateExceptionLoggingAllOthers(() =>
+            return ControllerTryCatchBlocks.ReturnBadRequestOnFailedToGenerateExceptionLoggingAllOthers(logger, () =>
                 {
                     var equationGenerator = new QuadraticEquationGenerator(randomIntegerGenerator, parameters);
                     return Ok(equationGenerator.GenerateQuestionAndAnswer());
                 },
-                BadRequest);
+                BadRequest, parameters);
         }
     }
 }

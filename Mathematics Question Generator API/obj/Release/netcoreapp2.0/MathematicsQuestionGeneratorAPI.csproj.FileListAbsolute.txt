@@ -9,3 +9,4 @@ C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\Mathematics Question Gene
 C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\Mathematics Question Generator API\obj\Release\netcoreapp2.0\MathematicsQuestionGeneratorAPI.AssemblyInfo.cs
 C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\Mathematics Question Generator API\obj\Release\netcoreapp2.0\MathematicsQuestionGeneratorAPI.dll
 C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\Mathematics Question Generator API\obj\Release\netcoreapp2.0\MathematicsQuestionGeneratorAPI.pdb
+C:\Users\Jamie\Desktop\MathematicsQuestionGeneratorAPI\Mathematics Question Generator API\bin\Release\netcoreapp2.0\PolyLib.dll

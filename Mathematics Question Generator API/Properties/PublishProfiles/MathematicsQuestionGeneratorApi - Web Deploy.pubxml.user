@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA/85UARBBpUOqZt9D0iRNiQAAAAACAAAAAAAQZgAAAAEAACAAAACNzw7rttuQdiTwRZfbkyctdDTXtqXBoJq9Ii7BkT/35gAAAAAOgAAAAAIAACAAAABaX+CU3CoLbZeULNEYC3gt7wRJ/YI/EvUJJgMhRcQJWoAAAADvorCDzJmrAXt3PRF5PM3YJaHT/jzfvRVkWOgJsZn9Xv5TqGV6ti+IQxM+LvMh6c92v9ReoejNh5cRXPRB3g3hlQmG8lMiyljZ0dnZNar6T9HE5O0qMRW8ZQgjD7ydcdStyU6Tf8Kma8SzQ4cEtJBHc/ZGsH0El+SOAdqXi0y+LEAAAABaY/sCSBR+HYbxzgDLZXJNGrp88NP775ezP5i1LXAvaBg/YM1yZUqpr/QEkrfxWtM24tfOxpJSVC5QG6chYC/0</EncryptedPassword>
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="DefaultConnection">
+      <Value>Data Source=tcp:mathematicsquestiongeneratorapidbserver.database.windows.net,1433;Initial Catalog=MathematicsQuestionGeneratorApi_db;User Id=jmab@mathematicsquestiongeneratorapidbserver;Password=09J27e09J27e</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+</Project>

@@ -12,9 +12,8 @@ using MathematicsQuestionGeneratorAPI.Models.WorksheetGeneratorParameters;
 using MathematicsQuestionGeneratorAPI.Data;
 using System.Linq;
 using System.Threading.Tasks;
-using MathematicsQuestionGeneratorAPI.Models.MathematicalModels;
-using System.Collections;
 using Newtonsoft.Json;
+using Microsoft.Extensions.Logging;
 
 namespace MathematicsQuestionGeneratorAPI.Controllers
 {
@@ -25,14 +24,17 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
         private readonly IRandomIntegerGenerator randomIntegerGenerator;
         private readonly IMailSender mailSender;
         private readonly QuestionGeneratorContext context;
-        private readonly DatabaseQueries Queries;
+        private readonly DatabaseQueries queries;
+        private readonly ILogger logger;
 
-        public PdfBuilderController(IRandomIntegerGenerator randomIntegerGenerator, IMailSender mailSender, QuestionGeneratorContext context)
+        public PdfBuilderController(IRandomIntegerGenerator randomIntegerGenerator, IMailSender mailSender,
+            QuestionGeneratorContext context, ILogger logger)
         {
             this.randomIntegerGenerator = randomIntegerGenerator;
             this.mailSender = mailSender;
             this.context = context;
-            Queries = new DatabaseQueries(context);
+            queries = new DatabaseQueries(context);
+            this.logger = logger;
         }
 
         [Route("defaultQuadraticEquations")]
@@ -80,7 +82,7 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            return ControllerTryCatchBlocks.ReturnBadRequestOnFailedToGenerateExceptionLoggingAllOthers(() =>
+            return ControllerTryCatchBlocks.ReturnBadRequestOnFailedToGenerateExceptionLoggingAllOthers(logger, () =>
             {
                 var questionGenerators = new List<IQuestionGenerator<IQuestion>>();
                 foreach (var parameter in parameters.Parameters)
@@ -105,7 +107,7 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
                 BuildAndSendPdf(questionGenerators, parameters.EmailAddress.Address);
                 return Ok(ModelState);
             },
-            BadRequest);
+            BadRequest, parameters);
         }
 
         [Route("allPreviousWorksheets")]
@@ -117,11 +119,11 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (!Queries.CheckIfUserIsInDatabase(emailAddress.Address))
+            if (!queries.CheckIfUserIsInDatabase(emailAddress.Address))
             {
                 return BadRequest("This email address has not been used before.");
             }
-            var worksheets = Queries.SelectAllWorksheetsByUser(emailAddress.Address);
+            var worksheets = queries.SelectAllWorksheetsByUser(emailAddress.Address);
 
             foreach (var worksheet in worksheets)
             {
@@ -137,7 +139,7 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            return ControllerTryCatchBlocks.LoggingAllExceptions(() =>
+            return ControllerTryCatchBlocks.LoggingAllExceptions(logger, () =>
             {
                 var generators = Enumerable.Range(0, parameters.NumberOfQuestions)
                 .Select(t => generator)
@@ -145,7 +147,7 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
 
                 BuildAndSendPdf(generators, parameters.EmailAddress.Address);
                 return Ok(ModelState);
-            });
+            }, new { parameters, generator });
         }
 
         private IActionResult GenerateuserSpecifiedWorksheet<TGeneratorParamaters, TQuestion>(
@@ -159,7 +161,7 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            return ControllerTryCatchBlocks.ReturnBadRequestOnFailedToGenerateExceptionLoggingAllOthers(() =>
+            return ControllerTryCatchBlocks.ReturnBadRequestOnFailedToGenerateExceptionLoggingAllOthers(logger, () =>
             {
                 var generators =
                 worksheetParameters.QuestionGeneratorParameters
@@ -169,7 +171,7 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
                 BuildAndSendPdf(generators, worksheetParameters.EmailAddress.Address);
                 return Ok(ModelState);
             },
-            BadRequest);
+            BadRequest, worksheetParameters);
         }
 
         private void BuildAndSendPdf(List<IQuestionGenerator<IQuestion>> questionGenerators, string emailAddress, bool addToDatabase = true)
@@ -201,7 +203,7 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
         {
             try
             {
-                Queries.InsertWorksheet(questions, emailAddress);
+                queries.InsertWorksheet(questions, emailAddress);
             }
             catch
             {
