@@ -95,7 +95,7 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.PolynomialEq
 
             discriminant *= Math.Pow(coefficients[coefficients.Count - 1], 2 * (coefficients.Count - 1) - 2);
 
-            if (!DoubleEquality(discriminant.Imaginary, 0, Math.Max(Math.Abs(discriminant.Real) * 0.0001, 0.0001)))
+            if (!DoubleEquality(discriminant.Imaginary, 0, new List<double>() { discriminant.Real }))
             {
                 throw new MathematicalImpossibilityException();
             }
@@ -103,26 +103,35 @@ namespace MathematicsQuestionGeneratorAPI.Models.MathematicalModels.PolynomialEq
             return (int) Math.Round(discriminant.Real);
         }
 
-        // TODO: Make comparing doubles much nicer and more modular
         private static bool DoubleEquality(double a, double b)
         {
-            return DoubleEquality(a, b, 0.0001);
+            return DoubleEquality(a, b, 0.0001, new List<double>());
         }
 
-        private static bool DoubleEquality(double a, double b, double precision)
+        private static bool DoubleEquality(double a, double b, IEnumerable<double> context)
         {
-            return Math.Abs(a - b) < new List<double>()
+            return DoubleEquality(a, b, 0.0001, context);
+        }
+
+        private static bool DoubleEquality(double a, double b, double precision, IEnumerable<double> context)
+        {
+            var contextBasedPrecision = new List<double>()
             {
-                precision * Math.Abs(a),
-                precision * Math.Abs(b),
-                precision
+                1,
+                context.Count() == 0 ? 0 : context.Max(),
+                a,
+                b
             }
+            .Select(x => Math.Abs(x) * precision)
             .Max();
+
+            return Math.Abs(a - b) < contextBasedPrecision;
         }
 
         private static bool RootValueEquality(Root a, Root b)
         {
-            return DoubleEquality(a.RealPart, b.RealPart) && DoubleEquality(a.ImaginaryPart, b.ImaginaryPart);
+            return DoubleEquality(a.RealPart, b.RealPart)
+                && DoubleEquality(a.ImaginaryPart, b.ImaginaryPart);
         }
     }
 }

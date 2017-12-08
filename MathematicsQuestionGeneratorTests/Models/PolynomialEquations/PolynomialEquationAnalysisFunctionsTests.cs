@@ -1,9 +1,7 @@
 ﻿using MathematicsQuestionGeneratorAPI.Models.MathematicalModels.PolynomialEquations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace MathematicsQuestionGeneratorTests.Models.PolynomialEquations
 {
@@ -33,11 +31,11 @@ namespace MathematicsQuestionGeneratorTests.Models.PolynomialEquations
         [TestMethod]
         public void CheckComputesDiscriminant()
         {
-            var polynomial = new List<int>() { 32, 63, 12, 90, -23, -1 };
+            var polynomial = new List<int>() { 1, -9, 1, 2, -6, 1 };
 
             var solution = PolynomialEquationAnalysisFunctions.ComputePolynomialEquationSolution(polynomial);
 
-            Assert.AreEqual(-3104506881714059, solution.Discriminant);
+            Assert.AreEqual(-158315240, solution.Discriminant);
         }
     }
 }
