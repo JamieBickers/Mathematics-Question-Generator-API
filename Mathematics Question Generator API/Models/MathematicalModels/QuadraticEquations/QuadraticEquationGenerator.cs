@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MathematicsQuestionGeneratorAPI.Models.RandomNumberGenerators;
 using MathematicsQuestionGeneratorAPI.Models.MathematicalModels;
+using MathematicsQuestionGeneratorAPI.Exceptions;
 
 namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
 {
@@ -45,19 +46,25 @@ namespace MathematicsQuestionGeneratorAPI.Models.QuadraticEquations
          * */
         private List<int> GenerateDoubleRootCoefficients(out List<double> solution)
         {
-            var coefficients = new List<int>();
+            var coefficients = new List<int>() { 0, 0, 0 };
             bool invalidCoefficients;
+            var NumberOfTries = 0;
 
             do
             {
-                int uUpperBound = (int)Math.Round(Math.Sqrt(parameters.AUpperBound));
-                int vUpperBound = (int)Math.Round(Math.Sqrt(parameters.CUpperBound));
-                int u = randomIntegerGenerator.GenerateRandomInteger(uUpperBound);
-                int v = randomIntegerGenerator.GenerateRandomInteger(vUpperBound);
-                coefficients.Add(u * u);
-                coefficients.Add(2 * u * v);
-                coefficients.Add(v * v);
+                if (NumberOfTries > MaxNumberOfTries)
+                {
+                    throw new FailedToGenerateQuestionSatisfyingParametersException();
+                }
+                var uUpperBound = (int)Math.Round(Math.Sqrt(parameters.AUpperBound));
+                var vUpperBound = (int)Math.Round(Math.Sqrt(parameters.CUpperBound));
+                var u = randomIntegerGenerator.GenerateRandomInteger(uUpperBound);
+                var v = randomIntegerGenerator.GenerateRandomInteger(vUpperBound);
+                coefficients[0] = u * u;
+                coefficients[1] = 2 * u * v;
+                coefficients[2] = v * v;
                 solution = CalculateSolution(coefficients, out invalidCoefficients);
+                NumberOfTries++;
             } while (!CheckValidQuestion(coefficients, solution) || (coefficients[1] > parameters.BUpperBound)
             || (coefficients[1] < parameters.BLowerBound) || invalidCoefficients);
 

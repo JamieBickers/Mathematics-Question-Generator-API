@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -12,10 +14,12 @@ namespace MathematicsQuestionGeneratorAPI.Models.MailSenders
         private readonly string FromAddress;
         private readonly string Password;
         private readonly IConfiguration configuration;
+        private readonly ILogger logger;
 
-        public SmtpMailSender(IConfiguration configuration)
+        public SmtpMailSender(IConfiguration configuration, ILogger logger)
         {
             this.configuration = configuration;
+            this.logger = logger;
             FromAddress = configuration["EmailSettings:FromAddress"];
             Password = configuration["Emailsettings:Password"];
         }
@@ -51,9 +55,9 @@ namespace MathematicsQuestionGeneratorAPI.Models.MailSenders
             {
                 client.Send(message);
             }
-            catch
+            catch (Exception exception)
             {
-                //TODO: Logging here
+                logger.LogError("Error sending email", new object[] { exception, reciever, streams.Count });
             }
             finally
             {

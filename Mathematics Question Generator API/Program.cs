@@ -22,7 +22,6 @@ namespace MathematicsQuestionGeneratorAPI
                 }
                 catch (Exception exception)
                 {
-                    //TODO: Logging here
                     throw exception;
                 }
             }

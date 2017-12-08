@@ -127,7 +127,7 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
 
             foreach (var worksheet in worksheets)
             {
-                EmailWorksheetWithGivenQuestionsAsync(emailAddress.Address, worksheet, true);
+                EmailWorksheetWithGivenQuestionsAsync(emailAddress.Address, worksheet);
             }
             return Ok();
         }
@@ -174,20 +174,20 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
             BadRequest, worksheetParameters);
         }
 
-        private void BuildAndSendPdf(List<IQuestionGenerator<IQuestion>> questionGenerators, string emailAddress, bool addToDatabase = true)
+        private async void BuildAndSendPdf(List<IQuestionGenerator<IQuestion>> questionGenerators, string emailAddress, bool addToDatabase = true)
         {
             var questions = questionGenerators.Select(generator => generator.GenerateQuestionAndAnswer()).ToList();
-            AddToDatabase(emailAddress, questions);
-            EmailWorksheetWithGivenQuestionsAsync(emailAddress, questions, addToDatabase);
-        }
 
-        private async void EmailWorksheetWithGivenQuestionsAsync(string emailAddress, List<IQuestion> questions, bool addToDatabase)
-        {
             if (addToDatabase)
             {
                 await AddToDatabase(emailAddress, questions);
             }
 
+            EmailWorksheetWithGivenQuestionsAsync(emailAddress, questions);
+        }
+
+        private void EmailWorksheetWithGivenQuestionsAsync(string emailAddress, List<IQuestion> questions)
+        {
             var pdfBuilder = new BasicPdfBuilder(questions, "title", "instructions");
             var streams = pdfBuilder.CreatePdfsAsMemoryStreams();
 
@@ -205,9 +205,9 @@ namespace MathematicsQuestionGeneratorAPI.Controllers
             {
                 queries.InsertWorksheet(questions, emailAddress);
             }
-            catch
+            catch (Exception exception)
             {
-                //TODO: Logging
+                logger.LogError("Error adding worksheet to database.", new object[] { exception, emailAddress, questions });
             }
 
             return Task.Delay(0);
